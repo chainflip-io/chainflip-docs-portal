@@ -1,0 +1,888 @@
+---
+
+title: Requests
+
+description: The state chain node has some RPCs and subscriptions that are useful for liquidity providers.
+
+---
+
+## RPC requests
+
+Examples are using `curl`.
+
+##### optional last parameter
+
+- `at`: Block Hash as string (Optional)
+
+This defaults to the last block if not provided, it is useful to specify this argument in case it is required to query the chain at an old state.
+
+`cf_required_asset_ratio_for_range_order`
+
+Returns the ratio of assets that would be required to create a range order at the specified tick range.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset).
+- `quote_asset`: [Asset](lp-api#asset).
+- `tick_range`: Range\<[Tick](lp-api#tick)\>
+- `at`: Block Hash as string (Optional)
+
+Where `Range` is defined as follow:
+``` json
+{
+    "start": "Tick",
+    "end": "Tick"
+}
+```
+
+Return:
+- `base`: [Amount](lp-api#amount)
+- `quote`: [Amount](lp-api#amount)
+
+The ratio of these two amounts is the needed ratio for range orders over the same range given the current price, i.e. the asset composition of all range orders with the same range will match this ratio.
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_required_asset_ratio_for_range_order",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "tick_range":{
+         "start":-400000,
+         "end":400000
+      }
+   }
+}' http://localhost:9944
+```
+
+Response:
+```json
+{
+   "jsonrpc":"2.0",
+   "result":{
+      "base":"0x48fdda050e625251db12baf14c6258c",
+      "quote":"0x13979e2ae923a625b6119832"
+   },
+   "id":1
+}
+```
+
+### `cf_pool_info`
+
+Returns the fees percentages LP's earn in the given pool.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset).
+- `quote_asset`: [Asset](lp-api#asset).
+- `at`: Block Hash as string (Optional)
+
+Return:
+- `limit_order_fee_hundredth_pips`: number
+- `range_order_fee_hundredth_pips`: number
+- `range_order_total_fees_earned`: PoolPairsMap\<[Amount](lp-api#amount)\>
+- `limit_order_total_fees_earned`: PoolPairsMap\<[Amount](lp-api#amount)\>
+- `range_total_swap_inputs`: PoolPairsMap\<[Amount](lp-api#amount)\>
+- `limit_total_swap_inputs`: PoolPairsMap\<[Amount](lp-api#amount)\>
+
+where `PoolPairsMap` is defined as follows:
+```json
+{
+    "base": "Amount",
+    "quote": "Amount"
+}
+```
+
+The fees are represented in hundredth's of a pip, i.e. 1 = 0.00001%.
+
+#### Example
+
+Request:
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_info",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}' http://localhost:9944
+```
+
+Response:
+```json
+{
+   "jsonrpc":"2.0",
+   "result":{
+      "limit_order_fee_hundredth_pips":20,
+      "range_order_fee_hundredth_pips":20,
+      "range_order_total_fees_earned":{
+         "base":"0x92d398d746f9a",
+         "quote":"0x50925"
+      },
+      "limit_order_total_fees_earned":{
+         "base":"0x0",
+         "quote":"0x0"
+      },
+      "range_total_swap_inputs":{
+         "base":"0x70047cb8257ef2652",
+         "quote":"0x3d7844834"
+      },
+      "limit_total_swap_inputs":{
+         "base":"0x0",
+         "quote":"0x0"
+      }
+   },
+   "id":1
+}
+```
+
+### `cf_pool_depth`
+
+Returns depth of a specified pool between two prices.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset).
+- `quote_asset`: [Asset](lp-api#asset).
+- `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the range of prices over which depth will be calculated. The first number should always be less than the second.
+- `at`: Block Hash as string (Optional)
+
+Where `Range` is defined as follow:
+``` json
+{
+    "start": "Tick",
+    "end": "Tick"
+}
+```
+
+Return:
+- `asks`: UnidirectionalPoolDepth\<UnidirectionalSubPoolDepth\>
+- `bids`: UnidirectionalPoolDepth\<UnidirectionalSubPoolDepth\>
+
+Where `UnidirectionalPoolDepth` is defined as follows:
+```json
+{
+    "limit_orders": {
+        "price": "Option<Amount>",
+        "depth": "Amount",
+    },
+    "range_orders": {
+        "price": "Option<Amount>",
+        "depth": "Amount"
+    }
+}
+```
+The [Amount](lp-api#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_depth",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "tick_range":{
+         "start":0,
+         "end":10000
+      }
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "base": {
+      "limit_orders": { "price": null, "depth": "0x0" },
+      "range_orders": {
+        "price": "0x15d21b1217b76a34437fca3a9",
+        "depth": "0x8c3f38916066"
+      }
+    },
+    "pair": {
+      "limit_orders": { "price": null, "depth": "0x0" },
+      "range_orders": { "price": "0x15d21b1217b76a34437fca3a9", "depth": "0x0" }
+    }
+  },
+  "id": 1
+}
+```
+
+### `cf_pool_liquidity`
+
+Returns all the liquidity available for swaps in a particular pool, at a given block hash. If not provided, returns data for the latest block. Note that this does **not** take into account any pending transactions in the mempool.
+
+Parameters:
+
+- `base_asset` [Asset](lp-api#asset).
+- `quote_asset` [Asset](lp-api#asset).
+- `at`: Block Hash as string (Optional)
+
+Return:
+- `limit_orders`: AskBidMap\<Array\<LimitOrderLiquidity\>\>
+- `range_orders`: AskBidMap\<Array\<RangeOrderLiquidity\>\>
+
+Where `AskBidMap` is defined as follows:
+```json
+{
+    "asks": [ .. ],
+    "bids": [ .. ],
+}
+```
+while `LimitOrderLiquidity` and `RangeOrderLiquidity` are respectively:
+```json
+{
+	"tick": "Tick",
+	"amount": "Amount",
+}
+```
+```json
+{
+	"tick": "Tick",
+	"liquidity": "Amount",
+}
+```
+
+For limit orders two lists of prices (as [Tick](lp-api#tick)) and the amount/depth ([Amount](lp-api#amount)) available at those prices.
+
+For range orders, an ordered list of pairs. The first element of the pair is a tick/price and the second is the liquidity between that tick and the next tick in the list. Forming a histogram of the liquidity in the range order pool.
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_liquidity",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "limit_orders": {
+        "asks": [
+            {
+               "tick":"-195688",
+               "amount":"0x1"
+            },
+            ..
+            {
+               "tick":"-193196",
+               "amount":"0x1"
+            }
+        ],
+        "bids": [
+            {
+               "tick":"-199528",
+               "amount":"0x1"
+            },
+            ..
+            {
+               "tick":"-195587",
+               "amount":"0x1"
+            }
+        ]
+    },
+    "range_orders": [
+        {
+            "tick":"-887272",
+            "liquidity":"0x1edb6ec1a04b32"
+        },
+        ..
+        {
+            "tick":"887272",
+            "liquidity":"0x0"
+        }
+    ]
+  },
+  "id": 1
+}
+```
+
+### `cf_pool_orders`
+
+Returns all the orders associated with a specified account in a particular pool.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+- `lp`: The [account](lp-api#addresses) to return the orders of.
+- `at`: Block Hash as string (Optional)
+
+Return:
+
+- `limit_orders`: AskBidMap\<Array\<LimitOrder\>\>
+- `range_orders`: Array\<RangeOrder\>
+
+Where `AskBidMap` is defined as follows:
+```json
+{
+    "asks": [ .. ],
+    "bids": [ .. ],
+}
+```
+Where `LimitOrder` is defined as follows:
+```json
+{
+    "lp": "Account",
+	"id": "Amount",
+	"tick": "Tick",
+	"sell_amount": "Amount",
+	"fees_earned": "Amount",
+	"original_sell_amount": "Amount",
+}
+```
+Where `RangeOrder` is defined as follows:
+```json
+{
+    "lp": "Account",
+    "id": "Amount",
+    "range": "Range<Tick>",
+    "liquidity": "Liquidity",
+    "fees_earned": "PoolPairsMap<Amount>",
+}
+```
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_orders",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "lp":"cFPdef3hF5zEwbWUG6ZaCJ3X7mTvEeAog7HxZ8QyFcCgDVGDM"
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+   "jsonrpc":"2.0",
+   "result":{
+      "limit_orders":{
+         "asks":[
+            {
+               "lp":"cFLGvPhhrribWCx9id5kLVqwiFK4QiVNjQ6ViyaRFF2Nrgq7j",
+               "id":"0x0",
+               "tick":-195623,
+               "sell_amount":"0x56d3a03776ce8ba0",
+               "fees_earned":"0x0",
+               "original_sell_amount":"0x56d3a03776ce8ba0"
+            },
+            ..
+         ],
+         "bids":[
+            {
+               "lp":"cFLGvPhhrribWCx9id5kLVqwiFK4QiVNjQ6ViyaRFF2Nrgq7j",
+               "id":"0x0",
+               "tick":-195622,
+               "sell_amount":"0x4a817c800",
+               "fees_earned":"0x0",
+               "original_sell_amount":"0x4a817c800"
+            },
+            ..
+         ]
+      },
+      "range_orders":[
+         {
+            "lp":"cFPdef3hF5zEwbWUG6ZaCJ3X7mTvEeAog7HxZ8QyFcCgDVGDM",
+            "id":"0x0",
+            "range":{
+               "start":-887272,
+               "end":887272
+            },
+            "liquidity":3161961432402363,
+            "fees_earned":{
+               "base":"0xd251bdbd8c558",
+               "quote":"0xcd376"
+            }
+         }
+      ]
+   },
+   "id":1
+}
+```
+
+### `cf_pool_orderbook`
+
+Returns an orderbook representation of all the liquidity in the specified pool. For example if you make a request with an orders count of 1, it will return 1 ask and 1 bid that each represent the sum of all asks and bids respectively. The returned ask's and bid's prices will be approximately in an logarithm distribution going from the best price to the worst, for example it could be something like the first ask/bid represents all liquidity within 0.01% of the best price, then the next all liquidity between 0.01%->0.1% of the best price, then next between 0.1%->1.0%, and so on until there is no more liquidity.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+- `orders`: The number of orders to return. As this is increased the returned orderbook representation will more accurately reflect the pool's liquidity distribution. This number is inclusively bounded between 1 and 16384.
+- `at`: Block Hash as string (Optional)
+
+Return:
+
+- `bids`: PoolOrder
+- `asks`: PoolOrder
+
+Where `PoolOrder` is defined as follows:
+```json
+{
+	"amount": "Amount",
+	"sqrt_price": "SqrtPrice",
+}
+```
+A list of asks and a list of bids. The number of asks and bids will be equal to or less than the specified number of orders. There may be zero asks or bids if no liquidity exists to either ask or bid. Each ask and bid has two properties a sqrt_price and an amount.
+- The amount is quoted in the base asset's smallest unit, i.e. for ETH that is 10^-18 ETH.
+- The sqrt_price is the sqrt of the price in units of the quote asset, represented as a fixed point number with 96 fractional bits. Note prices are in each asset's smallest unit i.e. for ETH 10^-18, and for USDC 10^-6, so the price 10000 USDC/ETH represented as sqrt_price would be `round(sqrt(10000 * 10^18 / 10^6)*2^96) ≈ 7.9228162E36`. We use this representation as it ensures a high degree of precision across a large range of possible prices.
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_orderbook",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "orders":10
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "asks": [
+            {
+                "amount": "0x54b2cec31723f8b04",
+                "sqrt_price": "0x2091b342e50d7f26cdc582"
+            },
+            {
+                "amount": "0x5b475d13fc0374e",
+                "sqrt_price": "0x1e38a26ccc8cad8ff5ed7d0e"
+            },
+            {
+                "amount": "0x625ecb4a48690",
+                "sqrt_price": "0x1c0ae64c925b19f39a41ff17bd"
+            },
+            {
+                "amount": "0x6a03445844f",
+                "sqrt_price": "0x1a055f3578ef64659516605ff66d"
+            },
+            {
+                "amount": "0x723fbd69d",
+                "sqrt_price": "0x18252720d1c42e3ba5952fd2fe89fb"
+            },
+            {
+                "amount": "0x7b20059",
+                "sqrt_price": "0x16678d870594b3379bb55bece63777cb"
+            },
+            {
+                "amount": "0x84b0d",
+                "sqrt_price": "0x14ca1409cb331360845a79ebe43373e18e"
+            },
+            {
+                "amount": "0x8ef",
+                "sqrt_price": "0x134b7afbfbb5777da858f99704921055bfe0"
+            },
+            {
+                "amount": "0x9",
+                "sqrt_price": "0x12848533e1997da57a9773adec9795a3626203"
+            }
+        ],
+        "bids": [
+            {
+                "amount": "0x9a488cdb615edf25fd",
+                "sqrt_price": "0x62bac2a2b8f0b98b9ceb"
+            },
+            {
+                "amount": "0x1217d98319cd00bc28de",
+                "sqrt_price": "0x349e212a7a008282ff9"
+            },
+            {
+                "amount": "0x21f2ffe1f3cc8bebab567",
+                "sqrt_price": "0x1c0ae0758c0acee837"
+            },
+            {
+                "amount": "0x3fb3690cb0511666161b4d",
+                "sqrt_price": "0xef1f790088e3f323"
+            },
+            {
+                "amount": "0x77868270bada4c06b5c9e64",
+                "sqrt_price": "0x7f7094efc08a808"
+            },
+            {
+                "amount": "0xe045b383a1b21969cebb4976",
+                "sqrt_price": "0x43eaad48a59f17"
+            },
+            {
+                "amount": "0x1a4d08d014973bf8ba1c33904f",
+                "sqrt_price": "0x241d6cfa0a79c"
+            },
+            {
+                "amount": "0x3159920b20889ed50eabfa6edc8",
+                "sqrt_price": "0x123884db5748"
+            }
+        ]
+    },
+    "id": 1
+}
+```
+
+### `cf_pool_range_order_liquidity_value`
+
+Returns the value of a hypothetical range order, e.g. the assets which would be returned to an LP's free balance if they were to close/cancel such a range order.
+
+Parameters:
+
+- `base_asset` [Asset](lp-api#asset).
+- `quote_asset` [Asset](lp-api#asset).
+- `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the start and end of the price range the order is over as ticks. The first number should always be less than the second.
+- `liquidity`: The liquidity of the range order as an [amount](lp-api#amounts).
+- `at`: Block Hash as string (Optional)
+
+Return:
+- `base`: [Amount](lp-api#amount)
+- `quote`: [Amount](lp-api#amount)
+
+The value of the hypothetical range order if it where burnt now, in amounts of the base and pair assets.
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_pool_range_order_liquidity_value",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "tick_range":[
+         0,
+         1000
+      ],
+      "liquidity":10000000000
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+   "jsonrpc":"2.0",
+   "result":{
+      "base":"0x1d116fb8",
+      "quote":"0x0"
+   },
+   "id":1
+}
+```
+
+### `cf_free_balances`
+
+> [!TIP]
+>
+> This RPC method can also be called as `cf_asset_balances`.
+
+Returns the free balances of all assets for a specified account at the current best block. Note that 'Free Balances' does *not* include any assets currently active in LP orders or in boost pools.
+
+Parameters:
+
+- `account_id`: The [account_id](lp-api#addresses) to return the balances of.
+- `at`: Block Hash as string (Optional)
+
+Return:
+- A JSON object containing the list of [Chains](lp-api#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](lp-api#amount)).
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_free_balances",
+   "params":{
+      "account_id":"cFPdef3hF5zEwbWUG6ZaCJ3X7mTvEeAog7HxZ8QyFcCgDVGDM"
+   }
+}' http://localhost:9944
+```
+
+Response:
+```json
+{
+   "jsonrpc":"2.0",
+   "result":{
+      "Ethereum":{
+         "ETH":"0x45939e6733a79d71",
+         "FLIP":"0x128d484779ed9a9b",
+         "USDC":"0x45dde576d3",
+         "USDT":"0x9d2687"
+      },
+      "Polkadot":{
+         "DOT":"0x25c7d0cb6"
+      },
+      "Bitcoin":{
+         "BTC":"0x18c12"
+      },
+      "Arbitrum":{
+         "ETH":"0x303467cadd3773",
+         "USDC":"0x9dc14c"
+      }
+   },
+   "id":1
+}
+```
+
+### `cf_scheduled_swaps`
+
+Returns all scheduled swaps in a pool. Works similarly to [cf_subscribe_scheduled_swaps](lp-rpcs#cf_subscribe_scheduled_swaps).
+
+Parameters:
+
+- `base_asset` [Asset](lp-api#asset).
+- `quote_asset` [Asset](lp-api#asset).
+- `at`: Block Hash as string (Optional)
+
+Return:
+- Array\<ScheduledSwap\>
+
+Where `ScheduledSwap` is defined as follow:
+```json
+{
+	"swap_id": "number",
+	"base_asset": "Asset",
+	"quote_asset": "Asset",
+	"side": "Side",
+	"amount": "Amount",
+	"source_asset": "Option<Asset>",
+	"source_amount": "Option<Amount>",
+	"execute_at": "number",
+}
+```
+#### Example:
+
+Request:
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_scheduled_swaps",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"FLIP"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}' http://localhost:9944
+```
+
+Response:
+
+```json
+{
+    "jsonrpc":"2.0",
+    "result":[
+        {
+            "swap_id":1,
+            "base_asset":{
+                "chain":"Ethereum",
+                "asset":"FLIP"
+            },
+            "quote_asset":{
+                "chain":"Ethereum",
+                "asset":"USDC"
+            },
+            "side":"sell",
+            "amount":"0x1ad5814560a6c1005b",
+            "execute_at":170
+        }
+    ],
+    "id":1
+}
+```
+
+### `cf_get_trading_strategies`
+
+> [!NOTE]
+>
+> This RPC is available from version 1.9 onwards.
+
+Returns all trading strategies optionally filtered by the LP account used to deploy them.
+
+Parameters:
+
+- `lp` (optional) The [account](lp-api#addresses) owning the strategies to return (if not provided, all strategies will be returned).
+- `at`: Block Hash as string (Optional)
+
+Return:
+- `Array<TradingStrategyEntry>`, where `TradingStrategyEntry` is defined as follows:
+
+```json
+{
+	"lp_id": "Account",
+	"strategy_id": "Account",
+	"strategy": "TradingStrategy",
+	"balance": "Array<(Asset, Amount)>",
+}
+
+```
+
+and `TradingStrategy` is an enum where each variant is a different strategy type. Only one stategy is supported as of 1.9:
+
+```json
+{
+	"TickZeroCentered": {
+		"spread_tick": "Tick",
+		"base_asset": "Asset"
+	}
+}
+```
+
+
+<details>
+<summary>Example</summary>
+
+```sh
+curl -H "Content-Type: application/json" -d '{
+	"id":1,
+	"jsonrpc":"2.0",
+	"method": "cf_get_trading_strategies",
+	"params": {"lp": "cFMzM1G4He5k3Aa58X6d8yo8hRxiMVd92qrXMu1zKBXCqqTxi"}
+}' http://localhost:10589
+```
+
+Possible response:
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "lp_id": "cFMzM1G4He5k3Aa58X6d8yo8hRxiMVd92qrXMu1zKBXCqqTxi",
+      "strategy_id": "cFKhxreJ2F8kLYCtsGQkwnbK5K7wBF7hqMbig2QzdXiFYhZN4",
+      "strategy": {
+        "TickZeroCentered": {
+          "spread_tick": 1,
+          "base_asset": {
+            "chain": "Ethereum",
+            "asset": "USDT"
+          }
+        }
+      },
+      "balance": [
+        [
+          {
+            "chain": "Ethereum",
+            "asset": "USDC"
+          },
+          "0x1dcd6500"
+        ],
+        [
+          {
+            "chain": "Ethereum",
+            "asset": "USDT"
+          },
+          "0x0"
+        ]
+      ]
+    },
+  ],
+  "id": 1
+}
+```
+
+
+</details>

@@ -1,0 +1,44 @@
+---
+
+title: Index
+
+description: All the node exposed RPCs useful for LPs
+
+---
+
+import { Cards, Callout } from 'nextra/components'
+
+
+## Node RPCs useful for LPs
+
+Here are the RPCs and subscriptions that are useful for liquidity providers but available on the State Chain node.
+
+<Callout type="info">
+    The following RPCs are only available on `chainflip-node`
+</Callout>
+
+
+## Requests
+
+<Cards num={3}>
+    <Cards.Card title="cf_required_asset_ratio_for_range_order" href="/lp/lp-node-rpcs/requests#cf_required_asset_ratio_for_range_order" />
+    <Cards.Card title="cf_pool_info" href="/lp/lp-node-rpcs/requests#cf_pool_info" />
+    <Cards.Card title="cf_pool_depth" href="/lp/lp-node-rpcs/requests#cf_pool_depth" />
+    <Cards.Card title="cf_pool_liquidity" href="/lp/lp-node-rpcs/requests#cf_pool_liquidity" />
+    <Cards.Card title="cf_pool_orders" href="/lp/lp-node-rpcs/requests#cf_pool_orders" />
+    <Cards.Card title="cf_pool_orderbook" href="/lp/lp-node-rpcs/requests#cf_pool_orderbook" />
+    <Cards.Card title="cf_pool_range_order_liquidity_value" href="/lp/lp-node-rpcs/requests#cf_pool_range_order_liquidity_value" />
+    <Cards.Card title="cf_free_balances" href="/lp/lp-node-rpcs/requests#cf_free_balances" />
+    <Cards.Card title="cf_scheduled_swaps" href="/lp/lp-node-rpcs/requests#cf_scheduled_swaps" />
+    <Cards.Card title="cf_get_trading_strategies" href="/lp/lp-node-rpcs/requests#cf_get_trading_strategies" />
+</Cards>
+
+
+## Subscriptions
+
+<Cards>
+    <Cards.Card title="cf_subscribe_scheduled_swaps" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_scheduled_swaps" />
+    <Cards.Card title="cf_subscribe_prewitness_swaps" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_prewitness_swaps" />
+    <Cards.Card title="cf_subscribe_pool_price" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price" />
+    <Cards.Card title="cf_subscribe_pool_price_v2" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price_v2" />
+</Cards>

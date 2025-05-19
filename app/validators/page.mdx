@@ -1,0 +1,46 @@
+---
+title: Introduction
+description:
+    This is the official guide for setting up your Chainflip Validator
+---
+
+import { Cards, Image } from 'nextra/components'
+import { cloneElement } from 'react'
+
+export default function MdxLayout(props) {
+  return cloneElement(props.children, {
+    components: {
+      img: Image
+    }
+  })
+}
+
+## Introduction
+
+A Validator, in the context of Chainflip, is a server operating a **Chainflip State Chain node**, as well as additional ‘sidecar’ functionality through the **Chainflip Engine (CFE)**, an off-chain processing module. For the purposes of introduction, at a high level:
+
+- Up to 150 Validators can participate in the protocol’s **Authority Set** at any one time, and collectively operate almost all of the protocol's functions concurrently, and jointly control _all_ funds in the system.
+- All Validator slots are entirely permissionless, where any Validator operator with sufficient $FLIP to outbid others in [Auctions](validator-network/validator-auctions-bonds-and-rewards.md) becomes a member of the Authority Set after winning.&#x20;
+- Each individual Validator has its own set of private keys which it uses to participate in the consensus of the State Chain, as well as to generate secrets for the purposes of TSS key generation and signing.
+- Every Validator simultaneously watches all supported external chains for **Witnessing**, which is functionally equivalent to the network being its own decentralised oracle for incoming transfers.
+- Using the TSS protocol in chorus with the other Validators and the external blockchain connections, Validators also **Broadcast** transactions to send funds out of the protocol. Again, the network is its own decentralised relayer.
+
+## Disclaimer
+
+Running a Chainflip Validator node is [**not for the faint of heart**](https://idioms.thefreedictionary.com/not+for+the+faint+of+heart).
+
+Chainflip is a system which relies on its Validators being responsive and competent hardware operators. Chainflip is not responsible for any negative externalities that arise due to your participation in the network.
+
+## Validator Responsibilities
+
+As a Validator, you are responsible for keeping your software up to date and ensuring that it is running at all times. Network or hardware outages will almost certainly result in your `$FLIP` stake being slashed. Slashed `$FLIP` is gone forever. **You may have all of your stake slashed.**
+
+Chainflip will announce on official channels when there is a software update required for Validators, and we implore Validators to check these channels regularly. We may have no way of getting in touch with Validators directly, so it is your responsibility to monitor for updates. **Validators who do not keep their software up to date may be slashed.**
+
+**Official Channels**:
+
+- [Discord](https://discord.gg/chainflip-community)
+- [Twitter](https://twitter.com/chainflip)
+- [Telegram](https://t.me/chainflip_io_chat)
+
+We will endeavour to do our best to assist you with running the Validator software (the best place to get help is [Discord](https://discord.gg/chainflip-community)), but you and only you are responsible for this machine and what happens to your funds. Chainflip is not liable for any damages incurred to you by running the Validator software.

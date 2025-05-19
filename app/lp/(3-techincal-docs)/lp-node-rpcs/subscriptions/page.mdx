@@ -1,0 +1,394 @@
+---
+
+title: Subscriptions
+
+description: The state chain node has some RPCs and subscriptions that are useful for liquidity providers.
+
+---
+
+## Subscriptions
+
+Example usages are using a Websocket utility such as [Websocat](https://github.com/vi/websocat):
+
+### `cf_subscribe_scheduled_swaps`
+
+Subscribes to a stream of all swaps that are scheduled to be executed in the next few blocks in a given pool.
+Note that all Chainflip swaps get scheduled 2 State Chain blocks after the deposit that triggers it is witnessed,
+so there is approximately 12 seconds between a swap first appearing in the subscription and it being executed.
+The subscription is designed to help liquidity providers see what swaps are coming in and prepare for them.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+
+Returns:
+
+A websocket notification is returned on every State Chain block, each of which is a json object containing:
+
+- `block_hash`: string
+- `block_number`: number
+- `swaps`: Array\<ScheduledSwap\>
+
+where `ScheduledSwap` contains the following details of an upcoming swap as a json object:
+
+- `swap_id`: number
+- `swap_request_id`: number - Each swap request might be broken up into multiple chunks, each with their own swap_id.
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+- `side`: [Side](lp-api#side)
+- `amount`: [Amount](lp-api#amount) - The size of the swap chunk.
+- `source_asset`: [Asset](lp-api#asset) (optional)
+- `source_amount`: [Amount](lp-api#amount) (optional)
+- `execute_at`: number
+- `remaining_chunks`: number - The number of swap chunks of the same size that are remaining for this request.
+- `chunk_interval`: number - The number of blocks between each swap chunk (a new chunk will not be scheduled until the previous one succeeds). Each block is 6 seconds.
+
+#### Example
+
+```json copy
+wscat -c ws://localhost:9944
+>
+```
+
+Subscribe:
+
+```json copy
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"cf_subscribe_scheduled_swaps",
+   "params":{
+      "base_asset":{
+         "chain":"Ethereum",
+         "asset":"ETH"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}
+```
+
+Here we subscribe to all swaps involving the `FLIP/USDC` pool.
+Say users request the swaps `FLIP->USDC` and `BTC->FLIP` and their corresponding deposits
+have just been witnessed.
+The subscription returns one websocket notification on every State Chain block.
+Here is what a possible notification for block 84 might look like:
+
+```json
+{
+    "block_hash":"0x00d717c77802650d08267f5c2d90efcf4dccde271ea9d69359d30f3de2f3e32e",
+    "block_number":84,
+    "swaps": [
+        {
+            "swap_id":1,
+            "swap_request_id":1,
+            "base_asset":{
+                "chain":"Ethereum",
+                "asset":"FLIP"
+            },
+            "quote_asset":{
+                "chain":"Ethereum",
+                "asset":"USDC"
+            },
+            "side":"sell",
+            "amount":"0x1ad5814560a6c1005b",
+            "execute_at":85,
+            "remaining_chunks":0,
+            "chunk_interval":0
+        },
+        {
+            "swap_id":2,
+            "swap_request_id":2,
+            "base_asset":{
+                "chain":"Ethereum",
+                "asset":"FLIP"
+            },
+            "quote_asset":{
+                "chain":"Ethereum",
+                "asset":"USDC"
+            },
+            "side":"buy",
+            "amount":"0x1d540d83",
+            "source_asset":{
+                "chain":"Bitcoin",
+                "asset":"BTC"
+            },
+            "source_amount":"0x4b877c",
+            "execute_at":86,
+            "remaining_chunks":0,
+            "chunk_interval":0
+        }
+    ]
+}
+```
+
+Note that the `FLIP->USDC` swap will be executed in the next block (85).
+Note also that only the second leg (`USDC->FLIP`) of the `BTC->FLIP` is returned since it is the one that
+involves the pool we requested.
+IMPORTANT: while the `amount` field in the first swap is the exact amount that will be executed, the `amount` in
+the second swap cannot be known precisely before the corresponding first leg (`BTC->USDC`) is executed, and thus
+we only return an approximate amount computed by simulating all scheduled swaps given the current state of the
+liquidity pool.
+All swaps with approximate amounts additionally include `source_asset` and `source_amount` fields to give liquidity
+providers an option to use a custom method for approximating intermediate amounts.
+
+The notification for the next block (85) would look like the following under this example:
+
+```json
+{
+    "block_hash":"0xcd3e34680895f3f98a0fb7f74265cc0b23ed8dc89cddb0cd3e6c60700985d74e",
+    "block_number":85,
+    "swaps": [
+        {
+            "swap_id":2,
+            "request_id":2,
+            "base_asset":{
+                "chain":"Ethereum",
+                "asset":"FLIP"
+            },
+            "quote_asset":{
+                "chain":"Ethereum",
+                "asset":"USDC"
+            },
+            "side":"buy",
+            "amount":"0x1d540d83",
+            "source_asset":{
+                "chain":"Bitcoin",
+                "asset":"BTC"
+            },
+            "source_amount":"0x4b877c",
+            "execute_at":86,
+            "remaining_chunks":0,
+            "chunk_interval":0
+        }
+    ]
+}
+```
+
+Using `swap_id` to identify swaps, swap 1 has already been executed and is thus not present. However, swap 2 appears again as it is still scheduled for execution in the next block.
+In practice a swap can be expected to appear in at least two websocket notifications.
+Note that in the rare case of swaps failing (e.g. due to insufficient liquidity in the pool), they will be re-scheduled for
+the next block, and will appear again in the subscription.
+
+### `cf_subscribe_prewitness_swaps`
+
+> [!CAUTION]
+>
+> *THIS SUBSCRIPTION IS DEPRECATED. Use [cf_subscribe_scheduled_swaps](#cf_subscribe_scheduled_swaps) instead.*
+
+Subscribes to all *potential* incoming swaps of a particular direction. Swaps are only executed after a certain number of block confirmations for each chain, so this RPC allows you to see
+swaps that are *potential* but not yet confirmed. This is useful for liquidity providers to see what swaps are coming in and prepare for them.
+
+> [!WARNING]
+>
+> Because these are witnessed *before* confirmation, they are not guaranteed to be executed *at all* or at that time, since blockchains can re-org.
+
+The current number of confirmations (where 0 confirmations is just in mempool and not in a block) required for each chain are:
+
+#### Mainnet (Berghain)
+
+| Chain      | Confirmations |
+|------------|---------------|
+| Bitcoin    | 3             |
+| Ethereum   | 7             |
+| Arbitrum   | 2             |
+| Polkadot   | Finalization  |
+| Solana     | Finalization  |
+
+
+#### Testnet (Perseverance)
+
+| Chain      | Confirmations |
+|------------|---------------|
+| Bitcoin    | 6             |
+| Ethereum   | 7             |
+| Arbitrum   | 2             |
+| Polkadot   | Finalization  |
+| Solana     | Finalization  |
+
+> For Bitcoin and Ethereum we use probabilistic finality, for Polkadot and Solana we use deterministic finality.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+- `side`: [Side](lp-api#side)
+
+Returns:
+
+- `block_hash`: string
+- `block_number`: number
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+- `side`: [Side](lp-api#side)
+- `amounts`: Array\<[Amount](lp-api#amount)\>
+
+
+
+#### Example
+
+Subscribe:
+```json copy
+{
+   "jsonrpc":"2.0",
+   "id":"1",
+   "method":"cf_subscribe_prewitness_swaps",
+   "params":{
+      "base_asset":{
+         "chain":"Bitcoin",
+         "asset":"BTC"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      },
+      "side":"buy"
+   }
+}
+```
+Notification:
+```json
+{
+   "jsonrpc":"2.0",
+   "method":"cf_subscribe_prewitness_swaps",
+   "params":{
+      "subscription":"KoWRLlMJ2CX1WxmY",
+      "result":{
+         "block_hash":"0x552e6b5daf12347375e5cea885c7398e1cbae1ad0cdbdd0a8e92c2b308c56141",
+         "block_number":4074,
+         "base_asset":{
+            "chain":"Bitcoin",
+            "asset":"BTC"
+         },
+         "quote_asset":{
+            "chain":"Ethereum",
+            "asset":"USDC"
+         },
+         "side":"buy",
+         "amounts":[
+            "0x989680"
+         ]
+      }
+   }
+}
+```
+### `cf_subscribe_pool_price`
+
+Subscribes to the current price of a pair in a particular direction. This is useful for liquidity providers to see the current price of a pool. Note `{"from_asset": "BTC", "to_asset": "USDC }` is not equivalent to `{"from_asset": "USDC", "to_asset": "BTC"}`, therefore the prices maybe different.
+
+It returns the price at the time of beginning the subscription as the first item in the stream. Subsequent items are only returned if there is a *change* in the price.
+
+Parameters:
+
+- `from_asset`: [Asset](lp-api#asset)
+- `to_asset`: [Asset](lp-api#asset)
+
+Returns:
+
+- `price`: [Price](lp-api#price)
+- `sqrt_price`: [Square Root Price](lp-api#square-root-price)
+- `tick`: [Tick](lp-api#tick)
+
+#### Example
+
+Subscribe:
+```json copy
+{
+   "jsonrpc":"2.0",
+   "id":"1",
+   "method":"cf_subscribe_pool_price",
+   "params":{
+      "from_asset":{
+         "chain":"Bitcoin",
+         "asset":"BTC"
+      },
+      "to_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}
+```
+Notification:
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "cf_subscribe_pool_price",
+    "params": {
+        "subscription": "zynJAJ4qG4mIvBEl",
+        "result": {
+            "price": "0x101487bee1c17ddb45ce0badfbe6eff13",
+            "sqrt_price": "0x100a4096906976f1080c4042d",
+            "tick": 50
+        }
+    }
+}
+```
+
+### `cf_subscribe_pool_price_v2`
+
+Subscribes to the current pool price. Note that, at the time of writing, all pools are quoted in USDC, so the `quote_asset` will always be USDC.
+
+It returns an update at every block, even if there are no price changes.
+
+Parameters:
+
+- `base_asset`: [Asset](lp-api#asset)
+- `quote_asset`: [Asset](lp-api#asset)
+
+Returns:
+
+- `block_hash`: string
+- `block_number`: number
+- `sell`: Option\<[Square Root Price](lp-api#square-root-price)\>
+- `buy`: Option\<[Square Root Price](lp-api#square-root-price)\>
+- `range_order`: [Square Root Price](lp-api#square-root-price)
+
+#### Example
+
+Subscribe:
+```json
+{
+   "jsonrpc":"2.0",
+   "id":"1",
+   "method":"cf_subscribe_pool_price_v2",
+   "params":{
+      "base_asset":{
+         "chain":"Bitcoin",
+         "asset":"BTC"
+      },
+      "quote_asset":{
+         "chain":"Ethereum",
+         "asset":"USDC"
+      }
+   }
+}
+```
+Notification:
+```json
+{
+   "jsonrpc":"2.0",
+   "method":"cf_subscribe_pool_price_v2",
+   "params":{
+      "subscription":"F4pKA7E8C3Br63pA",
+      "result":{
+         "block_hash":"0x12c3662b220472de6d839a8a73dfe6ca873835bc202e282e6d008821dca0ac25",
+         "block_number":1209,
+         "base_asset":{
+            "chain":"Bitcoin",
+            "asset":"BTC"
+         },
+         "quote_asset":{
+            "chain":"Ethereum",
+            "asset":"USDC"
+         },
+         "sell":"0x10b09273676d13f5d254e20a20",
+         "buy":"0x10b09273676d13f5d254e20a20",
+         "range_order":"0x10b09273676d13f5d254e20a20"
+      }
+   }
+}
+```

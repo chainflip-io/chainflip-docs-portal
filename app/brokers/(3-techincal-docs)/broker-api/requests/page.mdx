@@ -1,0 +1,372 @@
+---
+
+title: Requests
+
+description: All the subscriptions used in LP API
+
+---
+
+import { Callout } from "nextra/components";
+
+## Broker-API Methods
+
+### `broker_request_swap_deposit_address`
+
+Parameters:
+- `source_asset`: Source [asset](#assets).
+- `destination_asset`: Egress [asset](#assets).
+- `destination_address`: Egress [Address](#addresses).
+- `broker_commission`: Broker Commission in basis points (100th of a percent or 0.01%). Broker operators can choose to charge a fee for the use of their endpoint, and can be set at any value from 1 basis point to 1000 basis points (0.01% - 10%).
+- `channel_metadata`: (Optional) Json object with the [cross-chain messaging]((../advanced/cross-chain-messaging/cross-chain-messaging.mdx) metadata:
+- `message`: Hex encoded call data used after the message is egressed.
+- `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
+- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](../advanced/cross-chain-messaging/sol-ccm.mdx#solana-ccm-additional-data).
+- `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
+- `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
+- `refund_parameters`: (Optional) [Minimum accepted price](../../swapping-basics#minimum-accepted-price-slippage-protection) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price).
+- `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
+
+Where every affiliate broker is defined as follow:
+```json
+{
+	"account": <AccountId>,
+	"bps": <BasisPoints>,
+}
+```
+The total broker fee is the sum of the `broker_commission` + all the `affiliate_fees`.
+
+Return:
+
+- deposit [address](#addresses).
+
+### `broker_register_account`
+
+Parameters:
+
+None
+
+Return:
+
+- `null` if successful, otherwise an error.
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_register_account"}' | jq
+```
+
+### `broker_withdraw_fees`
+
+Withdraw all accumulated fees for a given asset.
+
+Parameters:
+- `asset`: The [asset](#assets) to withdraw.
+- `destination_address`: The [destination address](#addresses) to which the assets should be withdrawn.
+
+Return:
+- tx_hash: Hash,
+- egress_id: [ForeignChain, Number],
+- egress_amount: Amount,
+- egress_fee: Amount,
+- destination_address: [Address](#addresses),
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_withdraw_fees", "params": {"asset": {"chain": "Ethereum", "asset": "ETH"}, "destination_address": "0xabababababababababababababababababababab"}}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "tx_hash": "0x736c159fec96ea84b8eceb49258019625a17e68ab981a3a674261e1df00a0482",
+    "egress_id": [
+      "Ethereum",
+      103
+    ],
+    "egress_amount": 99998499999503000,
+    "egress_fee": 490000,
+    "destination_address": "0xabababababababababababababababababababab"
+  },
+  "id": 1
+}
+```
+
+### `broker_mark_transaction_for_rejection`
+
+Request an incoming transaction to be rejected. Only available for bitcoin. This call will always succeed, but the transaction will
+only be refunded if it hasn't been witnessed on-chain yet. For un-boosted channels this means prior to 6 blocks confirmation, for boosted
+channels its prior to 1 block confirmation, i.e. only while the transaction is in the mempool. Also, a broker can only mark transactions
+going into its own deposit-channels for rejection.
+
+Parameters:
+- `tx_id`: The transaction id of the transaction to be rejected. Only bitcoin is supported, the transaction hash has to be specified as shown in
+the example below. Also, note that the byte order of the hash is *in reverse* to the usual representation in bitcoin block explorers.
+
+Return:
+- Nothing if transaction was successfully marked for rejection, error message otherwise.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_mark_transaction_for_rejection", "params": {"tx_id": {"Bitcoin": "0x736c159fec96ea84b8eceb49258019625a17e68ab981a3a674261e1df00a0482"}}}' | jq
+```
+
+Example output (success):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "null",
+  "id": 1
+}
+```
+
+### `broker_get_open_deposit_channels`
+
+Return all deposit channels which have been opened and are relevant for `broker_mark_transaction_for_rejection`. Only returns bitcoin channels.
+
+Parameters:
+- `query`: Which deposit channels to take into account. Possible values are `Mine` and `All`.
+
+Return:
+- All currently open bitcoin deposit channels that match `query`.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_get_open_deposit_channels", "params": {"query": "Mine"}}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "btc_chain_accounts": [
+      {
+        "Taproot": [ ... ]
+      },
+      {
+        "Taproot": [ ... ]
+      },
+      {
+        "Taproot": [ ... ]
+      }
+    ]
+  },
+  "id": 1
+}
+```
+
+### `broker_request_swap_parameter_encoding`
+
+Create an encoded swap with the given parameters. The encoding depends on the chain of the input asset.
+See [Vault Swaps](../advanced/vault-swaps/vault-swaps.mdx) for more details.
+
+Parameters:
+- `source_asset`: The source [asset](#assets) who's chain we are encoding for.
+- `destination_asset`: Egress [asset](#assets).
+- `destination_address`: Egress [Address](#addresses).
+- `broker_commission`: Broker Commission in basis points (100th of a percent).
+- `extra_parameters`: JSON object with different data depending on the chain of the input asset.
+- `chain`: The chain of the input asset. Use only one of the following, then provide the corresponding parameters:
+- `Bitcoin`:
+- `min_output_amount`: Minimum output amount in the smallest unit of the output asset.
+- `retry_duration`: Number of blocks to wait before refunding the swap.
+- `Ethereum` or `Arbitrum`:
+- `input_amount`: Amount of the input asset in the smallest unit.
+- `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
+- `Solana`:
+- `from`: [Address](#addresses) of the sender.
+- `event_data_account`: [Address](#addresses) of the event data account.
+- `input_amount`: Amount of the input asset in the smallest unit.
+- `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
+- `from_token_account`: (Optional) Associated token account (ATA) of the `from` account.
+- `channel_metadata`: (Optional) Json object with the [cross-chain messaging](../advanced/cross-chain-messaging/cross-chain-messaging.mdx) metadata:
+- `message`: Hex encoded call data used after the message is egressed.
+- `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
+- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](../advanced/cross-chain-messaging/sol-ccm.mdx#solana-ccm-additional-data).
+- `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
+- `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
+- `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
+
+
+Return:
+- Encoded swap data depending on the input asset chain. See [vault swaps](../advanced/vault-swaps/vault-swaps.mdx) for more details.
+
+Example usage:
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "id":1,
+   "jsonrpc":"2.0",
+   "method":"broker_request_swap_parameter_encoding",
+"params":
+  {
+    "source_asset": "BTC",
+    "destination_asset": "ETH",
+    "destination_address": "0xabababababababababababababababababababab",
+    "broker_commission": 10,
+    "extra_parameters":
+      {
+        "chain": "Bitcoin",
+        "min_output_amount": 0,
+        "retry_duration": 0
+      }
+  }
+}' http://my-broker-api:9944
+```
+
+Example output:
+```json
+{
+  "chain": "Bitcoin",
+  "nulldata_payload": "0x0001abababababababababababababababababababab00000000000000000000000000000000000001000200000000",
+  "deposit_address": "bcrt1phs8wzjf79ga4y04ses8alz4dgjlz0jdx0r8uat6w04e5xcvqtqkqe4rx3c"
+}
+```
+
+### `broker_open_private_btc_channel`
+
+A private Bitcoin channel is a dedicated persistent deposit channel unique to a single broker.
+
+Opening a private Bitcoin channel is a requirement for Brokers who wish to support [Vault Swaps](../advanced/vault-swaps/bitcoin.mdx) with Bitcoin as the source asset. This is a one-time operation and requires the Broker to post a bond of 100 $FLIP, meaning the Broker must maintain a balance of at least 100 FLIP. The bond will be unlocked once the Broker [closes the channel](#broker_close_private_btc_channel) again.
+
+Note that even though the *channel* is considered persistent, the corresponding *deposit address* will change every Epoch.
+
+<Callout type="info">
+    Private Channels are *not* required unless the Broker wishes to support Vault Swaps with Bitcoin as source asset.
+</Callout>
+
+Parameters: None
+
+Return: The channel ID (Number)
+
+### `broker_close_private_btc_channel`
+
+Close the private Bitcoin deposit channel. The bond will be returned to your free balance.
+
+Parameters: None
+
+Return: The channel ID (Number)
+
+### `broker_register_affiliate`
+
+Registers an affiliate account and returns the account id of the affiliate.
+
+Parameters:
+- `withdrawal_address`: The withdrawal address of the affiliate.
+
+Return:
+- The account id of the affiliate.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_register_affiliate", "params": {"withdrawal_address": "0x3499b9b27ec38fe019299498958c451d294f6b5e"}}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR",
+  "id": 1
+}
+```
+
+### `broker_affiliate_withdrawal_request`
+
+Request a withdrawal of the affiliate's collected commissions. The affiliate will receive the funds to their registered withdrawal address.
+
+Parameters:
+- `affiliate_account_id`: The account id of the affiliate.
+
+Return:
+- TxHash: The transaction hash of state chain extrinsic.
+- EgressId: The egress id of the withdrawal.
+- EgressAmount: The amount of the withdrawal.
+- EgressFee: The fee of the withdrawal.
+- DestinationAddress: The destination address of the withdrawal.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_affiliate_withdrawal_request", "params": {"affiliate_account_id": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR"}}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "tx_hash": "0x2b130acc1b3d56f8caff1e1adc32b8fbcc25c5ce0d9daa559d073e438c136ce1",
+    "egress_id": [
+      "Ethereum",
+      174
+    ],
+    "egress_amount": "0x6d4186e",
+    "egress_fee": "0x1843a",
+    "destination_address": "0x015c2baa0c23ce4340eb24ca0562883084aacef3"
+  },
+  "id": 1
+}
+```
+
+### `broker_get_affiliates`
+
+Get a list of all affiliates registered to your broker account.
+
+Parameters: None
+
+Return: Array of registered Affiliate Account IDs and Affiliate Details: `[[<AffiliateId>, {"short_id": <ShortId>, "withdrawal_address": <EthereumAddress>}]]`.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_get_affiliates", "params": []}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    [
+      "cFNGCP7MUJCbRyktHizaYnEekiTAPp1Sgopsbt99FNWc6Q1LU",
+      {
+        "short_id": 0,
+        "withdrawal_address": "0xa646ff46ce321cf4259caa01bcc71b54a333532c"
+      }
+    ]
+  ],
+  "id": 1
+}
+```

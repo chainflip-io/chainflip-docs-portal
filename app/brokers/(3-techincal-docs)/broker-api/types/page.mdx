@@ -1,0 +1,35 @@
+---
+
+title: Types
+
+description: All the types used in LP API
+
+---
+
+import { Tabs } from "nextra/components";
+
+
+## Broker-API Types
+
+
+### Assets
+
+Assets are specified as a `{ chain, asset }` object, where the [chain](#chains) is as described below, and the asset is an upper-case string.
+
+Assets returned from the RPCs will always take the explicit form, for example `{ chain: "Ethereum", asset: "ETH" }`
+
+### Chains
+
+Chains are specified as the full name of the chain, capitalized, for example `"Ethereum"`, `"Bitcoin"`, "`Solana"`.
+
+### Addresses
+
+Addresses should be encoded according to their host chains:
+- Ethereum addresses should be encoded as Hex strings, for example `"0xfa36e03defc6e4d140cc61fcaab9d1fbef18642f"`.
+- Polkadot addresses can be encoded using SS58 or Hex strings, for example: `"13zyEWmmLDx63Y99TL9SkxBe1DqPVCrcjXytxM3ZHGRyEJV5"` or `"0x84aec0876dbb3cb7391eeded2eef5fbcf0d1a34f7c9f86f9af205f944b461761"`
+- Bitcoin addresses should be encoded using the appropriate bitcoin standard for the address type. For example `"tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx"` is a valid bech32 address on Bitcoin testnet.
+- Solana addresses can be encoded using bs58 or Hex strings: `"9acHwMGmeoMr5o8Cw1V2U4HjMQwhced3eQP31yYEhYDU"` or `"0x7f799121d6c125f312c5f423a51959ce1d41df06af977e9a17f48b2c82ecf89f"`.
+
+### Price
+
+A 256 bit unsigned fixed point number, with 128 fractional bits, representing a price as the amount of quote asset a single unit of the base asset is valued at. Note the amounts are in the smallest units of both assets.

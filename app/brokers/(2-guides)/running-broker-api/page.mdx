@@ -1,0 +1,206 @@
+---
+
+title: How to run Broker-API
+
+description: Running an Broker-API guide.
+
+---
+
+import { Callout } from "nextra/components";
+
+## Broker API
+
+The Broker API is a standalone client that exposes _Broker_ functionality via a JSON API interface. It can be obtained from the same location as the chainflip-node, i.e. you can install it via `apt`, use the provided docker image or compile it yourself from the sources on Github.
+
+Brokers need to run the client for the API themselves, as the Broker holds keys used to sign extrinsics and collect any fees set for [Deposit Channels](../../../concepts/swaps-amm/deposit-channels-and-brokers). The API client works by pointing it to an RPC node — also run by the same Broker, ideally.
+
+
+### Command line arguments and defaults
+
+- The `state_chain.ws_endpoint` should point at a **synced Chainflip State Chain RPC node**. The default is `ws://localhost:9944` — assuming it is run locally.
+- The `state_chain.signing_key_file` should be a path to a file containing the hex-encoded **private key** for the on-chain Broker account. The default file path is `/etc/chainflip/keys/signing_key_file`. The account should be [funded](/mainnet/validator-setup/funding-and-bidding#adding-funds-to-your-validator-node) and the account role should be set to Broker.
+- The `port` is the port on which the Broker API will listen for connections. Use `0` to assign a random port. The default is `80`.
+- New functionality available from version 1.7+: The `health_check.hostname` and `health_check.port` describe the hostname and port where the Broker API will listen for health check requests. Both arguments have to be specified for the health check server to start.
+
+```bash copy
+chainflip-broker-api --help
+```
+```sh
+chainflip-broker-api
+
+USAGE:
+    chainflip-broker-api [OPTIONS]
+
+OPTIONS:
+    -h, --help
+            Print help information
+
+        --health_check.hostname <HEALTH_CHECK_HOSTNAME>
+            Hostname for this server's health check. Requires the <HEALTH_CHECK_PORT> parameter to be
+            given as well.
+
+        --health_check.port <HEALTH_CHECK_PORT>
+            Port for this server's health check. Requires the <HEALTH_CHECK_HOSTNAME> parameter to be
+            given as well.
+
+        --max_connections <MAX_CONNECTIONS>
+            The maximum number of concurrent websocket connections to accept. [default: 100]
+
+        --port <PORT>
+            The port number on which the broker will listen for connections. Use 0 to assign a
+            random port. [default: 80]
+
+        --state_chain.signing_key_file <SIGNING_KEY_FILE>
+            A path to a file that contains the broker's secret key for signing extrinsics.
+            [default: /etc/chainflip/keys/signing_key_file]
+
+        --state_chain.ws_endpoint <WS_ENDPOINT>
+            The state chain node's RPC endpoint. [default: ws://localhost:9944]
+
+    -v, --version
+            Print version information
+```
+
+## 1. Running Broker API locally
+
+Before you do anything, you need to generate a valid [signing_key](../chainflip-account/creating) and [fund](../chainflip-account/funding) the associated account.
+If you are planning to use [our Docker setup](#option-b-running-the-broker-api-with-docker-compose), instructions on how to generate new keys and fund your account are provided in the github repo.
+
+### Option A: Using the pre-compiled binaries
+
+Download the `chainflip-broker-api` software and the `chainflip-node`:
+
+```bash copy
+apt-get install chainflip-broker-api
+apt-get install chainflip-node
+```
+
+Generate a new signing key:
+
+```bash copy
+docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-1.6.7 generate-keys --json > broker-keys.json
+
+mkdir -p /etc/chainflip/keys
+cat broker-keys.json | jq -r '.signing_account_id' > /etc/chainflip/keys/signing_key_file
+```
+
+For a full list of command line arguments, see `chainflip-broker-api --help` and `chainflip-node --help`.
+
+To use the default configuration, run:
+
+- Testnet
+```bash copy
+chainflip-node --chain /etc/chainflip/perseverance.chainspec.json --rpc-methods=unsafe --sync=warp
+
+chainflip-broker-api --state_chain.signing_key_file /etc/chainflip/keys/signing_key_file
+```
+
+<Callout type="warning">
+  Make sure the signing key file is not exposed. Access to this key gives full control over the Broker account.
+</Callout>
+
+- Mainnet
+```bash copy
+chainflip-node --chain /etc/chainflip/berghain.chainspec.json --rpc-methods=unsafe --sync=warp
+
+chainflip-broker-api --state_chain.signing_key_file /etc/chainflip/keys/signing_key_file
+```
+
+<Callout type="warning">
+  Avoid exposing the broker-api publicly with these settings, as anyone could redeem your earned fees!
+</Callout>
+
+### Option B: Running the Broker API with Docker Compose
+
+Alternatively, for a quick start with the Broker API, we have provided a docker-compose setup that runs the Broker API and a State Chain node (required).
+
+- [Perseverance Testnet Setup](https://github.com/chainflip-io/chainflip-perseverance)
+- [Mainnet Setup](https://github.com/chainflip-io/chainflip-mainnet-apis)
+
+### Option C: Running the Broker API in Kubernetes
+
+Chainflip maintains a helm chart for running the Broker API in Kubernetes.
+
+- [Broker API Helm Chart](https://github.com/chainflip-io/chainflip-helm-charts/tree/main/charts/broker-api)
+
+This setup requires a running instance of the State Chain (`chainflip-node`). You can use this helm chart to deploy the Broker API and the State Chain in the same Kubernetes cluster.
+
+- [Node Helm Chart](https://github.com/chainflip-io/chainflip-helm-charts/tree/main/charts/node)
+
+## 2. Registering the account
+
+After being funded, before you can fully interact with the Broker API, your account needs to be [registered](#broker_register_account) as a Broker account.
+
+
+## Deployment Schema
+
+Brokers (and LPs) should ideally run their own local RPC nodes. These nodes connect to the network and expose the LP & Broker APIs locally to the backend they want to use.
+
+<br />
+<img src="/integration/image.png" alt="Broker API deploying example" />
+<br />
+<Callout type="warning">
+    Avoid using the public RPC node since its particularly vulnerable to DDOS or
+    other various attacks
+</Callout>
+
+
+## Working Example
+
+<Callout type="info">
+    This example assumes the node that is exposing the Statechain RPC's is **funded**.
+</Callout>
+
+1. Open a terminal and run:
+
+```bash copy
+RUST_LOG=info chainflip-broker-api \
+    --state_chain.ws_endpoint=ws://localhost:9944 \
+    --state_chain.signing_key_file /etc/chainflip/keys/signing_key_file \
+    --port 62378 # or whatever port you want to use
+```
+
+It will print `🎙 Server is listening on 0.0.0.0:62378.` and continue to run.
+
+2. Open another terminal and run:
+
+Register as a broker if you are not already.
+```bash copy
+curl 'http://localhost:62378/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_register_account"}'
+```
+
+3. Request a swap deposit address:
+
+```bash copy
+curl 'http://localhost:62378/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_request_swap_deposit_address", "params": ["ETH", "FLIP","0xabababababababababababababababababababab", 0]}'
+```
+The result is the hex encoded deposit address, channel id, expiry block, and the issued block:
+
+```json
+{
+    "jsonrpc":"2.0",
+    "result":{
+        "address":"0xe720e23f62efc931d465a9d16ca303d72ad6c0bc",
+        "issued_block":5418,
+        "channel_id":6,
+        "source_chain_expiry_block":2954
+    },
+    "id":1
+}
+```
+
+## Limitations
+
+- The current API architecture supports only **`ws`** and not **`wss`**.
+
+## Troubleshooting
+
+### Broker crashing
+
+If your Broker API crashes upon startup or when submitting requests, please ensure that you have updated it to the latest version. Make sure the version aligns with the specified engine and node versions. You can verify this easily using the `--version` command.

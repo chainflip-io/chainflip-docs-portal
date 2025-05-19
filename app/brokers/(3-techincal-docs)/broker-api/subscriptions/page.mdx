@@ -1,0 +1,56 @@
+---
+
+title: Subscriptions
+
+description: All the subscriptions used in Broker API
+
+---
+
+import { Tabs } from "nextra/components";
+
+## Broker-API subscriptions
+
+
+### `broker_subscribe_transaction_screening_events`
+
+Subscribe to all runtime events related to screening of transactions.
+
+Parameters: None
+
+Return:
+- A websocket subscription for transaction screening events. It sends notifications about all screening events, i.e. not filtered by broker.
+There are the following event types:
+ - `TransactionRejectionRequestReceived`
+ - `TransactionRejectedByBroker`
+ - `TransactionRejectionRequestExpired`
+
+Example input (the `websocat` utility is useful for testing websocket subscriptions):
+
+```bash copy
+websocat ws://localhost
+{"id": 1, "jsonrpc": "2.0", "method": "broker_subscribe_transaction_screening_events"}
+```
+
+Example subscription message:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "broker_subscribe_transaction_screening_events",
+  "params": {
+    "subscription": 1667528407325164,
+    "result": {
+      "block_hash": "0xf3562acd35af86b19a1b8464ef589743b4482b36854f780f4b72199a0759e602",
+      "block_number": 242,
+      "btc_events": [
+        {
+          "TransactionRejectionRequestReceived": {
+            "account_id": "cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy",
+            "tx_id": "0x8c985d3252aa7d02fade82c55e3423c583d09f544acf80c4116987ed3a5d8b7d"
+          }
+        }
+      ]
+    }
+  }
+}
+```

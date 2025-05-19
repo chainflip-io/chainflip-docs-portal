@@ -1,0 +1,50 @@
+---
+
+title: Index
+
+description: The Broker API rpc functions
+
+---
+
+import { Cards, Callout } from 'nextra/components'
+
+
+
+## Broker-API
+
+Here are the RPCs useful for brokers that are available on Broker-API binary.
+
+<Callout type="info">
+    The following RPCs are available on `chainflip-broker-api` binary
+</Callout>
+
+## Types
+
+<Cards>
+    <Cards.Card title="Assets" href="/brokers/broker-api/types#assets" />
+    <Cards.Card title="Chains" href="/brokers/broker-api/types#chains" />
+    <Cards.Card title="Addresses" href="/brokers/broker-api/types#addresses" />
+    <Cards.Card title="Price" href="/brokers/broker-api/types#price" />
+</Cards>
+
+## Requests
+
+<Cards num={2}>
+    <Cards.Card title="broker_request_swap_deposit_address" href="/brokers/broker-api/requests#broker_request_swap_deposit_address" />
+    <Cards.Card title="broker_get_open_deposit_channels" href="/brokers/broker-api/requests#broker_get_open_deposit_channels" />
+    <Cards.Card title="broker_withdraw_fees" href="/brokers/broker-api/requests#broker_withdraw_fees" />
+    <Cards.Card title="broker_mark_transaction_for_rejection" href="/brokers/broker-api/requests#broker_mark_transaction_for_rejection" />
+    <Cards.Card title="broker_request_swap_parameter_encoding" href="/brokers/broker-api/requests#broker_request_swap_parameter_encoding" />
+    <Cards.Card title="broker_open_private_btc_channel" href="/brokers/broker-api/requests#broker_open_private_btc_channel" />
+    <Cards.Card title="broker_close_private_btc_channel" href="/brokers/broker-api/requests#broker_close_private_btc_channel" />
+    <Cards.Card title="broker_register_affiliate" href="/brokers/broker-api/requests#broker_register_affiliate" />
+    <Cards.Card title="broker_get_affiliates" href="/brokers/broker-api/requests#broker_get_affiliates" />
+    <Cards.Card title="broker_affiliate_withdrawal_request" href="/brokers/broker-api/requests#broker_affiliate_withdrawal_request" />
+</Cards>
+
+
+## Subscriptions
+
+<Cards num={2}>
+    <Cards.Card title="broker_subscribe_transaction_screening_events" href="/brokers/broker-api/subscriptions#broker_subscribe_transaction_screening_events" />
+</Cards>

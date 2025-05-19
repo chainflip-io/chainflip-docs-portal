@@ -1,0 +1,64 @@
+---
+
+title: Index
+
+description: The LP API bundle allows liquidity providers to put up orders programmatically through the JIT AMM.
+
+---
+
+import { Cards, Callout } from 'nextra/components'
+
+
+
+## LP-API
+
+Here are the RPCs useful for liquidity providers that are available on LP-API binary.
+
+<Callout type="info">
+    The following RPCs are available on `chainflip-lp-api` binary
+</Callout>
+
+## Types
+
+<Cards>
+  <Cards.Card title="Addresses" href="/lp/lp-api/types#addresses" />
+  <Cards.Card title="Amount" href="/lp/lp-api/types#amount" />
+  <Cards.Card title="Liquidity" href="/lp/lp-api/types#liquidity" />
+  <Cards.Card title="Asset" href="/lp/lp-api/types#asset" />
+  <Cards.Card title="Chain" href="/lp/lp-api/types#chain" />
+  <Cards.Card title="Order IDs" href="/lp/lp-api/types#order-ids" />
+  <Cards.Card title="Order Updates" href="/lp/lp-api/types#order-updates" />
+  <Cards.Card title="Range Order Size" href="/lp/lp-api/types#range-order-size" />
+  <Cards.Card title="Tick" href="/lp/lp-api/types#tick" />
+  <Cards.Card title="Boost Fee" href="/lp/lp-api/types#boost-fee" />
+  <Cards.Card title="Wait For" href="/lp/lp-api/types#wait-for" />
+</Cards>
+
+## Requests
+
+<Cards num={2}>
+    <Cards.Card title="lp_register_account" href="/lp/lp-api/requests#lp_register_account" />
+    <Cards.Card title="lp_liquidity_deposit" href="/lp/lp-api/requests#lp_liquidity_deposit" />
+    <Cards.Card title="lp_request_liquidity_deposit_address" href="/lp/lp-api/requests#lp_request_liquidity_deposit_address" />
+    <Cards.Card title="lp_register_liquidity_refund_address" href="/lp/lp-api/requests#lp_register_liquidity_refund_address" />
+    <Cards.Card title="lp_withdraw_asset" href="/lp/lp-api/requests#lp_withdraw_asset" />
+    <Cards.Card title="lp_transfer_asset" href="/lp/lp-api/requests#lp_transfer_asset" />
+    <Cards.Card title="lp_update_range_order" href="/lp/lp-api/requests#lp_update_range_order" />
+    <Cards.Card title="lp_set_range_order" href="/lp/lp-api/requests#lp_set_range_order" />
+    <Cards.Card title="lp_update_limit_order" href="/lp/lp-api/requests#lp_update_limit_order" />
+    <Cards.Card title="lp_set_limit_order" href="/lp/lp-api/requests#lp_set_limit_order" />
+    <Cards.Card title="lp_free_balances" href="/lp/lp-api/requests#lp_free_balances" />
+    <Cards.Card title="lp_get_open_swap_channels" href="/lp/lp-api/requests#lp_get_open_swap_channels" />
+    <Cards.Card title="lp_request_redemption" href="/lp/lp-api/requests#lp_request_redemption" />
+    <Cards.Card title="lp_order_fills" href="/lp/lp-api/requests#lp_order_fills" />
+    <Cards.Card title="lp_cancel_all_orders" href="/lp/lp-api/requests#lp_cancel_all_orders" />
+    <Cards.Card title="lp_cancel_orders_batch" href="/lp/lp-api/requests#lp_cancel_orders_batch" />
+    <Cards.Card title="lp_schedule_swap" href="/lp/lp-api/requests#lp_schedule_swap" />
+</Cards>
+
+
+## Subscriptions
+
+<Cards>
+    <Cards.Card title="lp_subscribe_order_fills" href="/lp/lp-api/subscriptions#lp_subscribe_order_fills" />
+</Cards>

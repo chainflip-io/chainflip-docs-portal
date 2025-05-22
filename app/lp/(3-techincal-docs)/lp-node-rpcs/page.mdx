@@ -20,7 +20,7 @@ Here are the RPCs and subscriptions that are useful for liquidity providers but 
 
 ## Requests
 
-<Cards num={3}>
+<Cards num={2}>
     <Cards.Card title="cf_required_asset_ratio_for_range_order" href="/lp/lp-node-rpcs/requests#cf_required_asset_ratio_for_range_order" />
     <Cards.Card title="cf_pool_info" href="/lp/lp-node-rpcs/requests#cf_pool_info" />
     <Cards.Card title="cf_pool_depth" href="/lp/lp-node-rpcs/requests#cf_pool_depth" />
@@ -30,15 +30,16 @@ Here are the RPCs and subscriptions that are useful for liquidity providers but 
     <Cards.Card title="cf_pool_range_order_liquidity_value" href="/lp/lp-node-rpcs/requests#cf_pool_range_order_liquidity_value" />
     <Cards.Card title="cf_free_balances" href="/lp/lp-node-rpcs/requests#cf_free_balances" />
     <Cards.Card title="cf_scheduled_swaps" href="/lp/lp-node-rpcs/requests#cf_scheduled_swaps" />
-    <Cards.Card title="cf_get_trading_strategies" href="/lp/lp-node-rpcs/requests#cf_get_trading_strategies" />
+    <Cards.Card title={<span className="badge-success after:content-['New']">cf_get_trading_strategies</span>} href="/lp/lp-node-rpcs/requests#cf_get_trading_strategies" />
+
 </Cards>
 
 
 ## Subscriptions
 
-<Cards>
+<Cards num={2}>
     <Cards.Card title="cf_subscribe_scheduled_swaps" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_scheduled_swaps" />
-    <Cards.Card title="cf_subscribe_prewitness_swaps" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_prewitness_swaps" />
-    <Cards.Card title="cf_subscribe_pool_price" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price" />
+    <Cards.Card title={<span className="badge-danger after:content-['Deprecated']">cf_subscribe_prewitness_swaps</span>} href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_prewitness_swaps" />
+    <Cards.Card title={<span className="badge-danger after:content-['Deprecated']">cf_subscribe_pool_price</span>} href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price" />
     <Cards.Card title="cf_subscribe_pool_price_v2" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price_v2" />
 </Cards>

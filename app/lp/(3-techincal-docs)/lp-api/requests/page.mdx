@@ -6,7 +6,7 @@ description: All the subscriptions used in LP API
 
 ---
 
-import { Tabs } from "nextra/components";
+import {Callout, Tabs} from "nextra/components";
 
 ## LP-API Methods
 
@@ -18,12 +18,12 @@ Parameters: None
 
 Returns: The transaction hash of the extrinsic, otherwise an error.
 
-### `lp_liquidity_deposit`
+### `lp_liquidity_deposit` <span className="badge-danger after:content-['Deprecated']"/>
 
-> [!CAUTION]
->
-> This RPC is deprecated as of 1.9.
-> Please use the [`lp_request_liquidity_deposit_address`](#lp_request_liquidity_deposit_address) RPC instead.
+<Callout type="error">
+This RPC is deprecated as of 1.9.
+Please use the [`lp_request_liquidity_deposit_address`](#lp_request_liquidity_deposit_address) RPC instead.
+</Callout>
 
 Submits an extrinsic that opens a deposit address that you can send assets to.
 Once any assets you send are detected they will be credited to this account's free balance, and can then be used to create orders.
@@ -1388,7 +1388,7 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 
-### `lp_schedule_swap`
+### `lp_schedule_swap` <span className="badge-success after:content-['New']"/>
 
 This RPC allows you to initiate an [internal swap](../../swapping/integrations/advanced/internal-swaps).
 

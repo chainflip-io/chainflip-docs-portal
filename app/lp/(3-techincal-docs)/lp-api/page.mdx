@@ -38,7 +38,8 @@ Here are the RPCs useful for liquidity providers that are available on LP-API bi
 
 <Cards num={2}>
     <Cards.Card title="lp_register_account" href="/lp/lp-api/requests#lp_register_account" />
-    <Cards.Card title="lp_liquidity_deposit" href="/lp/lp-api/requests#lp_liquidity_deposit" />
+    <Cards.Card title={<span className="badge-danger after:content-['Deprecated']">lp_liquidity_deposit</span>} href="/lp/lp-api/requests#lp_liquidity_deposit" />
+
     <Cards.Card title="lp_request_liquidity_deposit_address" href="/lp/lp-api/requests#lp_request_liquidity_deposit_address" />
     <Cards.Card title="lp_register_liquidity_refund_address" href="/lp/lp-api/requests#lp_register_liquidity_refund_address" />
     <Cards.Card title="lp_withdraw_asset" href="/lp/lp-api/requests#lp_withdraw_asset" />
@@ -53,7 +54,7 @@ Here are the RPCs useful for liquidity providers that are available on LP-API bi
     <Cards.Card title="lp_order_fills" href="/lp/lp-api/requests#lp_order_fills" />
     <Cards.Card title="lp_cancel_all_orders" href="/lp/lp-api/requests#lp_cancel_all_orders" />
     <Cards.Card title="lp_cancel_orders_batch" href="/lp/lp-api/requests#lp_cancel_orders_batch" />
-    <Cards.Card title="lp_schedule_swap" href="/lp/lp-api/requests#lp_schedule_swap" />
+    <Cards.Card title={<span className="badge-success after:content-['New']">lp_schedule_swap</span>} href="/lp/lp-api/requests#lp_schedule_swap" />
 </Cards>
 
 

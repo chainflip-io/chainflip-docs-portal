@@ -8,15 +8,7 @@ description: The state chain node has some RPCs and subscriptions that are usefu
 
 ## RPC requests
 
-Examples are using `curl`.
-
-##### optional last parameter
-
-- `at`: Block Hash as string (Optional)
-
-This defaults to the last block if not provided, it is useful to specify this argument in case it is required to query the chain at an old state.
-
-`cf_required_asset_ratio_for_range_order`
+### `cf_required_asset_ratio_for_range_order`
 
 Returns the ratio of assets that would be required to create a range order at the specified tick range.
 
@@ -25,7 +17,7 @@ Parameters:
 - `base_asset`: [Asset](lp-api#asset).
 - `quote_asset`: [Asset](lp-api#asset).
 - `tick_range`: Range\<[Tick](lp-api#tick)\>
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
 ``` json
@@ -88,7 +80,7 @@ Parameters:
 
 - `base_asset`: [Asset](lp-api#asset).
 - `quote_asset`: [Asset](lp-api#asset).
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - `limit_order_fee_hundredth_pips`: number
@@ -167,7 +159,7 @@ Parameters:
 - `base_asset`: [Asset](lp-api#asset).
 - `quote_asset`: [Asset](lp-api#asset).
 - `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the range of prices over which depth will be calculated. The first number should always be less than the second.
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
 ``` json
@@ -253,7 +245,7 @@ Parameters:
 
 - `base_asset` [Asset](lp-api#asset).
 - `quote_asset` [Asset](lp-api#asset).
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - `limit_orders`: AskBidMap\<Array\<LimitOrderLiquidity\>\>
@@ -362,7 +354,7 @@ Parameters:
 - `base_asset`: [Asset](lp-api#asset)
 - `quote_asset`: [Asset](lp-api#asset)
 - `lp`: The [account](lp-api#addresses) to return the orders of.
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 
@@ -480,7 +472,7 @@ Parameters:
 - `base_asset`: [Asset](lp-api#asset)
 - `quote_asset`: [Asset](lp-api#asset)
 - `orders`: The number of orders to return. As this is increased the returned orderbook representation will more accurately reflect the pool's liquidity distribution. This number is inclusively bounded between 1 and 16384.
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 
@@ -615,7 +607,7 @@ Parameters:
 - `quote_asset` [Asset](lp-api#asset).
 - `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the start and end of the price range the order is over as ticks. The first number should always be less than the second.
 - `liquidity`: The liquidity of the range order as an [amount](lp-api#amounts).
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - `base`: [Amount](lp-api#amount)
@@ -675,7 +667,7 @@ Returns the free balances of all assets for a specified account at the current b
 Parameters:
 
 - `account_id`: The [account_id](lp-api#addresses) to return the balances of.
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - A JSON object containing the list of [Chains](lp-api#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](lp-api#amount)).
@@ -730,7 +722,7 @@ Parameters:
 
 - `base_asset` [Asset](lp-api#asset).
 - `quote_asset` [Asset](lp-api#asset).
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - Array\<ScheduledSwap\>
@@ -806,7 +798,7 @@ Returns all trading strategies optionally filtered by the LP account used to dep
 Parameters:
 
 - `lp` (optional) The [account](lp-api#addresses) owning the strategies to return (if not provided, all strategies will be returned).
-- `at`: Block Hash as string (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - `Array<TradingStrategyEntry>`, where `TradingStrategyEntry` is defined as follows:

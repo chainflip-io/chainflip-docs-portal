@@ -80,11 +80,13 @@ export default {
     items: {
       index: '',
       'lp-account': '',
+      'trading-strategies': '',
       __: {
         type: 'separator',
         title: 'Guides'
       },
       'how-to-provide-liquidity': '',
+      'how-to-register-as-lp': '',
       'running-lp-api': '',
       'how-boost-works': '',
       ___: {

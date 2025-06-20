@@ -29,24 +29,32 @@ export default {
     title: 'The Protocol',
     items: {
       'introduction-thesis': '',
-      'system-overview': '',
-      'the-state-chain': '',
+      'protocol-overview': '',
+      'just-in-time-amm-protocol': '',
       'ingress-witnessing-deposits': '',
       'egress-broadcasting-funds': '',
-      'frost-signature-scheme': '',
       'governance-and-security': '',
-      // _: {
-      //   type: 'separator',
-      //   title: 'Swapping'
-      // },
+      'mev-potential-on-chainflip': '',
+      'usdusdc-denominated-pools': '',
       __: {
         type: 'separator',
         title: 'Guides'
       },
+      'how-swapping-works': '',
       'funding-state-chain-account': '',
       ___: {
         type: 'separator',
         title: 'Technical Reference'
+      },
+      'frost-signature-scheme': '',
+      'vaults': {
+        title: 'Vaults',
+        items: {
+          'bitcoin-vault-design': '',
+          'evm-ethereum-vault-design': '',
+          'substrate-dot-vault-design': '',
+          'solana-vault-design': '',
+        }
       },
       'supported-chains-assets': {
         title: 'Supported Chains/Assets',
@@ -56,15 +64,14 @@ export default {
           'mainnet-addresses': '',
         }
       },
-      'vaults': {
-        title: 'Vaults',
+      'token-economics': {
+        title: 'Token Economics',
         items: {
-          'bitcoin-vault-design': '',
-          'evm-ethereum-vault-design': '',
-          'substrate-dot-vault-design': '',
-          'solana-vault-design': '',
+          'current-token-economics-2025-and-beyond': '',
+          'incentive-design-emission-and-burning': '',
+          'genesis-token-economics-pre-2023': '',
         }
-      }
+      },
     }
   },
   lp: {
@@ -137,6 +144,7 @@ export default {
     title: 'Validators',
     items: {
       index: '',
+      'validators-role': '',
       'validator-auctions-bonds-and-rewards': '',
       'validator-types-and-states': '',
       'reputation-and-slashing': '',

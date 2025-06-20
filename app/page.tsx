@@ -87,7 +87,7 @@ const IndexPage: FC = () => {
                   <div style={{ fontSize: '.9rem' }} className="leading-8">
                     <code>{'<Link .../>'}</code>
                     <br />
-                    <code>{'<Image .../>'}</code>
+                    <code>{'<Image alt="" .../>'}</code>
                   </div>
                 </div>
               </div>

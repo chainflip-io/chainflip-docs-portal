@@ -154,7 +154,20 @@ export default {
         type: 'separator',
         title: 'Guides'
       },
-      'how-to-provide-liquidity': '',
+      'mainnet': {
+        title: 'Mainnet Validator Setup',
+        items: {
+          'validator-setup': '',
+          'important-notes': '',
+        }
+      },
+      'testnet': {
+        title: 'Testnet Validator Setup',
+        items: {
+          'validator-setup': '',
+          'important-notes': '',
+        }
+      }
     }
   },
 }

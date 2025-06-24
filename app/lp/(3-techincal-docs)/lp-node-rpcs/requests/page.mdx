@@ -14,9 +14,9 @@ Returns the ratio of assets that would be required to create a range order at th
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset).
-- `quote_asset`: [Asset](lp-api#asset).
-- `tick_range`: Range\<[Tick](lp-api#tick)\>
+- `base_asset`: [Asset](/lp/lp-api/types#asset).
+- `quote_asset`: [Asset](/lp/lp-api/types#asset).
+- `tick_range`: Range\<[Tick](/lp/lp-api/types#tick)\>
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
@@ -28,8 +28,8 @@ Where `Range` is defined as follow:
 ```
 
 Return:
-- `base`: [Amount](lp-api#amount)
-- `quote`: [Amount](lp-api#amount)
+- `base`: [Amount](/lp/lp-api/types#amount)
+- `quote`: [Amount](/lp/lp-api/types#amount)
 
 The ratio of these two amounts is the needed ratio for range orders over the same range given the current price, i.e. the asset composition of all range orders with the same range will match this ratio.
 
@@ -78,17 +78,17 @@ Returns the fees percentages LP's earn in the given pool.
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset).
-- `quote_asset`: [Asset](lp-api#asset).
+- `base_asset`: [Asset](/lp/lp-api/types#asset).
+- `quote_asset`: [Asset](/lp/lp-api/types#asset).
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
 - `limit_order_fee_hundredth_pips`: number
 - `range_order_fee_hundredth_pips`: number
-- `range_order_total_fees_earned`: PoolPairsMap\<[Amount](lp-api#amount)\>
-- `limit_order_total_fees_earned`: PoolPairsMap\<[Amount](lp-api#amount)\>
-- `range_total_swap_inputs`: PoolPairsMap\<[Amount](lp-api#amount)\>
-- `limit_total_swap_inputs`: PoolPairsMap\<[Amount](lp-api#amount)\>
+- `range_order_total_fees_earned`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
+- `limit_order_total_fees_earned`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
+- `range_total_swap_inputs`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
+- `limit_total_swap_inputs`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
 
 where `PoolPairsMap` is defined as follows:
 ```json
@@ -156,9 +156,9 @@ Returns depth of a specified pool between two prices.
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset).
-- `quote_asset`: [Asset](lp-api#asset).
-- `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the range of prices over which depth will be calculated. The first number should always be less than the second.
+- `base_asset`: [Asset](/lp/lp-api/types#asset).
+- `quote_asset`: [Asset](/lp/lp-api/types#asset).
+- `tick_range`: Range\<[Tick](/lp/lp-api/types#tick)\> Representing the range of prices over which depth will be calculated. The first number should always be less than the second.
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
@@ -186,7 +186,7 @@ Where `UnidirectionalPoolDepth` is defined as follows:
     }
 }
 ```
-The [Amount](lp-api#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
+The [Amount](/lp/lp-api/types#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
 
 #### Example
 
@@ -243,8 +243,8 @@ Returns all the liquidity available for swaps in a particular pool, at a given b
 
 Parameters:
 
-- `base_asset` [Asset](lp-api#asset).
-- `quote_asset` [Asset](lp-api#asset).
+- `base_asset` [Asset](/lp/lp-api/types#asset).
+- `quote_asset` [Asset](/lp/lp-api/types#asset).
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
@@ -272,7 +272,7 @@ while `LimitOrderLiquidity` and `RangeOrderLiquidity` are respectively:
 }
 ```
 
-For limit orders two lists of prices (as [Tick](lp-api#tick)) and the amount/depth ([Amount](lp-api#amount)) available at those prices.
+For limit orders two lists of prices (as [Tick](/lp/lp-api/types#tick)) and the amount/depth ([Amount](/lp/lp-api/types#amount)) available at those prices.
 
 For range orders, an ordered list of pairs. The first element of the pair is a tick/price and the second is the liquidity between that tick and the next tick in the list. Forming a histogram of the liquidity in the range order pool.
 
@@ -351,9 +351,9 @@ Returns all the orders associated with a specified account in a particular pool.
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset)
-- `quote_asset`: [Asset](lp-api#asset)
-- `lp`: The [account](lp-api#addresses) to return the orders of.
+- `base_asset`: [Asset](/lp/lp-api/types#asset)
+- `quote_asset`: [Asset](/lp/lp-api/types#asset)
+- `lp`: The [account](/lp/lp-api/types#addresses) to return the orders of.
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
@@ -469,8 +469,8 @@ Returns an orderbook representation of all the liquidity in the specified pool. 
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset)
-- `quote_asset`: [Asset](lp-api#asset)
+- `base_asset`: [Asset](/lp/lp-api/types#asset)
+- `quote_asset`: [Asset](/lp/lp-api/types#asset)
 - `orders`: The number of orders to return. As this is increased the returned orderbook representation will more accurately reflect the pool's liquidity distribution. This number is inclusively bounded between 1 and 16384.
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
@@ -603,15 +603,15 @@ Returns the value of a hypothetical range order, e.g. the assets which would be 
 
 Parameters:
 
-- `base_asset` [Asset](lp-api#asset).
-- `quote_asset` [Asset](lp-api#asset).
-- `tick_range`: Range\<[Tick](lp-api#tick)\> Representing the start and end of the price range the order is over as ticks. The first number should always be less than the second.
-- `liquidity`: The liquidity of the range order as an [amount](lp-api#amounts).
+- `base_asset` [Asset](/lp/lp-api/types#asset).
+- `quote_asset` [Asset](/lp/lp-api/types#asset).
+- `tick_range`: Range\<[Tick](/lp/lp-api/types#tick)\> Representing the start and end of the price range the order is over as ticks. The first number should always be less than the second.
+- `liquidity`: The liquidity of the range order as an [amount](/lp/lp-api/types#amount).
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
-- `base`: [Amount](lp-api#amount)
-- `quote`: [Amount](lp-api#amount)
+- `base`: [Amount](/lp/lp-api/types#amount)
+- `quote`: [Amount](/lp/lp-api/types#amount)
 
 The value of the hypothetical range order if it where burnt now, in amounts of the base and pair assets.
 
@@ -666,11 +666,11 @@ Returns the free balances of all assets for a specified account at the current b
 
 Parameters:
 
-- `account_id`: The [account_id](lp-api#addresses) to return the balances of.
+- `account_id`: The [account_id](/lp/lp-api/types#addresses) to return the balances of.
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
-- A JSON object containing the list of [Chains](lp-api#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](lp-api#amount)).
+- A JSON object containing the list of [Chains](/lp/lp-api/types#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](/lp/lp-api/types#amount)).
 
 #### Example
 
@@ -720,8 +720,8 @@ Returns all scheduled swaps in a pool. Works similarly to [cf_subscribe_schedule
 
 Parameters:
 
-- `base_asset` [Asset](lp-api#asset).
-- `quote_asset` [Asset](lp-api#asset).
+- `base_asset` [Asset](/lp/lp-api/types#asset).
+- `quote_asset` [Asset](/lp/lp-api/types#asset).
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
@@ -797,7 +797,7 @@ Returns all trading strategies optionally filtered by the LP account used to dep
 
 Parameters:
 
-- `lp` (optional) The [account](lp-api#addresses) owning the strategies to return (if not provided, all strategies will be returned).
+- `lp` (optional) The [account](/lp/lp-api/types#addresses) owning the strategies to return (if not provided, all strategies will be returned).
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:

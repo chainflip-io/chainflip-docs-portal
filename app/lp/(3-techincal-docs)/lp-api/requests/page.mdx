@@ -30,12 +30,12 @@ Once any assets you send are detected they will be credited to this account's fr
 We recommend waiting until the extrinsic is finalized before sending any assets to the deposit address to ensure the assets are correctly credited to your account.
 
 Parameters:
-- [`asset`](#asset): The asset you wish to deposit.
-- [`wait_for`](#wait-for) (Optional)
-- [`boost_fee`](#boost-fee) (Optional): The maximum amount you are willing to pay to [boost](/lp/boost/how-boost-works) the deposit, expressed as basis points.
+- [`asset`](/lp/lp-api/types#asset): The asset you wish to deposit.
+- [`wait_for`](/lp/lp-api/types#wait-for) (Optional)
+- [`boost_fee`](/lp/lp-api/types#boost-fee) (Optional): The maximum amount you are willing to pay to [boost](/lp/boost/how-boost-works) the deposit, expressed as basis points.
 
-[Response](#wait-for-result):
-- The encoded deposit [address](#addresses) that you should send the deposit to.
+[Response](/lp/lp-api/types#wait-for-result):
+- The encoded deposit [address](/lp/lp-api/types#addresses) that you should send the deposit to.
 
 #### Example
 ```sh
@@ -73,12 +73,12 @@ Once any assets you send are detected they will be credited to this account's fr
 We recommend waiting until the extrinsic is finalized before sending any assets to the deposit address to ensure the assets are correctly credited to your account.
 
 Parameters:
-- [`asset`](#asset): The asset you wish to deposit.
-- [`wait_for`](#wait-for) (Optional)
-- [`boost_fee`](#boost-fee) (Optional): The maximum amount you are willing to pay to [boost](/lp/boost/how-boost-works) the deposit, expressed as basis points.
+- [`asset`](/lp/lp-api/types#asset): The asset you wish to deposit.
+- [`wait_for`](/lp/lp-api/types#wait-for) (Optional)
+- [`boost_fee`](/lp/lp-api/types#boost-fee) (Optional): The maximum amount you are willing to pay to [boost](/lp/boost/how-boost-works) the deposit, expressed as basis points.
 
-[Response](#wait-for-result):
-- An object containing The encoded deposit [address](#addresses) and the block number of the deposit chain at which the deposit address will expire.
+[Response](/lp/lp-api/types#wait-for-result):
+- An object containing The encoded deposit [address](/lp/lp-api/types#addresses) and the block number of the deposit chain at which the deposit address will expire.
 ```json
 {
   "deposit_address": <String>,
@@ -119,11 +119,11 @@ curl -H "Content-Type: application/json" -d '{
 Submits an extrinsic that sets your lp account's refund address for one of the external chains. For your lp account to have any assets associated with it, you must set a refund address with the external chain which those assets are associated with. For example, to create an order in the DOT-USDC pool, you must have Polkadot and Ethereum refund addresses registered. You can change your registered addresses at anytime via this RPC.
 
 Parameters:
-- [`chain`](#chain): The external chain the refund address exists on.
-- [`address`](#addresses): The refund address for the specified external chain. Any assets associated with that chain will be transferred there if a refund is needed, e.g. "USDC" would be transferred to the address associated with "Ethereum".
+- [`chain`](/lp/lp-api/types#chain): The external chain the refund address exists on.
+- [`address`](/lp/lp-api/types#addresses): The refund address for the specified external chain. Any assets associated with that chain will be transferred there if a refund is needed, e.g. "USDC" would be transferred to the address associated with "Ethereum".
 
 Return:
-- The transaction hash of the extrinsic that registered the new withdrawal [address](#foreign-chain-addresses).
+- The transaction hash of the extrinsic that registered the new withdrawal [address](/lp/lp-api/types#foreign-chain-addresses).
 
 #### Example
 ```sh
@@ -150,12 +150,12 @@ curl -H "Content-Type: application/json" -d '{
 This RPC allows you to withdraw assets associated with your lp account that are not currently deployed in orders. Note fees you earn are not automatically redeployed into your orders, and are therefore immediately withdrawable via this RPC.
 
 Parameters:
-- [`asset_amount`](#amount): The amount to be withdrawn.
-- [`asset`](#asset): The withdrawn asset.
-- [`destination_address`](#addresses): The address to send the withdrawn funds to.
-- [`wait_for`](#wait-for)
+- [`asset_amount`](/lp/lp-api/types#amount): The amount to be withdrawn.
+- [`asset`](/lp/lp-api/types#asset): The withdrawn asset.
+- [`destination_address`](/lp/lp-api/types#addresses): The address to send the withdrawn funds to.
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 - Egress id, which is used as the identifier for the operation/s to egress/withdraw the requested funds. It is structured as a JSON object like this:
 ```json
 [<chain>, <unsigned 64 bit integer ID>]
@@ -192,9 +192,9 @@ curl -H "Content-Type: application/json" -d '{
 This RPC allows you to transfer assets internally between your lp accounts. The destination account must be registered as an LP account.
 
 Parameters:
-- [`asset_amount`](#amount): The amount to be transferred.
-- [`asset`](#asset): The asset to be transferred.
-- [`destination_account`](#account): The account to transfer the funds to.
+- [`asset_amount`](/lp/lp-api/types#amount): The amount to be transferred.
+- [`asset`](/lp/lp-api/types#asset): The asset to be transferred.
+- [`destination_account`](/lp/lp-api/types#account): The account to transfer the funds to.
 
 Response:
 
@@ -230,14 +230,14 @@ It can also be used to move assets from one range order to a new range order (in
 When creating a new order via this method you must specify the initial `tick_range` to use, but assuming you don't wish to change the `tick_range` as described above and you only want to increase or decrease the size of the existing order, you don't need to specify the `tick_range` in future updates to that order.
 
 Parameters:
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`id`](#order-ids)
-- `tick_range` (Optional): A JSON array of two [Ticks](#tick), representing the lower and upper bound of the order's price range. Must be specified if no range order with the specified `id` exists in this pool. If not specified, the tick range of the existing order with the same `id` will be used.
-- [`size_change`](#order-updates)
-- [`wait_for`](#wait-for)
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`id`](/lp/lp-api/types#order-ids)
+- `tick_range` (Optional): A JSON array of two [Ticks](/lp/lp-api/types#tick), representing the lower and upper bound of the order's price range. Must be specified if no range order with the specified `id` exists in this pool. If not specified, the tick range of the existing order with the same `id` will be used.
+- [`size_change`](/lp/lp-api/types#order-updates)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 A chronological list of all the updates that were done as part of the operation. Each item in the JSON array is an object with this structure:
 
 ```json
@@ -333,14 +333,14 @@ It can also be used to move assets from one range order to a new range order (in
 When creating a new order via this method you must specify the initial `tick_range` to use, but assuming you don't wish to change the `tick_range` as described above and you only want to change the size of the existing order, you don't need to specify the `tick_range` in future updates to that order.
 
 Parameters:
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`id`](#order-ids)
-- `tick_range` (Optional): A JSON array of two [Ticks](#tick), representing the lower and upper bound of the order's price range. Must be specified if no range order with the specified `id` exists in this pool. If not specified, the tick range of the existing order with the same `id` will be used.
-- [`size`](#range-order-size)
-- [`wait_for`](#wait-for)
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`id`](/lp/lp-api/types#order-ids)
+- `tick_range` (Optional): A JSON array of two [Ticks](/lp/lp-api/types#tick), representing the lower and upper bound of the order's price range. Must be specified if no range order with the specified `id` exists in this pool. If not specified, the tick range of the existing order with the same `id` will be used.
+- [`size`](/lp/lp-api/types#range-order-size)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 A chronological list of all the updates that were done as part of the operation. Each item in the JSON array is an object with this structure:
 
 ```json
@@ -434,16 +434,16 @@ It can also be used to change the price of an existing limit order, by setting t
 When creating a new order via this method you must specify the `tick` to use, but assuming you don't wish to change the `tick` as described above and you only want to increase or decrease the size of the existing order, you don't need to specify the `tick` in future updates to that order.
 
 Parameters:
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`side`](#side)
-- [`id`](#order-ids)
-- [`tick`](#tick) (Optional): The price of the limit order.
-- [`amount_change`](#amount): The amount of assets to add or remove from the limit order. For "buy" orders, this is measured in the quote asset, and for "sell" orders, this is measured in the base asset.
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`side`](/lp/lp-api/types#side)
+- [`id`](/lp/lp-api/types#order-ids)
+- [`tick`](/lp/lp-api/types#tick) (Optional): The price of the limit order.
+- [`amount_change`](/lp/lp-api/types#amount): The amount of assets to add or remove from the limit order. For "buy" orders, this is measured in the quote asset, and for "sell" orders, this is measured in the base asset.
 - `dispatch_at` (Optional): If specified this RPC instead of submitting an extrinsic that does the specified operation, will submit an extrinsic that schedules the operation to occur at the specified block number. Note the RPC doesn't wait until the operation is scheduled, but only for the extrinsic (to the extent specified by the `wait_for` argument). If the `dispatch_at` block has already elapsed, this method returns an error.
-- [`wait_for`](#wait-for)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 A chronological list of all the updates that were done as part of the operation. Each item in the JSON array is an object with this structure:
 
 ```json
@@ -525,21 +525,21 @@ and specifying the `id` of the existing order.
 When creating a new order via this method you must specify the `tick` to use, but assuming you don't wish to change the `tick` as described above and you only want to increase or decrease the size of the existing order, you don't need to specify the `tick` in future updates to that order.
 
 Parameters:
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`side`](#side)
-- [`id`](#order-ids)
-- [`tick`](#tick) (Optional): The price of the limit order.
-- [`sell_amount`](#amount): The amount of assets the limit order should sell. For "buy" orders, this is measured in the quote asset, and for "sell" orders, this is measured in the base asset.
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`side`](/lp/lp-api/types#side)
+- [`id`](/lp/lp-api/types#order-ids)
+- [`tick`](/lp/lp-api/types#tick) (Optional): The price of the limit order.
+- [`sell_amount`](/lp/lp-api/types#amount): The amount of assets the limit order should sell. For "buy" orders, this is measured in the quote asset, and for "sell" orders, this is measured in the base asset.
 - `dispatch_at` (Optional): If specified this RPC instead of submitting an extrinsic that does the specified operation, will submit an extrinsic that schedules the operation to occur at the specified block number. Note the RPC doesn't wait until the operation is scheduled, but only for the extrinsic (to the extent specified by the `wait_for` argument). If the `dispatch_at` block has already elapsed, this method returns an error.
-- [`wait_for`](#wait-for)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 - `close_order_at` (Optional): (available from version 1.10 onwards) If specified this RPC will also schedule the order to be closed at the given block.
 Must be within 3600 blocks of the latest block and larger than the `dispatch_at` argument if provided.
 Note that the scheduled close will still get executed even if the limit order has been updated/closed before the `close_order_at` block.
 In particular, note that a schedule close operation cannot be canceled.
 
-[Response](#wait-for-result):
-- A chronological list of all the [updates](#order-updates) that were made as part of the operation. Each item in the list is a JSON object:
+[Response](/lp/lp-api/types#wait-for-result):
+- A chronological list of all the [updates](/lp/lp-api/types#order-updates) that were made as part of the operation. Each item in the list is a JSON object:
 
 ```json
 {
@@ -772,9 +772,9 @@ Please see [Redeeming Funds & Retiring](../../../mainnet/validator-setup/redeemi
 Returns the transaction hash of the extrinsic that requested the redemption.
 
 Parameters:
-- [`redeem_address`](#addresses): The Ethereum address to send the redeemed funds to.
-- [`exact_amount`](#asset) (Optional): The amount of flip to redeem. If not specified, all $FLIP will be redeemed.
-- [`executor_address`](#addresses) (Optional): Restricts the `executeRedemption` function call in the [Gateway contract](../swapping-and-aggregation/evm-integration/statechain-gateway.mdx) to only be callable by the specified address for this redemption. If not specified, anyone can execute the redemption.
+- [`redeem_address`](/lp/lp-api/types#addresses): The Ethereum address to send the redeemed funds to.
+- [`exact_amount`](/lp/lp-api/types#asset) (Optional): The amount of flip to redeem. If not specified, all $FLIP will be redeemed.
+- [`executor_address`](/lp/lp-api/types#addresses) (Optional): Restricts the `executeRedemption` function call in the [Gateway contract](../swapping-and-aggregation/evm-integration/statechain-gateway.mdx) to only be callable by the specified address for this redemption. If not specified, anyone can execute the redemption.
 
 #### Example
 
@@ -791,7 +791,7 @@ curl -H "Content-Type: application/json" \
      http://localhost:10589
 ```
 
-Redeem an exact [`amount`](#amount):
+Redeem an exact [`amount`](/lp/lp-api/types#amount):
 
 ```bash copy
 curl -H "Content-Type: application/json" \
@@ -928,9 +928,9 @@ If WaitFor is set to InBlock/Finalized the command will take multiple blocks to 
 > In general we suggests to stop submitting new orders/updates until the command is fully executed.
 
 Parameters:
-- [`wait_for`](#wait-for)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 A chronological list of all the updates that were done as part of the operation. Each item in the JSON array is an object with one of the following structure:
 
 ```json
@@ -1256,23 +1256,23 @@ This RPC allows you to cancel multiple orders in the same extrinsic (up to 100),
 
 Parameters:
 - orders: Array of `CloseOrder` (max 100 elements)
-- [`wait_for`](#wait-for)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
 where CloseOrder is an object defined as follow:
 
 for LimitOrder:
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`side`](#side)
-- [`id`](#order-ids)
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`side`](/lp/lp-api/types#side)
+- [`id`](/lp/lp-api/types#order-ids)
 
 for RangeOrder
-- [`base_asset`](#asset)
-- [`quote_asset`](#asset)
-- [`id`](#order-ids)
+- [`base_asset`](/lp/lp-api/types#asset)
+- [`quote_asset`](/lp/lp-api/types#asset)
+- [`id`](/lp/lp-api/types#order-ids)
 
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 A chronological list of all the updates that were done as part of the operation. Each item in the JSON array is an object with one of the following structure:
 
 ```json
@@ -1402,20 +1402,20 @@ curl -H "Content-Type: application/json" -d '
 This RPC allows you to initiate an [internal swap](../../swapping/integrations/advanced/internal-swaps).
 
 Parameters:
-- [`amount`](#amount): The amount of input asset to swap.
-- [`input_asset`](#asset): The asset to swap from.
-- [`output_asset`](#asset): The asset to swap into.
+- [`amount`](/lp/lp-api/types#amount): The amount of input asset to swap.
+- [`input_asset`](/lp/lp-api/types#asset): The asset to swap from.
+- [`output_asset`](/lp/lp-api/types#asset): The asset to swap into.
 - `retry_duration`: A number of blocks for which the swap will be retried if it fails (see [FoK](../../swapping/swapping-basics#minimum-accepted-price-slippage-protection) section).
 - [`min_price`](#hex-price): The minimum price to swap at (see [FoK](../../swapping/swapping-basics#minimum-accepted-price-slippage-protection) section).
 - `dca_params`: (optional) `DcaParameters`, which determines whether (and how) the swap should be split into chunks (see [DCA](../../swapping/swapping-basics#dollar-cost-average-dca-improving-price) section).
-- [`wait_for`](#wait-for)
+- [`wait_for`](/lp/lp-api/types#wait-for)
 
 where `DcaParameters` is an object containing the following fields:
 
 - `number_of_chunks`: The number of chunks to split the swap into.
 - `chunk_interval`: The number of blocks between each chunk.
 
-[Response](#wait-for-result):
+[Response](/lp/lp-api/types#wait-for-result):
 - `swap_request_id`: The id of the initiated swap request.
 
 <details>

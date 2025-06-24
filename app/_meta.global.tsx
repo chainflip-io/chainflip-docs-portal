@@ -155,17 +155,16 @@ export default {
         title: 'Guides'
       },
       'mainnet': {
-        title: 'Mainnet Validator Setup',
+        title: 'Mainnet',
         items: {
           'validator-setup': '',
           'important-notes': '',
         }
       },
       'testnet': {
-        title: 'Testnet Validator Setup',
+        title: 'Testnet',
         items: {
           'validator-setup': '',
-          'important-notes': '',
         }
       }
     }

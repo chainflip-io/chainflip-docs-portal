@@ -1,0 +1,293 @@
+---
+
+title: Funding
+
+---
+
+import { Callout } from "nextra/components";
+
+## Funding & Bidding
+
+Before your Validator is considered for the active set, you must fund your account with the necessary amount of `$FLIP`, register it as a validator then signal to the chain that you want to start bidding.
+To fund your validator, head to the [auctions](https://auctions.chainflip.io/) app.
+
+### Adding Funds to your Validator Node
+
+In order to fund your account, you should use the Auctions App. You could also interact with the Smart Contract directly, but since that's ugly we'll use the Dashboard for the purposes of this tutorial.
+
+1. Make sure you have `$FLIP` (ERC-20) in your EVM crypto wallet.
+2. Go to [Chainflip Auctions page](https://auctions.chainflip.io/) > "[**My Nodes**](https://auctions.chainflip.io/nodes)".
+3. Connect your crypto wallet containing the `$FLIP`.
+4. Click the button "**+ Add Node**" > You should see the "**Register new node**" dialog.
+5. Enter the Validator ID you got during [Generating Keys](../validator-setup/keys.md) step — your `Public Key(SS58)`— and the amount of `$FLIP` you want to fund. Click on "**Add Funds**".
+6. Your crypto wallet will ask you to sign two transactions. The first one is a token approval and the second one transfers and add funds to your validator.
+7. Once you have successfully funded your account, jump back to your terminal and run the following:
+
+```bash copy
+sudo systemctl restart chainflip-engine
+```
+
+<Callout type="warning">
+  **You have not finished all the steps!** Please continue to the bottom of your
+  page otherwise your node will show as{" "}
+  <span style={{ color: "red" }}>**Offline**</span>
+</Callout>
+
+Even after you successfully added funds, your node could still be in the <span style={{ color: "red" }}>**Offline**</span> state. Just wait for your node
+to sync all the blocks.
+
+### Register Node as a Validator
+
+Registering your node as a validator requires the node's balance to be a minimum of 10% of the current minimum active bid (MAB).
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip register-account-role Validator
+```
+
+After succesfully registering your node you should see the new node on "**My Nodes**" page.
+
+### Rotate Keys
+
+Registration gives your account access to Validator-specific commands on the State Chain. The first of these is rotating and registering your authorship keys:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip rotate
+```
+
+### Start Bidding
+
+Now your node should be synced, your account be fully registered, your ports open, your Chainflip Engine humming along. Check the logs once more, check your node status in the web app, then crack your knuckles one more time and signal your intent to bid in the next auction:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
+```
+
+<Callout type="warning">
+Make sure you rotate session keys and execute the commnad to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
+</Callout>
+
+### Set Vanity Name
+
+Set a Vanity Name for your validator by running:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip vanity-name "my-cool-validator 😎"
+```
+
+### Stop Bidding
+
+If you want to retire a node and redeem all its funds, you will first need to signal your intent to stop bidding:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator stop-bidding
+```
+
+This will ensure you don't participate in the next auction, and your funds will become unbonded. You can then redeem your funds.
+
+> Note you may not stop bidding if the auction has already begun.
+
+
+## Rebalancing
+
+If you administer multiple Validators, you may want to move funds between them to optimise your auction bids. This can be cumbersome using the normal funding and redeeming flow, so there is a way to short-circuit this and transfer funds directly between accounts.
+
+Moving funds between Validators is known as *rebalancing*.
+
+Similarly to redemptions, rebalancing is subject to certain restrictions:
+
+- The destination account must already exist: account creation through a rebalance operation is not possible.
+If the source account is currently bidding in an auction, the destination account must also be in a bidding state.
+- [Bound addresses](./advanced-account-management) on the destination account must match the source account.
+- If the funds to be transferred are associated with a [restricted source address](./advanced-account-management#restricted-balances), the transferred funds will have the same restrictions in the destination account.
+
+To rebalance, use the `chainflip-cli`. For example, to move 10,000 $FLIP to account `cFK1qK1oSfZqZzka4ABWRybf24GtUjYJuWj2A1g9aHpcGny5e`:
+
+```console
+chainflip-cli rebalance --exact=10000 cFK1qK1oSfZqZzka4ABWRybf24GtUjYJuWj2A1g9aHpcGny5e
+```
+
+If the funds originated at the restricted address `0xdeadbeef`, use this command:
+
+```console
+chainflip-cli rebalance --exact=10000 --restricted-address=0xdeadbeef cFK1qK1oSfZqZzka4ABWRybf24GtUjYJuWj2A1g9aHpcGny5e
+```
+
+Run `chainflip-cli rebalance --help` for a full list of options.
+
+As of version 1.10, the CLI options are:
+
+```console
+chainflip-cli rebalance --help
+
+Rebalance FLIP by transferring it to another account.
+
+Usage: chainflip-cli rebalance [OPTIONS] <RECIPIENT_ACCOUNT_ID>
+
+Arguments:
+  <RECIPIENT_ACCOUNT_ID>  The State Chain account ID of the recipient.
+
+Options:
+      --exact <AMOUNT>                           Amount to transfer in FLIP (omit this option to redeem all available FLIP). Up to 6 decimal places, any more are rounded.
+      --restricted-address <RESTRICTED_ADDRESS>  An optional Ethereum address under which restriction conditions we transfer the FLIP.
+  -h, --help                                     Print help
+```
+
+
+## Redeeming Funds & Retiring
+
+You can redeem your `$FLIP`, subject to certain conditions. In order to do so, the funds may neither be bonded, nor tied up in auction bidding.
+
+For a detailed account of the process and its restrictions see [Redeeming ERC-20 `$FLIP` through the Gateway](../../../concepts/validator-network/state-chain-flip-gateway.mdx#redeeming-erc-20-flip-through-the-gateway).
+
+### Retiring from Auctions
+
+First of all, you need to end your participation in auctions. To do so, use the Chainflip CLI:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator stop-bidding
+```
+
+Your node will cease to participate in auctions. When your node has left the validator set, it will still be a `Keyholder` for another epoch. You then have to wait another epoch until your `$FLIP` can be redeemed, so that your node is no longer a `Keyholder`. Once your node is no longer a Keyholder you can redeem all your `$FLIP` by following the next steps.
+
+### Redemption Process in Auctions App
+
+The redemption process is initiated via the [Chainflip Auctions App](https://auctions.chainflip.io/auctions) > **My Nodes** alongside the Chainflip CLI. You will need the address of the Ethereum account to which you want your `$FLIP` to be sent.
+
+In the Auctions App, select "Redeem". This will guide you through the process.
+
+You have two options. By default, the command will redeem the maximum available funds from your account, taking into account the bond.
+
+**Example:**
+
+Imagine your account balance is **1000** `$FLIP` and the bond is **800** `$FLIP`.
+
+You can redeem **200** `$FLIP` minus the tax, to the Ethereum account `0xcf..cf`:
+
+**195** `$FLIP` net.
+
+```bash copy
+sudo chainflip-cli redeem 0xcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf
+```
+
+Alternatively, you can specify an exact amount you wish to redeem, say **50** `$FLIP`:
+
+```bash copy
+sudo chainflip-cli redeem --exact 50 0xcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf
+```
+
+This process will generate a **Redemption Certificate** that will be sent to the Ethereum network.
+
+Once you have completed the request, continue in the Auctions App, where the redemption should display.
+
+### Redemption Tax
+
+The network requires a **Redemption Tax of 5 `$FLIP`** per redemption. This is to reduce *redemption request spam*. These requests are expensive for the network to process, and the cost for this is now carried by the requester, via the tax.
+
+### Waiting Period (48h)
+
+A waiting period of **48 hours** applies before a certificate can be used to redeem. This delay is a security measure to limit the risk in Chainflip's Vaults.
+
+### Execution window (24h)
+
+There is a window of 24h to execute the redemption (these 24h starts as soon as the waiting period ends).
+
+The redemption certificate has an expiration time of **24 hours** once the waiting period is over. If the redemption certificate expires, you will need to refund the `$FLIP` amount back to your State Chain account balance and start the process over. To do so, you only need to click on 'Refund FLIP to your balance'.
+
+### Deregistration and Account Deletion
+
+Accounts are automatically deleted once all funds have been redeemed.
+
+Before making this final redemption, your account must be deregistered:
+
+```bash copy
+sudo chainflip-cli validator deregister-account
+```
+
+Deregistration is not possible until your account has stopped bidding and is no longer a key holder for an active Epoch (usually this implies that at least one Epoch has passed since your account was last in the authority set).
+
+
+
+## Advanced Account Management
+
+Chainflip does not directly support full account delegation, however it provides some advanced account management features that can be used by delegation service providers to provide additional guarantees to their users.
+
+This process looks like this:
+1. User A (Operator) sets up a State Chain account and an associated validator node.
+2. User B (Delegator) has an Ethereum wallet with `$FLIP` they want to "delegate" to the Operator's node.
+3. The Operator can bind the Delegator's Ethereum address as their "Redeem Address", which is an **irreversible action**. See [Redeem Address Binding](#redeem-address-binding)
+4. Funds can only be redeemed to the Delegator's Ethereum address from now on - including future rewards but only the Operator can trigger any redemption claims. This means **a degree of trust is still required**.
+
+<Callout type="warning">
+    **Given the funds are still under the Operator's custody, a misbehaving or malfunctioning Operator can still lose Delegator's funds through slashing, losing the account key, etc.**
+</Callout>
+
+### Redeem Address Binding
+
+Any account may be explicitly *bound* to a single redemption address. Henceforth, any redemption request from that account can *only redeem to this exact address*.
+
+<Callout type="warning">
+    Redeem Address Binding is a **one-off irreversible operation**.
+</Callout>
+
+**Example #1:**
+
+> *The account `cFc00Ld00d` is bound to the redeem address `0xdeadbeef`. This was a bad idea since it's unlikely that `cFc00Ld00d` knows the private key for `0xdeadbeef`, so his or her funds are effectively permanently locked. Do not do this.*
+>
+
+**Example #2:**
+
+> *A liquid staking provider wants to allow users to pool their `$FLIP` through a smart contract on Ethereum, to then fund a validator account. They bind their validator account to the smart contract address. This binding is permanent and irrevocable, so users can now rest assured that there is no way the pooled funds can be redeemed to any other address.*
+
+In order to bind a redemption address, use the `chainflip-cli`. Log on to the node that contains the keys to the account for which you want to bind a redemption address.
+
+In order to check if the account is currently bound to a redemption address:
+
+```bash copy
+chainflip-cli get-bound-redeem-address
+```
+
+In order to permanently bind a redeem address:
+
+```bash copy
+chainflip-cli bind-redeem-address <ETH_ADDRESS>
+```
+
+### Redemption Execution Address Binding
+
+Similar to the above, redemptions can be restricted such that only a single specific Ethereum address can be the *executor* of a redemption.
+
+In order to bind an executor address, proceed as above using the `chainflip-cli`.
+
+Query for any currently bound address like so:
+
+```bash copy
+chainflip-cli get-bound-executor-address
+```
+
+In order to permanently bind an executor address:
+
+```bash copy
+chainflip-cli bind-executor-address <ETH_ADDRESS>
+```
+
+Now, if you want to redeem, you must explicitly provide this address as the executor:
+
+```bash copy
+chainflip-cli redeem --exact 15314 <REDEEM_ADDRESS> <EXECUTOR_ADDRESS>
+```
+
+This can also be done via [Auctions App > My Nodes](https://auctions.chainflip.io/nodes).
+
+### Restricted Balances
+
+Certain funding *sources* are considered restricted, such that funds originating from that source can only be redeemed back to whence they came. In order to enforce this, we track the amount of funds added from restricted addresses and ensure that the account always has enough funds to cover its obligations to these addresses.
+
+This is used primarily to enforce vesting restrictions. Some of the `$FLIP` tokens in existence may be locked in a vesting contract that controls when the tokens can be freely accessed. In the meantime, we still would like the tokens to be used productively in the protocol. However this is not possible without restricting the funds, since otherwise the vesting restrictions can be trivially circumvented by funding an account and immediately redeeming to any other address.
+
+**Example:**
+
+> *The address `0xabc` is marked as restricted because it is a smart contract holding `$FLIP` for early investors.*
+>
+> *Imagine an account has 1,000 `$FLIP` funded from address `0xabc` and earns a return of 10 `$FLIP` after some period of time. Subject to other restrictions (bond etc.) those 10 `$FLIP` can be redeemed to any address. Any more than that can only be redeemed from the restricted balance of 1,000 `$FLIP`, and only to the originating address `0xabc`.*
+
+In case of Restricted addresses the limitation of [Redeem Address Binding](./advanced-account-management#redeem-address-binding) and [Redemption Execution Address Binding](./advanced-account-management#redemption-execution-address-binding) are not applied. Withdrawals to restricted addresses ignore any address bindings.

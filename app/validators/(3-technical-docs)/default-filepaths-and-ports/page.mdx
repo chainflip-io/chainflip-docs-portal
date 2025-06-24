@@ -1,0 +1,74 @@
+---
+
+title: Default Filepaths & Ports
+
+description: Here's a quick reference guide to help you quickly locate where things are by default in the software, or where we suggested in these docs.
+
+---
+
+
+## Default Filepaths & Ports
+
+Here's a quick reference guide to help you quickly locate where things are by default in the software, or where we suggested in these docs:
+
+### Chainflip Engine
+
+| Name                   | Default Value                                  |
+|------------------------|-----------------------------------------------|
+| Binary Path            | /usr/bin/chainflip-engine                    |
+| Config Path            | /etc/chainflip/config/Settings.toml          |
+| Systemd Service File   | /lib/systemd/system/chainflip-engine.service  |
+| Ethereum Key           | /etc/chainflip/keys/ethereum_key_file        |
+| Log File               | /var/log/chainflip-engine.log                |
+| Default Discovery Port | 8078 (TCP)                                   |
+
+### Chainflip Node
+
+| Name                   | Default Value                                  |
+|------------------------|-----------------------------------------------|
+| Binary Path            | /usr/bin/chainflip-node                      |
+| Systemd Service File   | /lib/systemd/system/chainflip-engine.service  |
+| Subkey Key             | /etc/chainflip/keys/signing_key_file          |
+| Node p2p Key           | /etc/chainflip/keys/node_key_file             |
+| Log File               | /var/log/chainflip-engine.log                |
+| P2P Port               | 30333 (TCP)                                  |
+
+### Logs and Metrics Streaming
+
+#### Promtail
+
+| Name                  | Default Value                            |
+|-----------------------|------------------------------------------|
+| Binary Path           | /usr/local/bin/promtail                 |
+| Config File           | /opt/promtail/chainflip-promtail.yaml   |
+| Systemd Service File  | /etc/systemd/system/promtail.service    |
+| Port                  | -                                       |
+
+
+#### Node Exporter
+| Name                  | Default Value                            |
+|-----------------------|------------------------------------------|
+| Binary Path           | /usr/local/bin/node_exporter            |
+| Config File           | -                                       |
+| Systemd Service File  | /etc/systemd/system/node_exporter.service |
+| Port                  | 9100                                    |
+
+
+#### Process Exporter
+
+| Name                  | Default Value                                  |
+|-----------------------|-----------------------------------------------|
+| Binary Path           | /usr/local/bin/process_exporter              |
+| Config File           | /etc/process_exporter/process-exporter.yaml  |
+| Systemd Service File  | /etc/systemd/system/process_exporter.service |
+| Port                  | 9256                                         |
+
+
+#### Substrate (chainflip-node) Prometheus
+
+| Name                  | Default Value                            |
+|-----------------------|------------------------------------------|
+| Binary Path           | -                                       |
+| Config File           | -                                       |
+| Systemd Service File  | -                                       |
+| Port                  | 9615                                    |

@@ -165,8 +165,16 @@ export default {
         title: 'Testnet',
         items: {
           'validator-setup': '',
+          'funding': '',
         }
-      }
+      },
+      ___: {
+        type: 'separator',
+        title: 'Technical Reference'
+      },
+      'maintenance': '',
+      'common-problems': '',
+      'default-filepaths-and-ports': ''
     }
   },
 }

@@ -1,0 +1,143 @@
+---
+
+title: Swapping Basics
+
+description: Chainflip swaps are fire-and-forget, meaning once a deposit is made, users don't need to do anything else for the swap to take place.
+
+---
+
+import {Callout, Steps} from "nextra/components";
+
+
+## Swapping Basics
+
+Chainflip swaps are _fire-and-forget_, meaning once a deposit is made, users don't need to do anything else for the swap to take place. In a nutshell, the swapping process starts when a deposit is made to the _State Chain_ through a process called [Ingress](../../concepts/validator-network/ingress-witnessing-deposits).
+
+The [State Chain](../../concepts/validator-network/the-state-chain) is an application-specific blockchain designed for the Chainflip protocol, making cross-chain swap transactions efficient.
+Whenever funds are deposited, the State Chain witnesses the deposit, where they are bundled and processed to be swapped in the [Just-In-Time AMM](../../concepts/swaps-amm/just-in-time-amm-protocol) protocol — all in the same block.
+Once the funds are swapped, the new assets are ready to be sent to the destination address by a process called [Egress](../../concepts/validator-network/egress-broadcasting-funds).
+To learn more on how Chainflip swaps work on the protocol level, check the [Native Swap Flow](/protocol/how-swapping-works) guide.
+
+At a high level, the process can be described with the following steps:
+
+<Steps>
+    ### Initiating a swap
+    This first step can be done through the [Swapping app](https://swap.chainflip.io/) (frontend), the [Javascript SDK](integrations/javascript-sdk/introduction), or directly using the [Chainflip CLI client](integrations/running-a-broker/broker-api#broker_request_swap_deposit_address). There are two primary methods to start a Chainflip Swap:
+    * **Generating a Deposit Address**: This method involves creating a unique deposit address where the user can send the funds. Once the deposit is made, the swap process is automatically triggered. See [Request Deposit Address](integrations/javascript-sdk/swap-assets/request-deposit-address-v2.md) method.
+    * **Direct call to the Chainflip Vault:** This method is a function call to a smart contract for EVM chains and a program call to a program for Solana, including a payload. This makes *aggregation* easier for application developers (think DEX Aggregators). For more details see [Vault swaps](integrations/advanced/vault-swaps/vault-swaps).
+
+    ### Witnessing the deposit
+    The Validator network will monitor open [Deposit Channels](../../concepts/swaps-amm/deposit-channels-and-brokers) for incoming transactions and Vault Contracts for swap calls. Upon seeing a deposit for a Swap, it will be witnessed and registered on the State Chain.
+
+    <Callout type="warning">
+        There's a delay between the deposit transaction and its confirmation on the
+        State Chain. On Ethereum, is 7 blocks (\~84 seconds), whereas Bitcoin is 3
+        blocks (\~30 minutes).
+    </Callout>
+
+    > [!TIP]
+    >
+    > At this point, you can use the [Block Explorer](https://scan.chainflip.io/swaps) to see the swap '_in progress_'.
+
+    ### Processing the swap
+    Once the swap is Witnessed it is ready to be swapped in the [Just-In-Time AMM](../../concepts/swaps-amm/just-in-time-amm-protocol) protocol. Swaps are automatically bundled and processed so that LPs can bid on swaps in the same block where they occur.\
+    For swap routes that require more than one pool, i.e. BTC -> ETH, **each swap is conducted sequentially, usually in the same block:** BTC -> USDC, and then USDC -> ETH.
+
+</Steps>
+
+### Example: USDC (Ethereum) to BTC (Bitcoin)
+
+Essentially, the process of JIT swaps on Chainflip looks like this for a user:
+
+1. A user initiates a swap by depositing **10,000 USDC** **to buy** **BTC**. The deposit is made through a swap [Deposit Channel](../../concepts/swaps-amm/deposit-channels-and-brokers) linked to their BTC address.
+2. Market Makers monitor the Ethereum blockchain for the deposit and anticipate its execution on the Chainflip State Chain.
+3. **After 7 Ethereum blocks**, the deposit transaction is considered **final in the State Chain**, and is expected to be executed in about 48 seconds (8 Chainflip State Chain blocks).
+4. Market Makers now **must include any limit or range order updates** to compete for the trade on the **BTC-USDC pool**. They use risk model calculations and their capital on other exchanges to determine their best possible price for the trade.
+5. The swap deposit reaches the witness threshold and is executed. The swap consumes some range orders before the pool price matches the next best limit order.
+6. The Chainflip Validator network sends the swapped BTC funds to the user's native BTC wallet address.
+
+### Example: BTC (Bitcoin) to ETH (Ethereum)
+
+The process is almost identical to the previous example, but in this case, there are **two pools involved**:
+
+1. A user initiates a swap by depositing **1 BTC** **to buy** **ETH**. The deposit is made through a swap [Deposit Channel](../../concepts/swaps-amm/deposit-channels-and-brokers) linked to their ETH address.
+2. Market Makers monitor the Bitcoin blockchain for the deposit and anticipate its execution on the Chainflip State Chain.
+3. **After 3 Bitcoin blocks** (\~30 minutes), the deposit transaction is considered **final in the State Chain**, it is expected to be executed in about 48 seconds (8 Chainflip State Chain blocks).
+4. Market Makers now **must include any limit or range order updates** to compete for the trade on the **BTC-USDC and ETH-USDC pools**. They use risk model calculations and their capital on other exchanges to determine their best possible price for the trade.
+5. When a swap route requires multiple swaps through pools, **each swap is conducted sequentially, usually in the same block**.
+6. The swap deposit reaches the witness threshold and is executed. Each swap consumes some range orders before the pool price matches the next best limit order.
+7. The Chainflip Validator network sends the swapped ETH funds to the user's ETH wallet address at the end.
+
+## Slippage protection: Minimum accepted price
+
+Chainflip allows to set a minimum accepted price for a swap.
+This allows to protect users against price changes between a quote and the execution of a swap (also known as slippage protection).
+
+When specifying a minimum accepted price, the protocol also requires a refund address and a retry duration. A retry duration is the time window (measured in blocks) during which a swap must be executed before the deposit is refunded to the refund address.
+
+If a swap is triggered through a deposit channel with a minimum accepted price, the Chainflip protocol will only swap the deposited assets if the available liquidity leads to a price that is equal or better than the specified minimum price.
+If this is not possible within the specified retry duration, the deposited assets will be refunded to the specified refund address on the source chain.
+
+Minimum accepted prices are enforced on the AMM level and do not take deposit fees and broadcast fees into account.
+If a deposit is refunded, the Chainflip protocol deducts a deposit fee and a broadcast fee from the refund amount to pay for the transactions sent by the protocol.
+If the deposit was boosted, the boost fee is not refunded.
+
+## Dollar Cost Average (DCA): Improving price
+
+Any swap can be broken down into smaller "chunks" which are executed over time.
+This results in longer execution time, but reduces certain risks for LPs which should translate into better pricing for the end user.
+The chunks are executed according to DCA parameters, which can be set when initiating a swap
+and include the number of chunks and the interval between their execution.
+
+If [slippage protection](#minimum-accepted-price-slippage-protection) is enabled, the minimum price requirement is applied to each
+individual chunk.
+If a chunk is executed, but does not meet the minimum price requirement, it is retried a few blocks later, pushing back the
+execution of any remaining chunks.
+If the same chunk reaches its retry limit, it will be refunded along with any remaining chunks in a single transaction to the user specified refund address.
+In that case, any amount successfully swapped in prior chunks is still sent to the user-specified destination address.
+
+### Example 1: Successful DCA swap
+
+1. A user initiates a swap by depositing **5 BTC** to get **USDC** with a minimum accepted price of **50,000 USDC/BTC**.
+The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
+2. The deposit is witnessed at state chain block **100**.
+The first chunk of **1 BTC** is scheduled for execution at block **102** (small initial delay allows LPs update their orders for the first chunk).
+3. At block **102** the chunk is executed with the output of **50,100 USDC**, which is within the price limit.
+According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
+4. At block **104** the second chunk is executed at a price of **49,900 USDC**, which is below the limit, and the swap is reverted.
+According to [slippage protection](#minimum-accepted-price-slippage-protection) parameters the chunk is to be retried a few times before the swap is refunded,
+with the first atttempt scheduled for block **109**.
+5. At block **109** the second chunk is retried, and this time gives the user the price of **50,070 USDC**, which is within the limit.
+5. The remaining chunks are also executed successfully at blocks **111**, **113**, and **115** resulting in **50020 USDC**, **50010 USDC**, and **50000 USDC** respectively.
+6. The total output of the swap is **250,200 USDC** which is sent to the user's USDC wallet address.
+
+### Example 2: DCA with partial refund
+
+1. A user initiates a swap by depositing **5 BTC** to get **USDC** with a minimum accepted price of **50,000 USDC/BTC**.
+The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
+2. The deposit is witnessed at state chain block **100**.
+The first chunk of **1 BTC** is scheduled for execution at block **102**.
+3. At block **102** the chunk is executed with the output of **50,100 USDC**, which is within the price limit.
+According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
+4. As in the example above, the second chunk fails at block **104** and is retried at block **109**.
+This time, however, the retry also fails, and the swap is aborted (to keep the example simple we assume only one retry is allowed).
+As a result, the amount of **50100 USDC** from the successfully executed chunks is sent to the user's *destination* USDC wallet address.
+The remaining **4 BTC** is refunded to the user's *refund* BTC wallet address.
+
+### Minimum Chunk Size
+
+While the protocol allows for dca parameters (number of chunks) to be set by the broker, the protocol sets a limit on the minimum amount per chunk (below which the execution would not result in better pricing and would just delay the swap unnecessarily), and can reduce the number chunks accordingly.
+
+
+<Callout type="info">
+For example, assuming a minimum chunk size of 1,000USDC: If the broker opens a channel requesting 100 chunks, but the user deposits 10,000USDC, the protocol will reduce the number of chunks to 10.
+</Callout>
+
+The minimum chunk sizes is set for each individual input asset and can be accessed via the RPC method `cf_environment`.
+
+## USDC as an intermediate asset
+
+It's important to note how Chainflip uses USD as the default pairing for all liquidity pools, with USDC (ERC20) as collateral. This design choice optimizes pricing while reducing liquidity fragmentation and aggregates slippage.
+USDC is chosen as the primary stablecoin base asset due to its high liquidity, adoption in DeFi, and secure structure compared to other options like USDT and algorithmic-stablecoins.
+
+Learn more about the need of a common pair and [the role of USDC in Chainflip's AMM](../../concepts/swaps-amm/usdusdc-denominated-pools.md).

@@ -1,0 +1,61 @@
+---
+
+title: Deposit Channels Swaps
+
+description: This particular ingress method provides incredible flexibility for the user and is a unique feature of the Chainflip protocol.
+
+---
+
+import { Callout } from "nextra/components";
+
+## Deposit Channels Swaps
+
+In [Ingress: Witnessing Deposits](../validator-network/ingress-witnessing-deposits.md), we briefly covered how unique deposit addresses can be reserved for depositors of various kinds to the protocol. Although not necessary to interact with the protocol, this particular ingress method provides incredible flexibility for the user and is a unique feature of the Chainflip protocol. In this component analysis, we’ll explore at a lower level how Deposit Channels work and discuss Brokers in more detail.
+
+## Deposit Channels
+
+Almost all contemporary blockchains have some sort of multi-sig compatible addressing system where anyone can derive a very large number of valid wallet addresses that are controlled by a single public key. Given N number of addresses can be derived as f(pubkey, index), creating Deposit Channels isn’t really about the addresses at all, but rather reserving an index for the user.
+
+We tie the index (and address derived from it) directly with a Deposit Channel. A Deposit Channel Request is submitted by the user which registers the Destination Address and other trade details but also reserves an index from which a unique Deposit Channel Address can be derived. Similarly, when Liquidity Providers wish to add funds to their position, they also request an index on the State Chain to lock in their unique Deposit Channel Address.
+
+![Ingress process](/concepts/Ingress.png)
+
+The method of deriving a unique Deposit Channel Address based on an index varies based on the blockchain that the deposit is intended to be made. Ethereum and its derivative chains, for example, rely on the CREATE2 function (as the vaults on EVM chains are contracts, not wallets), Bitcoin uses its own Hierarchical Deterministic (HD) wallet system, and for Polkadot, another Substrate specific system. Each new blockchain type added will require developing abstractions to handle these varying multi-signature systems.
+
+This is really no different to the way that centralized exchanges handle user deposits, deriving unique deposit addresses and then sweeping the funds from those public addresses into the main wallet as required.
+
+### Opening Deposit Channels
+
+1. The user, through a [Broker](deposit-channels-and-brokers.md#brokers) (discussed below), has an extrinsic submitted to the State Chain which includes all required swap data, such as their Destination Chain and Destination Address.
+2. The Broker returns the transaction hash to the user to verify the opening of the Deposit Channel.
+3. The user can verify the validity of the Deposit Channel using a secondary chain data source if desired
+4. The user can also locally derive the Deposit Channel Address based on the index/nonce/salt that was included in the successfully submitted Deposit Request, and when ready, makes a deposit to that derived address to initiate the swap.
+
+It should be noted that designers of front-end interfaces for the Chainflip protocol should be careful to offer users access to the transaction hash of Deposit Channel Request transactions, and should avoid deriving the addresses server-side. By doing it this way, the integrity of the interface and the Broker can be verified by the user through any secondary source of chain data, such as third-party block explorers. This is an essential design standard, necessary to uphold the credibility of the protocol and to promote trustless interactions in general.
+
+### Closure of Deposit Channels
+
+All Deposit Channels close after 24 hours. This guarantees continuity of service as the Vaults and Authority Sets rotate. Users should **always open a new Deposit Channel and send their deposit immediately** every time they swap or make a liquidity deposit.
+
+After a Deposit Channel has been closed, many Vault types will actually reuse the Deposit Channel Address when assigned to a new Deposit Channel. This is normally to avoid redeploying deposit contracts and save on gas on the EVM chains.
+
+See the [Vault design](../components/bitcoin-vault-design.mdx) documentation for more information on how Deposit Channels are handled during Vault rotations on each chain type.
+
+
+## Broker integration through deposit channels
+
+1. Any _State Chain_ account can register as a Broker, and start submitting **Deposit Channel Request** extrinsics on users' behalf.
+2. Once a _Deposit Channel_ is opened, a hash is returned and it can be verified using [Chainflip's Explorer](https://scan.chainflip.io/).
+3. Brokers must pay a small transaction fee in \$FLIP for each extrinsic they submit and a "Channel Fee". This is to avoid spam and for network integrity reasons. **The suggested amount to fund the State Chain account is 10 \$FLIP**.
+
+<Callout type="info">
+    The cost Brokers pay to open _Deposit Channels_ is **very** cheap. See the \$FLIP balance from [Chainflip's Broker](https://scan.chainflip.io/brokers/cFLRQDfEdmnv6d2XfHJNRBQHi4fruPMReLSfvB8WWD2ENbqj7) — used to power our Swapping app.
+</Callout>
+
+### Broker fees
+
+Broker operators can choose to charge a fee for the use of their endpoint. This fee is denominated in basis points, where a basis point is defined as 1/100th of a percentile and limited to 1000 basis points (equivalent to 10%). This fee is taken from the deposit asset amount and credited to the Broker's account.
+
+<Callout type="info">
+    Learn how to withdraw your collected fees [here](broker-api#broker_withdraw_fees).
+</Callout>

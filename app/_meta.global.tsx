@@ -118,6 +118,9 @@ export default {
     title: 'Brokers',
     items: {
       index: '',
+      'swapping-basics': '',
+      'deposit-channels-swaps': '',
+      'vault-swaps': '',
       'broker-account': '',
       'broker-affiliates': '',
       __: {

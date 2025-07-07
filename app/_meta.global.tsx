@@ -159,6 +159,14 @@ export default {
           subscriptions: '',
         }
       },
+      'javascript-sdk': {
+        title: 'Javascript SDK',
+        items: {
+          index: '',
+          'params': '',
+          'functions': '',
+        }
+      },
       'vault-swaps-api': {
         title: 'Vault Swaps API',
         items: {

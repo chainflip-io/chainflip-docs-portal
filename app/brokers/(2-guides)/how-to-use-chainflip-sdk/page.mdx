@@ -8,6 +8,7 @@ description: The Chainflip SDK provides a simple way for JavaScript/TypeScript d
 
 import { Callout } from "nextra/components";
 
+## Chainflip JavaScript SDK
 
 The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript developers to interact with the Chainflip protocol. In this guide we'll explain how to:
 
@@ -21,6 +22,23 @@ The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript dev
 <Callout type="info">
     If you want to learn more about how Chainflip swaps work, check the [Swapping Basics](../../swapping-basics.mdx) section
 </Callout>
+
+
+## Swap Assets using the SDK
+
+There are two ways to initiate a swap on Chainflip.
+Both options are **fire-and-forget** - once the assets are sent to a deposit channel or the vault swap transaction is submitted, the user doesn't need to do anything for the swap to take place.
+
+1. **Request a deposit address:** The [`requestDepositAddress` method](/brokers/javascirpt-sdk/functions#request-deposit-address-v2) generates a deposit address on the source chain.
+The user sends funds to this address to initiate a swap.
+
+2. **Trigger a vault swap:** The [`encodeVaultSwapData` method](/brokers/javascirpt-sdk/functions#encode-vault-swap-data) returns an unsigned transaction that encodes the details of the swap.
+The user signs and submits this transaction to initiate the swap.
+
+<Callout type="info">
+    Check [How Swapping Works](/protocol/how-swapping-works.md) and [Swapping Basics](../../../swapping-basics.md) for more information about how Chainflip swaps work.
+</Callout>
+
 
 
 ## Installation
@@ -245,3 +263,8 @@ const status = await swapSDK.getStatusV2({
 });
 console.log('status', status);
 ```
+
+
+## Support
+
+If you are experiencing issues with the SDK, visit the **#technical-discussion** channel in Discord for assistance. Not in Discord yet? [Join us](https://discord.gg/chainflip-community).

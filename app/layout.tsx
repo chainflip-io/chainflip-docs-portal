@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: 'Chainflip Docs – Chainflip documentation',
-    template: '%s | Nextra'
+    template: '%s | Chainflip'
   },
   openGraph: {
     // https://github.com/vercel/next.js/discussions/50189#discussioncomment-10826632

@@ -1,0 +1,63 @@
+---
+
+title: Chainflip CLI
+
+description: Chainflip CLI guide
+
+---
+
+
+## Chainflip CLI
+
+Chainflip CLI provide various commands that facilitate interacting with Chainflip
+
+### Installing the pre-compiled binaries
+
+Install the chainflip-cli using:
+
+```bash copy
+apt-get install chainflip-cli
+```
+
+### Command line arguments
+
+```bash copy
+./chainflip-cli --help
+```
+```sh
+Usage: chainflip-cli [OPTIONS] <COMMAND>
+
+Commands:
+  broker                      Broker specific commands
+  lp                          Liquidity provider specific commands
+  validator
+  redeem                      Request a redemption. After requesting the redemption, please proceed to the  to complete
+                              the redeeming process.
+  bind-redeem-address         Irreversible action that restricts your account to only be able to redeem to the specified
+                              address
+  bind-executor-address       Irreversible action that restricts your account to only be able to execute registered
+                              redemptions with the specified address
+  get-bound-redeem-address    Shows the redeem address your account is bound to
+  get-bound-executor-address  Shows the executor address your account is bound to
+  register-account-role       Set your account role to the Validator, Broker, Liquidity Provider
+  rotate                      Rotate your session keys
+  stop-bidding                Stop bidding, thereby stop participating in auctions. [DEPRECATED - use \'validator
+                              stop-bidding\' instead]
+  start-bidding               The account starts bidding for all future auctions, until it stops bidding. [DEPRECATED -
+                              use \'validator start-bidding\' instead]
+  vanity-name                 Set a UTF-8 vanity name for your node (max length 64)
+  pre-update-check            Check if it is safe to update your node/engine
+  generate-keys               Generates the private/public keys required needed to run a Chainflip validator node. These
+                              are the Node Key, Ethereum Key and Validator Key. The Validator Key and Ethereum Key can
+                              be recovered using the seed phrase. The Node Key does not control any funds and therefore
+                              doesn\'t need to be recoverable. It is generated independently of the seed phrase
+  count-witnesses             Count how many validators witnessed a given callhash
+  help                        Print this message or the help of the given subcommand(s)
+
+Options:
+  -c, --config-root <CONFIG_ROOT>                                    [env: CF_CONFIG_ROOT=] [default: /etc/chainflip]
+      --state_chain.ws_endpoint <STATE_CHAIN_WS_ENDPOINT>
+      --state_chain.signing_key_file <STATE_CHAIN_SIGNING_KEY_FILE>
+  -h, --help                                                         Print help
+  -V, --version                                                      Print version
+```

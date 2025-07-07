@@ -28,7 +28,7 @@ export default {
     type: 'page',
     title: 'The Protocol',
     items: {
-      'introduction-thesis': '',
+      index: '',
       'protocol-overview': '',
       'just-in-time-amm-protocol': '',
       'ingress-witnessing-deposits': '',
@@ -36,12 +36,14 @@ export default {
       'governance-and-security': '',
       'mev-potential-on-chainflip': '',
       'usdusdc-denominated-pools': '',
+      'boost': '',
       __: {
         type: 'separator',
         title: 'Guides'
       },
       'how-swapping-works': '',
       'funding-state-chain-account': '',
+      'failed-transfer-recovery': '',
       ___: {
         type: 'separator',
         title: 'Technical Reference'
@@ -64,6 +66,16 @@ export default {
           'mainnet-addresses': '',
         }
       },
+      'chainflip-cli': '',
+      'cross-chain-messaging': {
+        title: 'Cross-Chain Messaging',
+        items: {
+          'overview': '',
+          'evm-ccm': '',
+          'sol-ccm': '',
+          'hub-xcm': '',
+        }
+      },
       'token-economics': {
         title: 'Token Economics',
         items: {
@@ -81,6 +93,10 @@ export default {
       index: '',
       'lp-account': '',
       'trading-strategies': '',
+      'internal-swaps': {
+        href: '/internal-swaps',
+        title: <span className="badge-success after:content-['New']">Internal Swaps</span>
+      },
       __: {
         type: 'separator',
         title: 'Guides'
@@ -119,14 +135,15 @@ export default {
     items: {
       index: '',
       'swapping-basics': '',
-      'deposit-channels-swaps': '',
-      'vault-swaps': '',
+      'broker-deposit-channels': '',
+      'broker-vault-swaps': '',
       'broker-account': '',
       'broker-affiliates': '',
       __: {
         type: 'separator',
         title: 'Guides'
       },
+      'how-to-register-as-broker': '',
       'running-broker-api': '',
       'how-to-use-chainflip-sdk': '',
       ___: {
@@ -140,6 +157,15 @@ export default {
           types: '',
           requests: '',
           subscriptions: '',
+        }
+      },
+      'vault-swaps-api': {
+        title: 'Vault Swaps API',
+        items: {
+          'bitcoin': 'Bitcoin',
+          'evm': 'EVM',
+          'solana': 'Solana',
+          'encoding-reference': '',
         }
       },
     }

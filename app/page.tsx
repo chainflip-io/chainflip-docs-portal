@@ -14,7 +14,7 @@ import type { FC } from 'react'
 
 export const metadata: Metadata = {
   description:
-    'Build fast, customizable, and content-rich websites with Nextra. Powered by Next.js, it offers seamless Markdown support, customizable themes, file conventions, and easy integration with MDX, making it perfect for documentation, blogs, and static websites.'
+    'Explore the official Chainflip Documentation, your comprehensive resource for building with the Chainflip protocol. Learn about cross-chain swapping, liquidity provisioning, becoming a validator or broker, and access essential developer guides and SDK references for seamless integration.'
 }
 
 const IndexPage: FC = () => {

@@ -91,27 +91,39 @@ code.text-\[\.9em\] {
   font-style: normal;
   font-weight: 400 600;
   font-display: swap;
-  src: url("../public/font/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  src: url("../public/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat";
+  font-family: 'Aeonik';
+  src: url('../public/fonts/Aeonik-Regular.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
-  font-weight: 450 500;
   font-display: swap;
-  src: url("../public/font/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+  font-family: 'Aeonik';
+  src: url('../public/fonts/Aeonik-Medium.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* Override Nextra's default fonts */
 :root {
-  --nextra-font-sans: "Montserrat", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --cf-font-sans: "Aeonik", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --cf-inter-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .headline {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: var(--cf-inter-font-sans);
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var( --nextra-font-sans);
+/* Navigation */
+nav, .nextra-nav {
+  font-family: var(--cf-font-sans);
+}
+
+body {
+  font-family: var(--cf-font-sans);
 }

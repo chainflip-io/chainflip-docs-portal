@@ -61,7 +61,7 @@ const navbar = (
     logo={
         <div className="flex font-medium text-lg">
             <img height="25" width="25" src="/chainfliplogo.png"  alt="logo"/>
-            <span className="custom-header hidden lg:flex" style={{ marginLeft: "8px" }}>Chainflip Docs</span>
+            <span className="custom-header hidden lg:flex text-xl font-medium" style={{ marginLeft: "8px" }}>Chainflip Docs</span>
         </div>
     }
     projectLink="https://github.com/chainflip-io"
@@ -81,7 +81,20 @@ const RootLayout: FC<{
   const pageMap = await getEnhancedPageMap()
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head />
+      <Head color={{
+          hue: {
+              light: 324,
+              dark: 151
+          },
+          saturation: {
+              light: 85,
+              dark: 67
+          },
+          lightness: {
+              light: 45,
+              dark: 50
+          }
+      }}/>
       <body>
         <Layout
           banner={banner}

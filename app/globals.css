@@ -76,3 +76,42 @@ code.text-\[\.9em\] {
     @apply ms-1.5 rounded-full border border-yellow-200 bg-yellow-100 px-1.5 text-xs font-bold text-yellow-900;
   }
 }
+
+.nextra-callout a {
+  color: inherit !important;
+  text-decoration: underline;
+}
+
+.nextra-callout a:hover {
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("../public/font/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 450 500;
+  font-display: swap;
+  src: url("../public/font/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+
+/* Override Nextra's default fonts */
+:root {
+  --nextra-font-sans: "Montserrat", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.headline {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var( --nextra-font-sans);
+}

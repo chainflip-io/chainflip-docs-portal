@@ -135,7 +135,7 @@ export default {
     items: {
       index: '',
       'swapping-basics': '',
-      'broker-deposit-channels': '',
+      'broker-deposit-channels-swaps': '',
       'broker-vault-swaps': '',
       'broker-account': '',
       'broker-affiliates': '',

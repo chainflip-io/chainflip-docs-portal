@@ -63,13 +63,15 @@ const rehypeOpenGraphImage: RehypePlugin = () => (ast: any) => {
 }
 
 const withNextra = nextra({
-  latex: true,
+  latex: {
+    renderer: 'mathjax'
+  },
   defaultShowCopyCode: true,
   mdxOptions: {
     rehypePlugins: [
       // Provide only on `build` since turbopack on `dev` supports only serializable values
       process.env.NODE_ENV === 'production' && rehypeOpenGraphImage
-    ].filter(v => !!v)
+    ].filter(v => !!v),
   },
   whiteListTagsStyling: ['figure', 'figcaption']
 })
@@ -150,6 +152,14 @@ const nextConfig = withNextra({
   },
   experimental: {
     optimizePackageImports: ['@components/icons']
+  },
+  latex: {
+    renderer: 'katex',
+    options: {
+      macros: {
+        '\\RR': '\\mathbb{R}'
+      }
+    }
   }
 })
 

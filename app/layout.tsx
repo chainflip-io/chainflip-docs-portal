@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description: 'Learn about the Chainflip protocol.',
   metadataBase: new URL('https://docs.chainflip.io'),
   keywords: [
-    'Nextra',
-    'Next.js',
-    'React',
-    'JavaScript',
-    'MDX',
-    'Markdown',
-    'Static Site Generator'
+    'Chainflip',
+    'Flip Token',
+    'Decentralized Exchange',
+    'Permissionless',
+    'Native Swapping',
+    'Cross-chain',
+    'Developer docs'
   ],
   generator: 'Next.js',
   applicationName: 'Chainflip Docs',

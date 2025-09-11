@@ -67,48 +67,13 @@ const swapSDK = new SwapSDK(options);
 
 The `options` object accepts the following properties:
 
-{
-<table>
-    <thead>
-    <tr>
-        <th width="223">Param</th><th width="476">Description</th><th width="244.33333333333331">Data type</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><code>network</code><span className="param-optional-label">(optional)</span></td>
-        <td>The <a href="../../supported-chains-and-assets/supported-chains-and-assets#chainflip-networks">Chainflip network</a> to interact with. Defaults to <code>perseverance</code>.</td>
-        <td><code>'sisyphos' | 'perseverance' | 'mainnet'</code></td>
-    </tr>
-    <tr>
-        <td><code>backendServiceUrl</code><span className="param-optional-label">(optional)</span></td>
-        <td>The URL of the <a href="https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap">backend service</a>. Defaults to the backend service run by Chainflip for the given network.</td>
-        <td><code>string</code></td>
-    </tr>
-    <tr>
-        <td><code>broker</code><span className="param-optional-label">(optional)</span></td>
-        <td>The URL of the <a href="../running-a-broker/broker-api">Broker API</a> used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network.</td>
-        <td>
-            <code>{`{ url: string }`}</code>
-        </td>
-    </tr>
-    <tr>
-        <td><code>rpcUrl</code><span className="param-optional-label">(optional)</span></td>
-        <td>The URL of the <a href="/validators/misc/running-an-rpc-node">Chainflip RPC node</a>. Defaults to the public rpc node operated by Chainflip for the given network.</td>
-        <td>
-            <code>String</code>
-        </td>
-    </tr>
-    <tr>
-        <td><code>enabledFeatures</code><span className="param-optional-label">(optional)</span></td>
-        <td>Features that must be explicitly opted into.</td>
-        <td>
-            <code>{`{ dca?: boolean }`}</code>
-        </td>
-    </tr>
-    </tbody>
-</table>
-}
+| Param | Description | Data type |
+| :---- | :---------- | :-------- |
+| `network`(optional) | The [Chainflip network](../../supported-chains-and-assets/supported-chains-and-assets#chainflip-networks) to interact with. Defaults to `perseverance`. | `'sisyphos' \| 'perseverance' \| 'mainnet'` |
+| `backendServiceUrl`(optional) | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network. | `string` |
+| `broker`(optional) | The URL of the [Broker API](../running-a-broker/broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network. | `` `{ url: string }` `` |
+| `rpcUrl`(optional) | The URL of the [Chainflip RPC node](/validators/misc/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network. | `String` |
+| `enabledFeatures`(optional) | Features that must be explicitly opted into. | `` `{ dca?: boolean }` `` |
 
 ## Working Examples
 

@@ -188,61 +188,49 @@ su - flip
 
 ## 3. Getting the Validator Software
 
-You have two ways to get the Chainflip binaries through the `apt` package manager or Docker:
+This guide describes how to download and run Chainflip's validator software.
 
-### 3.a Installation using `apt`
+### Download Binaries via APT Repo
 
-It's a good practice to use a fresh node and upgrade all system dependencies before installing the validator software.
+Use the following commands to add Chainflip's APT Repo to your node then use `apt install` to get the binaries:
 
-```bash copy
-sudo apt update
-sudo apt upgrade -y
-```
-
-#### Adding Chainflip's `apt` Repo
+### Adding Chainflip's `apt` Repo
 
 We distribute our binaries as debian packages through our `apt` repository. To install the packages, you need to add our repo to your `apt` sources list.
 
-Use the following commands to add Chainflip's **Mainnet** `apt` repo to your node:
+Use the following commands to add Chainflip's **Testnet** `apt` repo to your node:
 
-1. Download Chainflip Mainnet GPG key from the **Ubuntu Key Server**:
+1. Download Chainflip Testnet GPG key from the **Ubuntu Key Server**:
 
 ```bash copy
-gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37
+gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6
 ```
 
 2. Verify the key's authenticity:
 
 ```bash copy
-gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | gpg --show-keys
+gpg --export BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6 | gpg --show-keys
 ```
 
 <Callout type="warning">
     **Important:** Make sure you see the following output from the terminal:
 
     ```
-    pub   rsa4096 2023-11-06 [SC]
-    4E506212E4EF4E0D3E37E568596FBDCACBBCDD37
-    uid                      Chainflip Labs GmbH (Releaser Master Key) <security@chainflip.io>
-    sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
-    sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
-    sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
+    pub   rsa3072/0xFB3E88547C6B47C6 2022-11-08 [SC]
+    Key fingerprint = BDBC 3CF5 8F62 3694 CD9E  3F5C FB3E 8854 7C6B 47C6
+    uid                              Chainflip Labs GmbH <dev@chainflip.io>
+    sub   rsa3072/0x48249A1599E31935 2022-11-08 [E]
     ```
 </Callout>
 
-3. Add Chainflip's Mainnet Repo to `apt` sources list:
-
-<Callout type="info">
-    Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish). Running them on other versions of Ubuntu or other Debian-like distributions may require additional dependencies and configuration.
-</Callout>
+3. Add Chainflip's Testnet Repo to `apt` sources list:
 
 ```bash copy
-sudo mkdir -p /etc/apt/trusted.gpg.d
-gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | sudo tee /etc/apt/trusted.gpg.d/chainflip-mainnet.gpg
-echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/chainflip-mainnet.gpg] https://pkgs.chainflip.io/ubuntu/ jammy berghain" | sudo tee /etc/apt/sources.list.d/chainflip-berghain-mainnet.list
+gpg --export BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6 | sudo tee /etc/apt/trusted.gpg.d/chainflip-perseverance.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/chainflip-perseverance.gpg] https://repo.chainflip.io/perseverance/jammy jammy main" | sudo tee /etc/apt/sources.list.d/chainflip.list
 ```
 
-#### Installing The Packages
+### Installing The Packages
 
 To install, run the following commands:
 
@@ -251,39 +239,53 @@ sudo apt update
 sudo apt install -y chainflip-cli chainflip-node chainflip-engine
 ```
 
-### 3.b Docker Installation
 
-<Callout type="warning">
-    If you have done the **APT Installation** above, you don't need to follow the **Docker Installation** below.
+### Disable Automatic Updates
+Automatic updates are generally a good idea for keeping your system secure and up to date. However, for a Chainflip binaries, it is recommended to disable automatic updates to avoid interrupting operations when an update has breaking changes that need coordination with the rest of the network.
+
+```bash copy
+sudo apt-mark hold chainflip-cli chainflip-node chainflip-engine
+```
+
+### Downloading Latest Chaindata Snapshot
+
+First, download the latest chaindata snapshot and unpack it to the correct location.
+
+```bash copy
+mkdir -p /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
+
+wget -O ./cf_chaindata_pruned_paritydb.tar.gz https://snapshots.chainflip.io/perseverance/cf_chaindata_pruned_paritydb.tar.gz
+
+tar -xzf ./cf_chaindata_pruned_paritydb.tar.gz -C /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
+
+rm -f ./cf_chaindata_pruned_paritydb.tar.gz
+```
+
+After that, create a systemd override file for the `chainflip-node` service to use the correct parameters in order for the snapshot to be used.
+
+```bash copy
+sudo mkdir -p /etc/systemd/system/chainflip-node.service.d && \
+sudo tee /etc/systemd/system/chainflip-node.service.d/override.conf > /dev/null <<EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/chainflip-node \\
+  --chain /etc/chainflip/perseverance.chainspec.json \\
+  --base-path /etc/chainflip/chaindata \\
+  --node-key-file /etc/chainflip/keys/node_key_file \\
+  --validator \\
+  --database=paritydb \\
+  --sync=full \\
+  --blocks-pruning=300 \\
+  --pruning=300
+EOF
+
+sudo systemctl daemon-reload
+```
+
+<Callout type="info">
+    Snapshots are updated every 6 hours starting at 00:00 UTC. The snapshot holds the state and blocks of the most recent 300 blocks. The size of the snapshot is approximately 15GB.
+    You can override the snapshot to use a different number of blocks by changing the `--blocks-pruning` and `--pruning` parameters in the systemd override file.
 </Callout>
-
-If you are planning to run a validator using a container orchestration system like Kubernetes you can use our pre-built images on [Docker Hub](https://hub.docker.com/u/chainfliplabs).
-
-```bash copy
-docker pull chainfliplabs/chainflip-node:berghain-1.1.1
-docker pull chainfliplabs/chainflip-engine:berghain-1.1.1
-docker pull chainfliplabs/chainflip-cli:berghain-1.1.1
-```
-
-#### Starting up the node in Docker
-To start the node, you would need the following options passed to the `chainflip-node` binary:
-
-```bash copy
-chainflip-node \
-  --chain=/path/to/chainflip/dir/berghain.chainspec.json \
-  --base-path=/path/to/chainflip/dir/chaindata \
-  --node-key-file=/path/to/chainflip/dir/keys/node_key_file \
-  --validator \
-  --trie-cache-size=0 \
-  --sync=warp
-```
-
-#### Getting the chainspec
-If you have installed binaries through APT, the chainspec is already included in the `chainflip-node` package. However, if you need the chainspec for Kubernetes deployments or other docker orchestration systems, you can download it by running:
-
-```bash copy
-curl https://repo.chainflip.io/chainspecs/berghain.chainspec.json -o berghain.chainspec.json
-```
 
 
 ## 4. Generating Validator Keys

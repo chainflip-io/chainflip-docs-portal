@@ -286,9 +286,9 @@ type QuoteResponseV2 = {
   brokerCommissionBps?: number;
   affiliateBrokers?: { account: string; commissionBps: number; }[];
   ccmParams?: { gasBudget: string; messageLengthBytes: number; };
-  quotes: {
-    ...QuoteDetails
-    boostQuote?: BoostedQuoteDetails // only present if there is a boost opportunity for the requested swap amount
+  quotes: QuoteDetails & {
+    /** only present if there is a boost opportunity for the requested swap amount */
+    boostQuote?: BoostedQuoteDetails;
     type: 'REGULAR' | 'DCA';
   }[];
 }
@@ -298,24 +298,34 @@ type QuoteDetails = {
   egressAmount: string;
   includedFees: SwapFee[];
   poolInfo: PoolInfo[];
-  recommendedSlippageTolerancePercent: number; // recommended tolerance to prevent refunds while protecting against big price movements based on current market conditions
-  lowLiquidityWarning: boolean | undefined; // see below
-  estimatedDurationSeconds: number; // total estimated time until destination asset is received by the user
+  /** recommended tolerance to prevent refunds while protecting against big price movements based on current market conditions */
+  recommendedSlippageTolerancePercent: number;
+  /** recommended amount of minutes to retry a swap that has failed to meet the provided slippage tolerance */
+  recommendedRetryDurationMinutes: number;
+  /** see below */
+  lowLiquidityWarning: boolean | undefined;
+  /** total estimated time until destination asset is received by the user */
+  estimatedDurationSeconds: number;
   estimatedDurationsSeconds: {
-    deposit: number; // estimated time for a deposit to be witnessed
-    swap: number; // estimated time for a swap to be fully executed
-    egress: number; // estimated time until the output transaction is included in a block
+    /** estimated time for a deposit to be witnessed */
+    deposit: number;
+    /** estimated time for a swap to be fully executed */
+    swap: number;
+    /** estimated time until the output transaction is included in a block */
+    egress: number;
   };
-  estimatedPrice: string; // estimated price of the swap at amm level (does not include deposit/broadcast fee)
-  dcaParams?: { // only present if the quote is a DCA quote
+  /** estimated price of the swap at amm level (does not include deposit/broadcast fee) */
+  estimatedPrice: string;
+  /** only present if the quote is a DCA quote */
+  dcaParams?: {
     numberOfChunks: number;
     chunkIntervalBlocks: number;
   };
 };
 
-type BoostedQuoteDetails = {
-  ...QuoteDetails,
-  estimatedBoostFeeBps: number // estimated fee (in bps) that the user has to pay (from the deposit amount) to get this swap boosted
+interface BoostedQuoteDetails extends QuoteDetails {
+  /** estimated fee (in bps) that the user has to pay (from the deposit amount) to get this swap boosted */
+  estimatedBoostFeeBps: number;
 };
 ```
 
@@ -366,6 +376,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
     {
       egressAmount: '309311018',
       recommendedSlippageTolerancePercent: 0.5,
+      recommendedRetryDurationMinutes: 5,
       includedFees: [
         { type: 'INGRESS', chain: 'Ethereum', asset: 'USDC', amount: '1395704' },
         { type: 'NETWORK', chain: 'Ethereum', asset: 'USDC', amount: '48604' },
@@ -616,7 +627,7 @@ const swapDepositAddressRequest = {
   fillOrKillParams: {
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
     refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF', // address to which assets are refunded
-    retryDurationBlocks: 100, // 100 blocks * 6 seconds = 10 minutes before deposits are refunded
+    retryDurationMinutes: quote.recommendedRetryDurationMinutes, // use recommended retry duration from quote
   },
   brokerCommissionBps: 100, // 100 basis point = 1%
   affiliateBrokers: [

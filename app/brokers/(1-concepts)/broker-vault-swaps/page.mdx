@@ -42,7 +42,7 @@ Each of Chainflip's supported chains encodes data differently. Integrators shoul
 
 ### Step 1: Request the Encoded Parameters
 
-This step is similar to opening a deposit channel: the request must specify the source and destination assets and other swap execution parameters. For a full list of arguments please refer to the API reference: The RPC call that builds the encoded the transaction data is [request_swap_parameter_encoding](../../running-a-broker/broker-api/#broker_request_swap_parameter_encoding).
+This step is similar to opening a deposit channel: the request must specify the source and destination assets and other swap execution parameters. For a full list of arguments please refer to the API reference: The RPC call that builds the encoded the transaction data is [request_swap_parameter_encoding](/brokers/broker-api/requests#broker_request_swap_parameter_encoding).
 
 <Callout type="info">
 Note there are two variants of this RPC call:
@@ -58,9 +58,9 @@ The RPC call will return the swap parameters encoded in a format specific to the
 
 For detailed instructions of how to interpret the value returned by this RPC call, please refer to individual sections for each chain:
 
-- [Bitcoin](./bitcoin.mdx)
-- [Ethereum or Arbitrum](./evm.mdx)
-- [Solana](./solana.mdx)
+- [Bitcoin](/brokers/vault-swaps-api/bitcoin)
+- [Ethereum or Arbitrum](/brokers/vault-swaps-api/evm)
+- [Solana](/brokers/vault-swaps-api/solana)
 
 ### Step 3: Sign and Submit
 

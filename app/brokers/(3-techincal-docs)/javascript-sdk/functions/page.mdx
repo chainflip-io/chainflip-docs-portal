@@ -65,7 +65,7 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
     name: 'Ethereum',
     evmChainId: 1,
     isMainnet: true,
-    requiredBlockConfirmations: 3,
+    requiredBlockConfirmations: 5,
     maxRetryDurationBlocks: 0
   },
   {
@@ -1894,7 +1894,7 @@ console.log(await swapSDK.getRequiredBlockConfirmations());
 // console output:
 {
   Bitcoin: 2,
-  Ethereum: 3,
+  Ethereum: 5,
   Polkadot: null,
   Arbitrum: 2,
   Solana: null

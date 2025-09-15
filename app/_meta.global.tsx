@@ -44,6 +44,7 @@ export default {
       'how-swapping-works': '',
       'funding-state-chain-account': '',
       'failed-transfer-recovery': '',
+      'running-an-rpc-node': '',
       ___: {
         type: 'separator',
         title: 'Technical Reference'

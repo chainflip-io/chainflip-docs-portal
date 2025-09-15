@@ -210,7 +210,7 @@ gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | gpg --show-keys
 3. Add Chainflip's Mainnet Repo to `apt` sources list:
 
 <Callout type="info">
-    Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish). Running them on other versions of Ubuntu or other Debian-like distributions may require additional dependencies and configuration.
+    Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish) on an AMD processor. Running them on other versions of Ubuntu or other Debian-like distributions may require additional dependencies and configuration.
 </Callout>
 
 ```bash copy
@@ -285,9 +285,9 @@ sudo systemctl daemon-reload
 If you are planning to run a validator using a container orchestration system like Kubernetes you can use our pre-built images on [Docker Hub](https://hub.docker.com/u/chainfliplabs).
 
 ```bash copy
-docker pull chainfliplabs/chainflip-node:berghain-1.1.1
-docker pull chainfliplabs/chainflip-engine:berghain-1.1.1
-docker pull chainfliplabs/chainflip-cli:berghain-1.1.1
+docker pull chainfliplabs/chainflip-node:berghain-1.10.0
+docker pull chainfliplabs/chainflip-engine:berghain-1.10.0
+docker pull chainfliplabs/chainflip-cli:berghain-1.10.0
 ```
 
 #### Starting up the node in Docker

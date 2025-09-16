@@ -108,7 +108,6 @@
   .feature h3 {
     font-size: 28px;
     font-size: min(28px, max(4vw, 22px));
-    text-align: center;
   }
 }
 
@@ -128,7 +127,6 @@
   .feature h3 {
     font-size: 34px;
     font-size: min(34px, max(4vw, 22px));
-    text-align: center;
   }
   .feature :global(.show-on-mobile) {
     display: block;

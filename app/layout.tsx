@@ -49,7 +49,7 @@ export const metadata: Metadata = {
 
 const banner = (
   <Banner dismissible={false}>
-    🎉 Chainflip 1.9  is released. {' '}
+    🎉 Chainflip 1.11 is released. {' '}
     <Link href="https://github.com/chainflip-io/chainflip-backend/releases" className="text-current!">
       Check the release notes here.
     </Link>

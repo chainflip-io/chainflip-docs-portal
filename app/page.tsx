@@ -2,7 +2,7 @@ import {ArrowRightIcon} from '@components/icons'
 import type {Metadata} from 'next'
 import Image from 'next/image'
 import {Link} from 'nextra-theme-docs'
-import {MdxIcon, GlobeIcon, GoIcon} from 'nextra/icons'
+import {MdxIcon, GlobeIcon, GoIcon, GitHubIcon} from 'nextra/icons'
 import docsCardDark from 'public/assets/card-1.dark.png'
 import docsCard from 'public/assets/card-1.png'
 import {Feature, Features} from './_components/features'
@@ -12,6 +12,8 @@ import styles from './page.module.css'
 import './page.css'
 import type {FC} from 'react'
 import {BoxesIcon, SquareChevronRightIcon} from "lucide-react";
+import {Cards} from "nextra/components";
+import SocialCards from "private-next-root-dir/app/_components/social-cards";
 
 export const metadata: Metadata = {
     description:
@@ -24,7 +26,7 @@ const IndexPage: FC = () => {
 
             <div className="inline-flex flex-col items-center w-full">
                 <img className="h-36 xs:h-48 sm:h-56 lg:h-72 py-8" src="/landing-page/chainflip-waves.png"/>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-5xl font-semibold text-center">
+                <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-semibold text-center">
                     Welcome to Chainflip Docs
                 </h1>
                 <p className="subtitle px-4 text-center max-w-10/12">
@@ -43,7 +45,7 @@ const IndexPage: FC = () => {
                 <div className="content-container">
                     <Features>
                         <Feature
-                            index={2}
+                            index={1}
                             id="broker-card"
                             href="/brokers"
                             className="bg-gradient-to-r"
@@ -80,7 +82,7 @@ const IndexPage: FC = () => {
                             </p>
                         </Feature>
                         <Feature
-                            index={2}
+                            index={3}
                             id="broker-card"
                             href="/validators"
                             className="bg-gradient-to-r"
@@ -100,29 +102,29 @@ const IndexPage: FC = () => {
                             </p>
                         </Feature>
 
-                        <Feature index={5} href="/protocol">
+                        <Feature index={4} href="/protocol">
                             <h3>
                                 Explore Chainflip, <br/>
                                 concepts and ecosystem
                             </h3>
                             <p className="mr-6">
                                 Kickstart your journey by
-                                learning how to get started on becoming {' '}
-                                <Link href="/brokers">
-                                    Broker
+                                learning  {' '}
+                                <Link href="/protocol/how-swapping-works">
+                                    how swapping works
                                 </Link>
-                                ,{' '}
-                                <Link href="/validators">
-                                    Validator
+                                , discover {' '}
+                                <Link href="/protocol/just-in-time-amm-protocol">
+                                    Just In Time AMM Protocol
                                 </Link>
-                                , or{' '}
-                                <Link href="/lp">
-                                    Liquidity provider
+                                {' '}, or understand how {' '}
+                                <Link href="/protocol/boost">
+                                    Bitcoin swaps are boosted
                                 </Link>
                                 .
                             </p>
                         </Feature>
-                        <Feature index={6} large>
+                        <Feature index={5} large>
                             <h3>And more...</h3>
                             <p>
                                 Your complete guide to building on Chainflip ecosystem.
@@ -251,12 +253,12 @@ const IndexPage: FC = () => {
             </div>
 
             <div className="content-container">
-                <div className="flex justify-center items-center">
-                    <h1 className="headline text-center">
-                        Learn more about Chainflip
+                <div className="flex justify-center items-center mt-20">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-center">
+                        Connect with us at Chainflip Labs
                     </h1>
                 </div>
-                <div className="flex justify-center items-center px-20">
+                <div className="">
                     <p className="subtitle text-center">
                         For further information on our Protocol Design and what we are building here at Chainflip Labs,
                         please read our
@@ -264,7 +266,7 @@ const IndexPage: FC = () => {
                         <Link href="https://assets.chainflip.io/whitepaper.pdf">
                             White paper
                         </Link>
-                        or even our {' '}
+                        or our {' '}
                         <Link href="https://assets.chainflip.io/lightpaper.pdf">
                             Light paper
                         </Link>. {' '}
@@ -283,15 +285,19 @@ const IndexPage: FC = () => {
                         </Link>, {' '}
                     </p>
                 </div>
-                <div className="flex justify-center items-center mt-4 mb-20">
-                    <iframe
-                        className="sm:h-[320px] lg:h-[480px] w-9/12"
-                        src="https://youtube.com/embed/V1TG08BeYvQ"
-                        frameBorder="0"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                    />
-                </div>
+
+                <SocialCards className="mt-10 mb-20"/>
+
+                {/*<div className="flex justify-center items-center mt-10 mb-20">*/}
+                {/*    <iframe*/}
+                {/*        className="sm:h-[320px] lg:h-[480px] w-9/12"*/}
+                {/*        src="https://youtube.com/embed/V1TG08BeYvQ"*/}
+                {/*        frameBorder="0"*/}
+                {/*        allow="autoplay; encrypted-media"*/}
+                {/*        allowFullScreen*/}
+                {/*    />*/}
+                {/*</div>*/}
+
             </div>
         </div>
     )

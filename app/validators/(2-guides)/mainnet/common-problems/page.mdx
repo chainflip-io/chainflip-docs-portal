@@ -8,7 +8,11 @@ description: We'll continue updating this page so you can easily troubleshoot yo
 
 import { Callout } from "nextra/components";
 
-## Common Problems
+# Common Problems
+
+We'll continue updating this page so you can easily troubleshoot your node.
+
+## How does this page work?
 
 This page is designed to help you fix all of your problems on your own!
 
@@ -38,7 +42,7 @@ You will see this log before the Chainflip network witnesses that you added fund
 
 ### Solution
 
-Please make sure you followed all the steps outlined in [Funding](../funding/funding-and-bidding.md).
+Please make sure you followed all the steps outlined in [Funding](/validators/mainnet/funding#funding--bidding).
 
 If after **30 minutes** your engine is still not online, try restart your engine\
 `sudo systemctl restart chainflip-engine`.
@@ -59,7 +63,7 @@ Caused by:
 
 ### Solution
 
-You have not selected the correct Ethereum network. In this case, you have selected `mainnet`. The Chainflip network uses Sepolia. Please reread [#pointing-to-the-ethereum-client](../validator-setup/engine-settings.md#pointing-to-the-ethereum-client).
+You have not selected the correct Ethereum network. In this case, you have selected `mainnet`. The Chainflip network uses Sepolia. Please reread [#pointing-to-the-ethereum-client](/validators/testnet/validator-setup#pointing-to-the-ethereum-client).
 
 ### Logs
 
@@ -91,7 +95,7 @@ Caused by:
 
 ### Solution
 
-You have copied the `chainflip-engine` config without changing any of the values! Please re-read the steps in [Engine Settings ](../validator-setup/engine-settings.md). You need to make that you use the URL from your Ethereum Client. [#pointing-to-the-ethereum-client](../validator-setup/engine-settings.md#pointing-to-the-ethereum-client).
+You have copied the `chainflip-engine` config without changing any of the values! Please re-read the steps in [Engine Settings ](/validators/mainnet/validator-setup#5-engine-settings). You need to make that you use the URL from your Ethereum Client. [#pointing-to-the-ethereum-client](/validators/testnet/validator-setup#pointing-to-the-ethereum-client).
 
 ## Node killed Out Of Memory
 
@@ -117,9 +121,9 @@ You need to create a swapfile (8GB), you can follow this guide in order to do so
 <img src="/testnet/validator_offline.png" alt="validator offline" />
 <br />
 
-Likely you haven't completed all the steps. Please start from [Generating Keys](../validator-setup/keys.md) section and work your way very slowly, making sure you have read everything.
+Likely you haven't completed all the steps. Please start from [Generating Keys](/validators/mainnet/validator-setup#validator-keys) section and work your way very slowly, making sure you have read everything.
 
-It can be, that you did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](../funding/funding-and-bidding.md#registering-validator-keys) section.
+It can be, that you did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](/validators/mainnet/funding#funding--bidding) section.
 
 #### Becoming Authority
 
@@ -156,7 +160,7 @@ journalctl -f -u "chainflip-*"
 <img src="/testnet/validator_backup.png" alt="validator backup" />
 <br />
 
-You did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](../funding/funding-and-bidding.md#registering-and-setting-up-your-validator-node) section.
+You did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](/validators/mainnet/funding#register-node-as-a-validator) section.
 
 The commands that already ran successfully will fail with an error resembling the following:
 <br />
@@ -285,7 +289,7 @@ Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 
 ## It still doesn't work?
 
-Follow instructions under [Submitting an issue](submitting-an-issue.md).
+Follow instructions under [Submitting an issue](/validators/mainnet/submitting-an-issue).
 
 <Callout type="warning">
   **Please** do this step before raising an issue on Discord. It makes our lives

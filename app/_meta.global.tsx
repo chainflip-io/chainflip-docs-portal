@@ -197,6 +197,9 @@ export default {
         items: {
           'validator-setup': '',
           'important-notes': '',
+          'funding': '',
+          'common-problems': '',
+          'submitting-an-issue': ''
         }
       },
       'testnet': {
@@ -204,6 +207,8 @@ export default {
         items: {
           'validator-setup': '',
           'funding': '',
+          'common-problems': '',
+          'submitting-an-issue': ''
         }
       },
       ___: {
@@ -211,7 +216,6 @@ export default {
         title: 'Technical Reference'
       },
       'maintenance': '',
-      'common-problems': '',
       'default-filepaths-and-ports': ''
     }
   },

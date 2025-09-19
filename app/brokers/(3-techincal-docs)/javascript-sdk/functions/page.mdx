@@ -494,7 +494,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
             <code>quote</code><span className="param-required-label">(required)</span>
         </td>
         <td>
-            The object returned by <a href="/swapping/integrations/javascript-sdk/get-quote-v2"><code>getQuoteV2</code></a>.
+            The object returned by <a href="/brokers/javascript-sdk/functions/get-quote-v2"><code>getQuoteV2</code></a>.
             This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote),
             and the boost parameters (if it is a boost quote).
         </td>
@@ -515,7 +515,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
             <span className="param-required-label">(required)</span>
         </td>
         <td>
-            Parameters to set a <a href="/swapping/swapping-basics#minimum-accepted-price-slippage-protection">minimum accepted price</a>.
+            Parameters to set a <a href="/brokers/swapping-basics#minimum-accepted-price-slippage-protection">minimum accepted price</a>.
             This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).
         </td>
         <td><code>Object</code></td>
@@ -523,7 +523,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
     <tr>
         <td><code>brokerCommissionBps</code><span className="param-optional-label">(optional)</span></td>
         <td>
-            Commission charged by the <a href="../../running-a-broker/introduction">broker</a> creating the channel, in basis points.
+            Commission charged by the <a href="/brokers">broker</a> creating the channel, in basis points.
             This option is only available when the SDK is initialized with a <code>brokerUrl</code>
         </td>
         <td><code>number</code></td>
@@ -531,18 +531,18 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
     <tr>
         <td><code>affiliateBrokers</code><span className="param-optional-label">(optional)</span></td>
         <td>
-            An array of objects defining <a href="../../running-a-broker/broker-affiliates">affiliate accounts</a> that take a commission in addition to <code>brokerCommissionBps</code>.
+            An array of objects defining <a href="/brokers/broker-affiliates">affiliate accounts</a> that take a commission in addition to <code>brokerCommissionBps</code>.
             This option is only available when the SDK is initialized with a <code>brokerUrl</code>
         </td>
         <td><code>Array</code></td>
     </tr>
     <tr>
         <td>
-            <a href="overview#cross-chain-messaging-ccmparams"><code>ccmParams</code></a>
+            <a href="/protocol/cross-chain-messaging/overview"><code>ccmParams</code></a>
             <span className="param-optional-label">(optional)</span>
         </td>
         <td>
-            Optional parameters for <a href="/swapping/integrations/advanced/cross-chain-messaging/cross-chain-messaging">passing a message</a> to a reciever contract/program on the  destination chain.
+            Optional parameters for <a href="/protocol/cross-chain-messaging/overview">passing a message</a> to a reciever contract/program on the  destination chain.
         </td>
         <td><code>Object</code></td>
     </tr>
@@ -669,7 +669,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 
 #### Boostable Deposit Address
 
-Check the [Introduction to Boost](../../../intro-to-boost) section for more information about the Boost feature.
+Check the [Introduction to Boost](/protocol/boost) section for more information about the Boost feature.
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -698,7 +698,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 
 #### DCA deposit address
 
-Check the [Dollar Cost Average](../../../swapping-basics.mdx#dollar-cost-average-dca-improving-price) section for more information about the DCA feature.
+Check the [Dollar Cost Average](/brokers/swapping-basics#dollar-cost-average-dca-improving-price) section for more information about the DCA feature.
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -743,7 +743,7 @@ Compared to [deposit channel swaps](#request-deposit-address-v2), the vault swap
 of other decentralized exchanges and therefore might be easier to integrate into existing applications.
 
 <Callout type="info">
-    Learn more about vault swaps in the [Vault Swaps](../../advanced/vault-swaps/vault-swaps) documentation.
+    Learn more about vault swaps in the [Vault Swaps](/brokers/broker-vault-swaps) documentation.
 </Callout>
 
 Returns the unsigned transaction data for the given `VaultSwapRequest`.
@@ -793,7 +793,7 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
             <code>quote</code><span className="param-required-label">(required)</span>
         </td>
         <td>
-            The object returned by <a href="/swapping/integrations/javascript-sdk/get-quote-v2"><code>getQuoteV2</code></a>.
+            The object returned by <a href="/brokers/javascript-sdk/functions/get-quote-v2"><code>getQuoteV2</code></a>.
             This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote),
             and the boost parameters (if it is a boost quote).
         </td>
@@ -832,14 +832,14 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
     <tr>
         <td><code>brokerAccount</code><span className="param-optional-label">(optional)</span></td>
         <td>
-            <a href="../../running-a-broker/introduction">Broker</a> account that recieves the commission for the swap.
+            <a href="/brokers#brokers">Broker</a> account that recieves the commission for the swap.
         </td>
         <td><code>string</code></td>
     </tr>
     <tr>
         <td><code>brokerCommissionBps</code><span className="param-optional-label">(optional)</span></td>
         <td>
-            Commission charged by the <a href="../../running-a-broker/introduction">broker</a> of the swap, in basis points.
+            Commission charged by the <a href="/brokers#brokers">broker</a> of the swap, in basis points.
             This option is only available when setting a <code>brokerAccount</code> or the SDK is initialized with a <code>brokerUrl</code>
         </td>
         <td><code>number</code></td>
@@ -847,18 +847,18 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
     <tr>
         <td><code>affiliateBrokers</code><span className="param-optional-label">(optional)</span></td>
         <td>
-            An array of objects defining <a href="../../running-a-broker/broker-affiliates">affiliate accounts</a> that take a commission in addition to <code>brokerCommissionBps</code>.
+            An array of objects defining <a href="/brokers/broker-affiliates">affiliate accounts</a> that take a commission in addition to <code>brokerCommissionBps</code>.
             This option is only available when setting a <code>brokerAccount</code> or the SDK is initialized with a <code>brokerUrl</code>
         </td>
         <td><code>Array</code></td>
     </tr>
     <tr>
         <td>
-            <a href="overview#cross-chain-messaging-ccmparams"><code>ccmParams</code></a>
+            <a href="/protocol/cross-chain-messaging/overview#type-reference"><code>ccmParams</code></a>
             <span className="param-optional-label">(optional)</span>
         </td>
         <td>
-            Optional parameters for <a href="/swapping/integrations/advanced/cross-chain-messaging/cross-chain-messaging">passing a message</a> to a reciever contract/program on the destination chain.
+            Optional parameters for <a href="/protocol/cross-chain-messaging/overview">passing a message</a> to a reciever contract/program on the destination chain.
         </td>
         <td><code>Object</code></td>
     </tr>
@@ -870,7 +870,7 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
             Additional data that is required for encoding vault swap transaction data for specific chains.
             <ul>
                 <li>
-                    For swaps starting from Solana, a <a href="../../advanced/vault-swaps/solana#user-created-event-data-account"><code>seed</code></a> can be set optionally.
+                    For swaps starting from Solana, a <a href="/brokers/vault-swaps-api/solana#swap-event-data-account"><code>seed</code></a> can be set optionally.
                     If no seed is set, a random one will be generated on the fly.
                 </li>
             </ul>

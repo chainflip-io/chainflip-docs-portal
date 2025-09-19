@@ -12,13 +12,13 @@ import { Callout } from "nextra/components";
 
 The Broker API is a standalone client that exposes _Broker_ functionality via a JSON API interface. It can be obtained from the same location as the chainflip-node, i.e. you can install it via `apt`, use the provided docker image or compile it yourself from the sources on Github.
 
-Brokers need to run the client for the API themselves, as the Broker holds keys used to sign extrinsics and collect any fees set for [Deposit Channels](..//brokers/broker-deposit-channels-swaps#deposit-channels). The API client works by pointing it to an RPC node — also run by the same Broker, ideally.
+Brokers need to run the client for the API themselves, as the Broker holds keys used to sign extrinsics and collect any fees set for [Deposit Channels](/brokers/broker-deposit-channels-swaps#deposit-channels). The API client works by pointing it to an RPC node — also run by the same Broker, ideally.
 
 
 ### Command line arguments and defaults
 
 - The `state_chain.ws_endpoint` should point at a **synced Chainflip State Chain RPC node**. The default is `ws://localhost:9944` — assuming it is run locally.
-- The `state_chain.signing_key_file` should be a path to a file containing the hex-encoded **private key** for the on-chain Broker account. The default file path is `/etc/chainflip/keys/signing_key_file`. The account should be [funded](/mainnet/validator-setup/funding-and-bidding#adding-funds-to-your-validator-node) and the account role should be set to Broker.
+- The `state_chain.signing_key_file` should be a path to a file containing the hex-encoded **private key** for the on-chain Broker account. The default file path is `/etc/chainflip/keys/signing_key_file`. The account should be [funded](/validators/mainnet/funding#adding-funds-to-your-validator-node) and the account role should be set to Broker.
 - The `port` is the port on which the Broker API will listen for connections. Use `0` to assign a random port. The default is `80`.
 - New functionality available from version 1.7+: The `health_check.hostname` and `health_check.port` describe the hostname and port where the Broker API will listen for health check requests. Both arguments have to be specified for the health check server to start.
 
@@ -63,7 +63,7 @@ OPTIONS:
 
 ## 1. Running Broker API locally
 
-Before you do anything, you need to generate a valid [signing_key](../chainflip-account/creating) and [fund](../chainflip-account/funding) the associated account.
+Before you do anything, you need to generate a valid signing_key and [fund](/brokers/broker-account#funding-your-account) the associated account.
 If you are planning to use [our Docker setup](#option-b-running-the-broker-api-with-docker-compose), instructions on how to generate new keys and fund your account are provided in the github repo.
 
 ### Option A: Using the pre-compiled binaries

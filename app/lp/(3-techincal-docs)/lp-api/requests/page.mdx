@@ -1399,15 +1399,15 @@ curl -H "Content-Type: application/json" -d '
 
 ### `lp_schedule_swap`<span className="badge-success after:content-['New']"/>
 
-This RPC allows you to initiate an [internal swap](../../swapping/integrations/advanced/internal-swaps).
+This RPC allows you to initiate an [internal swap](/lp/internal-swaps).
 
 Parameters:
 - [`amount`](/lp/lp-api/types#amount): The amount of input asset to swap.
 - [`input_asset`](/lp/lp-api/types#asset): The asset to swap from.
 - [`output_asset`](/lp/lp-api/types#asset): The asset to swap into.
-- `retry_duration`: A number of blocks for which the swap will be retried if it fails (see [FoK](../../swapping/swapping-basics#minimum-accepted-price-slippage-protection) section).
-- [`min_price`](#hex-price): The minimum price to swap at (see [FoK](../../swapping/swapping-basics#minimum-accepted-price-slippage-protection) section).
-- `dca_params`: (optional) `DcaParameters`, which determines whether (and how) the swap should be split into chunks (see [DCA](../../swapping/swapping-basics#dollar-cost-average-dca-improving-price) section).
+- `retry_duration`: A number of blocks for which the swap will be retried if it fails (see [FoK](/brokers/swapping-basics#slippage-protection-minimum-accepted-price) section).
+- [`min_price`](#hex-price): The minimum price to swap at (see [FoK](/brokers/swapping-basics#slippage-protection-minimum-accepted-price) section).
+- `dca_params`: (optional) `DcaParameters`, which determines whether (and how) the swap should be split into chunks (see [DCA](/brokers/swapping-basics#dollar-cost-average-dca-improving-price) section).
 - [`wait_for`](/lp/lp-api/types#wait-for)
 
 where `DcaParameters` is an object containing the following fields:

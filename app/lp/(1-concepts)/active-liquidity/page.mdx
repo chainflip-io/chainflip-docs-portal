@@ -1,0 +1,19 @@
+---
+
+title: Active Liquidity Provisioning
+
+description: Active Liquidity Provisioning overview
+
+---
+
+
+## Active Liquidity Provisioning
+Active Liquidity Provisioning represents a more advanced and potentially high-gain strategy. Instead of leaving capital idle across the full price curve, active liquidity provisioning  involves actively managing and reallocating liquidity based on market dynamics. LPs continuously adjust their positions—narrowing or widening price ranges, moving liquidity to higher-volume regions, or exiting positions entirely—using on-chain data, off-chain analytics, and sometimes automated bots. When executed effectively, this approach can generate significantly higher fee income and returns compared to passive liquidity provisioning.
+
+### LP Orders
+
+To provision liquidity, LPs can create **range orders** or **limit orders** in the JIT AMM. To do so, they need to have deposited enough assets to open the order from their virtual balance on the State Chain.
+
+Range orders are similar to Uniswap v3's, and can be closed or updated at any time.
+
+Limit orders are maker-only, and can be closed or updated at any time. Filled limit orders are automatically closed and the swapped funds are returned to the LP account balance.

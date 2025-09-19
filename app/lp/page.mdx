@@ -25,25 +25,16 @@ Liquidity provisioning is a crucial aspect of the Chainflip protocol. It ensures
 
 Liquidity providers (LPs) are entities that supply assets to Chainflip's liquidity pools. They then create orders that indicate their willingness to act as the counterpart for swaps at a specific price. In return for their contribution, LPs earn fees. The more liquidity an LP provides, the more fees they can potentially earn.
 
-### LP Orders
-
-To provision liquidity, LPs can create **range orders** or **limit orders** in the JIT AMM. To do so, they need to have deposited enough assets to open the order from their virtual balance on the State Chain.
-
-Range orders are similar to Uniswap v3's, and can be closed or updated at any time.
-
-Limit orders are maker-only, and can be closed or updated at any time. Filled limit orders are automatically closed and the swapped funds are returned to the LP account balance.
-
-
 ## Quick start
 
-To start using supplying liquidity on Chainflip, you can provide:
+To start using supplying liquidity on Chainflip, you can choose what liquidity provisioning strategy is best fit for your risk tolerance. You can either use passive liquidity or active liquidity strategies:
 
 <Cards num={2}>
   <Cards.Card arrow title="Passive Liquidity" href="/docs/docs-theme/start">
-    <>![Documentation theme screenshot](/assets/docs-theme.png)</>
+    <>![passive-liquidity](/assets/passive-liquidity-light.png)</>
   </Cards.Card>
   <Cards.Card arrow title="Active Liquidity" href="/docs/blog-theme/start">
-    <>![Blog theme screenshot](/assets/blog-theme.png)</>
+    <>![active-liquidity](/assets/active-liquidity-light.png)</>
   </Cards.Card>
 </Cards>
 

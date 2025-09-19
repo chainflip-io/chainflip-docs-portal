@@ -92,12 +92,13 @@ export default {
     title: 'Liquidity Providers',
     items: {
       index: '',
-      'lp-account': '',
-      'trading-strategies': '',
+      'active-liquidity': '',
+      'passive-liquidity': '',
       'internal-swaps': {
         href: '/internal-swaps',
         title: <span className="badge-success after:content-['New']">Internal Swaps</span>
       },
+      'lp-account': '',
       __: {
         type: 'separator',
         title: 'Guides'

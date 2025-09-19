@@ -100,7 +100,7 @@ If you use the `broker_request_swap_parameter_encoding` RPC call to build the ca
 In both the [EVM smart contract interface](/brokers/vault-swaps-api/evm#vault-contract-interface-reference) and the [Solana program interface](/brokers/vault-swaps-api/solana#ault-contract-interface-references), the `cf_parameters` must be passed as part of the transaction data.
 
 There are two recommended approaches to encode this data to avoid manual encoding errors and to ensure compatibility with the protocol:
-- The Chainflip SDK's method to [encode the cf parameters](../../javascript-sdk/swap-assets/encode-cf-parameters.mdx).
+- The Chainflip SDK's method to [encode the cf parameters](/brokers/javascript-sdk/functions#encodecfparameters).
 - The RPC call [`broker_encode_cf_parameters`](/brokers/broker-api/requests#broker_encode_cf_parameters).
 
 <Callout type="info">
@@ -111,7 +111,7 @@ There are two recommended approaches to encode this data to avoid manual encodin
     Both of the above behave identically, the only difference is that the `cf_` variant requires the `broker_id` field to be populated explicitly, whereas the `broker_` variant adds the ID configured in the Broker API.
 </Callout>
 
-As described in the [EVM smart contract interface](./evm.mdx#vault-contract-interface-references) and  the [Solana program interface](./solana.mdx#parameter-reference-for-the-program-call), the `cf_parameters` must be passed as part of the transaction data. The protocol expects a `VersionedCfParameters` encoded into bytes format using Parity's Scale.
+As described in the [EVM smart contract interface](/protocol/cross-chain-messaging/evm-ccm#ccm-receiver-smart-contract-interface) and  the [Solana program interface](/protocol/cross-chain-messaging/sol-ccm#receive-call-and-asset-on-the-receiver-program), the `cf_parameters` must be passed as part of the transaction data. The protocol expects a `VersionedCfParameters` encoded into bytes format using Parity's Scale.
 
 ```rust 
 #[derive(Encode, Decode)]
@@ -248,5 +248,5 @@ function encodeCfParameters(
 <Callout type="info">
   The `ccmAdditionalData` parameter should not be encoded for non-CCM swaps - it should be undefined in the code above.
   For CCM swaps, when the destination chain is different than Solana it should be an empty hex string. For
-  Solana CCM swaps, it should be encoded as described in the [Solana CCM message section](../cross-chain-messaging/sol-ccm.mdx#solana-ccm-additional-data).
+  Solana CCM swaps, it should be encoded as described in the [Solana CCM message section](/brokers/vault-swaps-api/solana#interface-references).
 </Callout>

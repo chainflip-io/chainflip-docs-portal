@@ -21,7 +21,7 @@ Chainflip’s AMM design differs substantially from industry standards due to li
 ## JIT AMM Core Features
 
 - The JIT AMM is implemented directly on the State Chain in the '_pools_' pallet. Written in Rust, it's a substrate rewrite of the Uniswap v3 design on Ethereum with several changes and additions running in a custom execution environment.
-- **Range orders** work as they normally do in Uniswap v3. Liquidity remains deployed until the LP submits an extrinsic which removes it from the pool and returns the remaining funds and fees to their [liquidity account](liquidity-provider-accounts.md) balance.
+- **Range orders** work as they normally do in Uniswap v3. Liquidity remains deployed until the LP submits an extrinsic which removes it from the pool and returns the remaining funds and fees to their [liquidity account](/lp/lp-account) balance.
 - **Limit orders** are layered on top of the existing range order system.
 - Both limit and range orders are consumed by swaps based on the best price at any given time. This means switching between range and limit orders, can occur arbitrarily as needed. The resulting funds are returned to the LP's balance.
 - Swaps will take all of the liquidity from any limit and range orders in each price 'tick' before moving on to the next.
@@ -52,7 +52,7 @@ As long as a few Market Makers compete with each other for the trades, this prot
 
 Let’s trace the path of a typical swap to examine how this works in practice. For this example, our hypothetical user will swap USDC (ERC20) for BTC (Native), and Market Makers A & B will compete to win the liquidity fee from the trade. There is a 25bps liquidity fee on this pool (just as an example).
 
-- The User (BTC buyer) opens a [Deposit Channel](deposit-channels-and-brokers.md) connected with their destination address and swap intents for BTC. The user [initiates the swap](native-swap-flow.md) by depositing 10,000 USDC.
+- The User (BTC buyer) opens a [Deposit Channel](/brokers/broker-deposit-channels-swaps#deposit-channels) connected with their destination address and swap intents for BTC. The user [initiates the swap](/protocol/how-swapping-works#native-swap-flow) by depositing 10,000 USDC.
 
 ![USDC to BTC swap](public/concepts/usdc_bitcoin_swap.gif)
 
@@ -62,7 +62,7 @@ Let’s trace the path of a typical swap to examine how this works in practice. 
 - The swap deposit reaches the witness threshold and the swap is executed. As the pool price (from the last trade) is $23,920, the swap consumes $1000 worth of range orders before the pool price matches the next best limit order, in this case, Market Maker A's \$23,934 bid, which fills the rest of the buy swap.
 - Market Maker A, having just sold \$9,000 of BTC, goes ahead and instantaneously buys \$9,000 of BTC at \$23,980 on other markets as soon as they see that in the new block. If managed correctly, the Market Maker just pulled in a nice little profit and did so without much price risk. These opportunities occur every time a swap is executed.
 - The Chainflip Validator network now sends the swapped BTC funds to the user, straight to their native BTC wallet address they provided at the start.
-- Market Maker A might now make some [withdrawals or deposits to their LP position](liquidity-provider-accounts.md) to rebalance their portfolio to prepare to capture future opportunities, while Market Maker B is ready to fill another order in the immediate future. The next one is just 1 Ethereum block away.
+- Market Maker A might now make some [withdrawals or deposits to their LP position](/lp/lp-account) to rebalance their portfolio to prepare to capture future opportunities, while Market Maker B is ready to fill another order in the immediate future. The next one is just 1 Ethereum block away.
 
 This swap flow relies on Market Makers executing behaviour which is functionally equivalent to that of typical software-driven OTC desks and RFQ systems but in an open and competitive environment. This strategy can easily be integrated into typical market-making strategies as a method of generating trade flow without needing to build or expand a customer base.
 

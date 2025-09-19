@@ -26,7 +26,7 @@ A `ThresholdSignatureRequest` signals to the Authority Set that a transaction mu
 
 ### Threshold Signature Scheme (TSS) Signing Ceremonies
 
-TSS signing in Chainflip is conducted using the [FROST multisig scheme](../components/frost-signature-scheme.md), which relies on Schnorr signatures for fast and scalable multi-party computation, allowing for a large set of signers. FROST allows Chainflip to secure all Vaults using the same Authority Set of 150 Validators, offering substantial benefits in terms of economic security and a simpler Vault management logic compared to other Cross-Chain Liquidity Networks.
+TSS signing in Chainflip is conducted using the [FROST multisig scheme](/protocol/frost-signature-scheme), which relies on Schnorr signatures for fast and scalable multi-party computation, allowing for a large set of signers. FROST allows Chainflip to secure all Vaults using the same Authority Set of 150 Validators, offering substantial benefits in terms of economic security and a simpler Vault management logic compared to other Cross-Chain Liquidity Networks.
 
 If the ceremony fails, it will time out on the State Chain and will be automatically restarted. Once the signing ceremony has been successfully completed, the signed transaction is reported on the State Chain and can now be broadcast to the external blockchain.
 

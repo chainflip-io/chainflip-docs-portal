@@ -20,7 +20,7 @@ export default function MdxLayout(props) {
 A Validator, in the context of Chainflip, is a server operating a **Chainflip State Chain node**, as well as additional ‘sidecar’ functionality through the **Chainflip Engine (CFE)**, an off-chain processing module. For the purposes of introduction, at a high level:
 
 - Up to 150 Validators can participate in the protocol’s **Authority Set** at any one time, and collectively operate almost all of the protocol's functions concurrently, and jointly control _all_ funds in the system.
-- All Validator slots are entirely permissionless, where any Validator operator with sufficient $FLIP to outbid others in [Auctions](validator-network/validator-auctions-bonds-and-rewards.md) becomes a member of the Authority Set after winning.&#x20;
+- All Validator slots are entirely permissionless, where any Validator operator with sufficient $FLIP to outbid others in [Auctions](/validators/validator-auctions-bonds-and-rewards) becomes a member of the Authority Set after winning.&#x20;
 - Each individual Validator has its own set of private keys which it uses to participate in the consensus of the State Chain, as well as to generate secrets for the purposes of TSS key generation and signing.
 - Every Validator simultaneously watches all supported external chains for **Witnessing**, which is functionally equivalent to the network being its own decentralised oracle for incoming transfers.
 - Using the TSS protocol in chorus with the other Validators and the external blockchain connections, Validators also **Broadcast** transactions to send funds out of the protocol. Again, the network is its own decentralised relayer.

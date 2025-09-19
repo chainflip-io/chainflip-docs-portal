@@ -13,7 +13,7 @@ import { Callout } from "nextra/components";
 
 Cross-chain messaging allows application developers to send messages (payload) along with a swap. These swaps are like any other but include a message to a receiver contract on the destination chain, via program or smart contract call.
 
-As described in [How Swapping Works](../../../how-swapping-works.md), swaps in Chainflip can be initiated via **requesting a deposit address** or via a **call to the Chainflip vault**. Both of those methods support cross-chain messaging by defining additional data.
+As described in [How Swapping Works](/protocol/how-swapping-works), swaps in Chainflip can be initiated via **requesting a deposit address** or via a **call to the Chainflip vault**. Both of those methods support cross-chain messaging by defining additional data.
 
 
 ## Chains supported
@@ -28,14 +28,14 @@ The following chains are supported for cross-chain messaging as destination chai
 
 - The destination chain needs to be a Chainflip supported CCM-compatible chain.
 - The swap must be initiated by either requesting a deposit address or via Vault swap. Either way, the `message` and the `gasBudget` parameters must be supplied.
-- For CCMs swaps to Solana, the `ccm_additional_data` is also required. See [Solana CCM Additional data](./sol-ccm.mdx#solana-ccm-additional-data).
-- The receiver contract on the destination chain needs to be a smart contract or program with the interface described for the destination chain, either [EVM](./evm-ccm.mdx#ccm-receiver-smart-contract-interface) or [Solana](./sol-ccm.mdx#receive-call-and-asset-on-the-receiver-program).
+- For CCMs swaps to Solana, the `ccm_additional_data` is also required. See [Solana CCM Additional data](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
+- The receiver contract on the destination chain needs to be a smart contract or program with the interface described for the destination chain, either [EVM](/protocol/cross-chain-messaging/evm-ccm#ccm-receiver-smart-contract-interface) or [Solana](/protocol/cross-chain-messaging/sol-ccm#receive-call-and-asset-on-the-receiver-program).
 - The message must be shorter or equal than 15k bytes and will be passed along the swap completely unmodified from source chain to destination chain.
 - The `gas_budget` represents the amount of gas or compute units that the user requests on the destination chain to execute user logic. The protocol will automatically add its gas requirements on top for the overhead of the transaction verification to make sure the requested gas budget is available for the user logic.
 - As part of the broadcast fees, Chainflip will estimate the minimum amount of the destination asset needs to be subtracted to pay for the transaction cost, including the requested gas or compute units.
-- The **gas budget should to be enough to execute the receiver's contract logic on the destination chain**. The estimation depends on the destination chain, [EVM](./evm-ccm.mdx#gas-budget-estimation) or [Solana](./sol-ccm.mdx#compute-budget-estimation).
+- The **gas budget should to be enough to execute the receiver's contract logic on the destination chain**. The estimation depends on the destination chain, [EVM](/protocol/cross-chain-messaging/evm-ccm#gas-budget-estimation) or [Solana](/protocol/cross-chain-messaging/sol-ccm#compute-budget-estimation).
 
-Depending on the destination chain there are some extra considerations that need to be taken into account. Check out [EVM considerations](./evm-ccm.mdx#considerations) and/or [Solana considerations](./sol-ccm.mdx#considerations)
+Depending on the destination chain there are some extra considerations that need to be taken into account. Check out [EVM considerations](/protocol/cross-chain-messaging/evm-ccm#evm-considerations) and/or [Solana considerations](/protocol/cross-chain-messaging/sol-ccm#safety-considerations-on-the-users-logic)
 
 <Callout type="warning">
   Assethub is only supported from Chainflip version 1.9 onwards

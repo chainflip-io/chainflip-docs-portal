@@ -20,7 +20,7 @@ Firstly, let's explore protocol emissions. Emissions are newly minted tokens giv
 
 The rewards distributed to Validators are to ensure the economic security of the protocol. Chainflip requires Validators to stake tokens that can be slashed in order to ensure the safety of liquidity contained in the protocol.
 
-This economic security is discussed in more detail on the [Governance & Security](../components/governance-and-security.md "mention") page.
+This economic security is discussed in more detail on the [Governance & Security](/protocol/governance-and-security "mention") page.
 
 In the future, additional budgets may be altered or granted through governance to fund liquidity provisioning incentives or trading rebate programs to extend overall market performance.
 
@@ -61,7 +61,7 @@ Given the budget of 4.5%, we would expect the staking ratio to end up between ~2
 
 ### Backup Validator Rewards
 
-Backup Validators are normally the top 50 bidding non-Authorities (see [Auction Theory (SSOD)](auction-theory-ssod.md)) and receive rewards from a limited budget of 1% per year target rate. The budget for rewards is distributed on a pro-rated basis, meaning those backup validators with a higher relative stake to the other Backup Validators will receive more rewards.
+Backup Validators are normally the top 50 bidding non-Authorities (see [Auction Theory](/validators/validators-role#the-auction-system-allocating-validator-slots)) and receive rewards from a limited budget of 1% per year target rate. The budget for rewards is distributed on a pro-rated basis, meaning those backup validators with a higher relative stake to the other Backup Validators will receive more rewards.
 
 The system immediately reflects increased bids for Backup Validators in the rewards they are paid. This provides a direct and immediate incentive to stake as much as possible as soon as possible, both increasing total bidding and increasing the likelihood that these more active and collateralised Backup Validators will be included in the next Authority set.
 
@@ -126,13 +126,13 @@ This chart is derived from the circulating supply at month 6 of the vesting sche
 
 A lesser type of burning mechanism is the State Chain gas fees, which are automatically burned. All extrinsic submissions incur these fees, including liquidity provider updates, deposit channel requests, validator extrinsics, and so on. We do not expect these burning transactions to account for significant volumes of \$FLIP unless network activity is extremely high.
 
-For more information on these fees check how they apply to [Brokers](../swaps-amm/deposit-channels-and-brokers.md#brokers) and [Liquidity Providers](../swaps-amm/liquidity-provider-accounts.md).
+For more information on these fees check how they apply to [Brokers](/brokers#brokers) and [Liquidity Providers](/lp#liquidity-providers).
 
 ### Slashing
 
 Finally, slashing and penalties for Validators are also burned. Hopefully, these penalties end up being insignificant, as a fully operational Authority set shouldn't ever incur these penalties if the operators are behaving correctly and maintaining their nodes.
 
-To read more about these penalties, you can check out [Reputation and Slashing](../validator-network/reputation-and-slashing.md "mention")
+To read more about these penalties, you can check out [Reputation and Slashing](/validators/reputation-and-slashing "mention")
 
 ## Conclusion
 

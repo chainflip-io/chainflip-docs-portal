@@ -45,12 +45,12 @@ The safety margin varies by chain. Some chains, like Polkadot, have deterministi
 
 However, as soon as a block is detected on the supported blockchain which causes a deposit to be considered ‘final’ according to the Chainflip protocol’s definition, each Validator in the Authority Set submits a `witness` extrinsic to the State Chain. When over 2/3rds of the Authority Set (100 of 150 in the standard case) have done so, this finalises the witness event. From then on, the State Chain registers the event as ‘real,’ and the transaction details such as the TXID, asset, amount, and any relevant metadata are recorded on the State Chain.
 
-If a Validator submitted a witness extrinsic which didn’t align with what other Validators have seen on the supported blockchain, the witness extrinsic would never reach sufficient consensus on the State Chain. This ‘false’ witness could then be used as proof to punish the Validator that submitted it. Similarly, nodes that frequently fail to witness events that the other 2/3rds of Validators catch within a given timeframe could also be grounds to programmatically punish a Validator through [**Slashing**](reputation-and-slashing.md)**.**
+If a Validator submitted a witness extrinsic which didn’t align with what other Validators have seen on the supported blockchain, the witness extrinsic would never reach sufficient consensus on the State Chain. This ‘false’ witness could then be used as proof to punish the Validator that submitted it. Similarly, nodes that frequently fail to witness events that the other 2/3rds of Validators catch within a given timeframe could also be grounds to programmatically punish a Validator through [**Slashing**](/validators/reputation-and-slashing)**.**
 
 ### Summary
 
 Witnessing is effectively how assets are passed through the settlement layer into the accounting layer, and is at the heart of all ingress processes, three of the main ones being:
 
-- [State Chain Flip Gateway](state-chain-flip-gateway.mdx)
-- [Native Swap Flow](../swaps-amm/native-swap-flow.mdx)
-- [Liquidity Provider Accounts](../swaps-amm/liquidity-provider-accounts.md)
+- [State Chain Flip Gateway](/protocol/funding-state-chain-account#state-chain-flip-gateway)
+- [Native Swap Flow](/protocol/how-swapping-works#native-swap-flow)
+- [Liquidity Provider Accounts](/lp/lp-account)

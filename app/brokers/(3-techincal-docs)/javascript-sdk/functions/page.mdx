@@ -445,7 +445,7 @@ Once a deposit channel is open, the user can send the funds from any wallet to i
 Compared to [vault swaps](#encode-vault-swap-data), using deposit channels can be cheaper for the user because it doesn't require token approvals.
 
 <Callout type="info">
-    Learn more about deposit channels in the [Deposit Channels & Brokers](/concepts/swaps-amm/deposit-channels-and-brokers) documentation.
+    Learn more about deposit channels in the [Deposit Channels & Brokers](//brokers/broker-deposit-channels-swaps) documentation.
 </Callout>
 
 Requests a deposit address for the given `DepositAddressRequestV2`.
@@ -591,8 +591,8 @@ type DepositAddressRequestV2 = {
 
 ### Configure your Broker API
 
-If you want to earn [broker fees](../../running-a-broker/introduction) or use [affiliates](../../running-a-broker/broker-affiliates),
-you need to run your own [Broker API](../../running-a-broker/broker-api).
+If you want to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates),
+you need to run your own [Broker API](/brokers/running-broker-api).
 You can configure the URL of your Broker API when initializing the SDK.
 
 ```typescript copy
@@ -747,7 +747,7 @@ of other decentralized exchanges and therefore might be easier to integrate into
 </Callout>
 
 Returns the unsigned transaction data for the given `VaultSwapRequest`.
-This method uses the `broker_request_swap_parameter_encoding` RPC method of the configured [Broker API](../../running-a-broker/broker-api).
+This method uses the `broker_request_swap_parameter_encoding` RPC method of the configured [Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding).
 
 ```typescript copy
 function encodeVaultSwapData(vaultSwapRequest: VaultSwapRequest): Promise<VaultSwapResponse>

@@ -13,7 +13,7 @@ import { Callout } from "nextra/components";
 Bitcoin Vault Swaps are a way of initiating a swap by constructing a custom Bitcoin transaction that is sent to the Chainflip Vault via a private broker channel. The transaction contains all of the instructions necessary to process the swap.
 
 <Callout type="info">
-Bitcoin Vault Swaps have a unique requirement compared to other chains: Brokers must first open a [Private Bitcoin Channel](../../running-a-broker/broker-api.mdx#broker_open_private_btc_channel). Private channels prevent spam, and allow the Broker to uniquely assign commission to itself and its Affiliates. Opening a Private Channel is a **one-time** operation.
+Bitcoin Vault Swaps have a unique requirement compared to other chains: Brokers must first open a [Private Bitcoin Channel](/brokers/broker-api/requests#broker_open_private_btc_channel). Private channels prevent spam, and allow the Broker to uniquely assign commission to itself and its Affiliates. Opening a Private Channel is a **one-time** operation.
 </Callout>
 
 Creating a Bitcoin Vault Swap follows the same pattern mentioned in the [Vault Swaps introduction](/brokers/broker-vault-swaps):
@@ -214,7 +214,7 @@ if (!txId) {
 This reference can be used to verify the encoding of the NullData Payload if desired.
 
 <Callout type="warning">
-You should not need to build this encoding yourself. Always prefer to use the [`broker_request_swap_parameter_encoding()` RPC](./vault-swaps.mdx) to encode the swap parameters. It's more convenient and more reliable.
+You should not need to build this encoding yourself. Always prefer to use the [`broker_request_swap_parameter_encoding()` RPC](/brokers/broker-vault-swaps) to encode the swap parameters. It's more convenient and more reliable.
 </Callout>
 
 The swap parameters are encoded in the `nulldata UTXO` payload using [Parity's SCALE](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/#scale-codec) codec, in the following order:
@@ -222,15 +222,15 @@ The swap parameters are encoded in the `nulldata UTXO` payload using [Parity's S
 | Param | Description | Data Type |
 | ------| ----------- | --------- |
 | `version` | Encoding version number. Currently `0` | `u8` |
-| `output_asset` | Destination [asset ID](../vault-swaps/vault-swaps.mdx#supported-chain-and-asset-notation). | `u8` |
-| `output_address` | Encoded [address](../../running-a-broker/broker-api.mdx#addresses) | `Vec<u8>` |
+| `output_asset` | Destination [asset ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation). | `u8` |
+| `output_address` | Encoded [address](/brokers/broker-api/types#addresses) | `Vec<u8>` |
 | `retry_duration` | Number of blocks to wait before refunding the swap | `u16` |
 | `min_output_amount` | Minimum output amount in the smallest unit of the output asset | `u128` |
 | `number_of_chunks` | DCA: The number of chunks the swap should be broker up into | `u16` |
 | `chunk_interval` | DCA: The delay between DCA chunks in number of 6-second blocks | `u16` |
 | `boost_fee` | Maximum accepted boost fee in basis points (100th of a percent) | `u8` |
 | `broker_fee` | Broker fee in basis points | `u8` |
-| `affiliates` | List of up to 2 [affiliate short IDs](../../running-a-broker/broker-api/#broker_register_affiliate) and fee (basis points) | `Vec<(u8, u8)>`|
+| `affiliates` | List of up to 2 [affiliate short IDs](brokers/broker-api/requests#broker_register_affiliate) and fee (basis points) | `Vec<(u8, u8)>`|
 
 <Callout type="info">
 The encoded data in `nulldata_payload` returned by [broker_request_swap_parameter_encoding](/brokers/broker-api/requests#broker_request_swap_parameter_encoding) does not include any OP codes. Depending on how you build your transaction, you may need to add these manually.

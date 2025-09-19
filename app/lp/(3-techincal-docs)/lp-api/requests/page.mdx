@@ -768,13 +768,13 @@ curl -H "Content-Type: application/json" -d '{
 ### `lp_request_redemption`
 
 Request a redemption of all $FLIP or a specified amount.
-Please see [Redeeming Funds & Retiring](../../../mainnet/validator-setup/redeeming-funds-and-retiring.mdx) for more details on redeeming.
+Please see [Redeeming Funds & Retiring](/validators/mainnet/funding#redeeming-funds--retiring) for more details on redeeming.
 Returns the transaction hash of the extrinsic that requested the redemption.
 
 Parameters:
 - [`redeem_address`](/lp/lp-api/types#addresses): The Ethereum address to send the redeemed funds to.
 - [`exact_amount`](/lp/lp-api/types#asset) (Optional): The amount of flip to redeem. If not specified, all $FLIP will be redeemed.
-- [`executor_address`](/lp/lp-api/types#addresses) (Optional): Restricts the `executeRedemption` function call in the [Gateway contract](/protocol/funding-state-chain-account#the-gateway) to only be callable by the specified address for this redemption. If not specified, anyone can execute the redemption.
+- [`executor_address`](/lp/lp-api/types#addresses) (Optional): Restricts the `executeRedemption` function call in the [Gateway contract](/protocol/funding-state-chain-account#state-chain-flip-gateway) to only be callable by the specified address for this redemption. If not specified, anyone can execute the redemption.
 
 #### Example
 

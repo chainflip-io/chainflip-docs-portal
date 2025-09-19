@@ -10,7 +10,7 @@ import { Callout } from "nextra/components";
 
 ## Deposit Channels Swaps
 
-In [Ingress: Witnessing Deposits](../validator-network/ingress-witnessing-deposits.md), we briefly covered how unique deposit addresses can be reserved for depositors of various kinds to the protocol. Although not necessary to interact with the protocol, this particular ingress method provides incredible flexibility for the user and is a unique feature of the Chainflip protocol. In this component analysis, we’ll explore at a lower level how Deposit Channels work and discuss Brokers in more detail.
+In [Ingress: Witnessing Deposits](/protocol/ingress-witnessing-deposits), we briefly covered how unique deposit addresses can be reserved for depositors of various kinds to the protocol. Although not necessary to interact with the protocol, this particular ingress method provides incredible flexibility for the user and is a unique feature of the Chainflip protocol. In this component analysis, we’ll explore at a lower level how Deposit Channels work and discuss Brokers in more detail.
 
 ## Deposit Channels
 
@@ -26,7 +26,7 @@ This is really no different to the way that centralized exchanges handle user de
 
 ### Opening Deposit Channels
 
-1. The user, through a [Broker](deposit-channels-and-brokers.md#brokers) (discussed below), has an extrinsic submitted to the State Chain which includes all required swap data, such as their Destination Chain and Destination Address.
+1. The user, through a [Broker](/brokers#brokers) (discussed below), has an extrinsic submitted to the State Chain which includes all required swap data, such as their Destination Chain and Destination Address.
 2. The Broker returns the transaction hash to the user to verify the opening of the Deposit Channel.
 3. The user can verify the validity of the Deposit Channel using a secondary chain data source if desired
 4. The user can also locally derive the Deposit Channel Address based on the index/nonce/salt that was included in the successfully submitted Deposit Request, and when ready, makes a deposit to that derived address to initiate the swap.
@@ -39,7 +39,7 @@ All Deposit Channels close after 24 hours. This guarantees continuity of service
 
 After a Deposit Channel has been closed, many Vault types will actually reuse the Deposit Channel Address when assigned to a new Deposit Channel. This is normally to avoid redeploying deposit contracts and save on gas on the EVM chains.
 
-See the [Vault design](../components/bitcoin-vault-design.mdx) documentation for more information on how Deposit Channels are handled during Vault rotations on each chain type.
+See the [Vault design](/protocol/vaults/bitcoin-vault-design) documentation for more information on how Deposit Channels are handled during Vault rotations on each chain type.
 
 
 ## Broker integration through deposit channels

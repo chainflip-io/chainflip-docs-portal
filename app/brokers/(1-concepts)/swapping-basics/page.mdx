@@ -11,23 +11,23 @@ import {Callout, Steps} from "nextra/components";
 
 ## Swapping Basics
 
-Chainflip swaps are _fire-and-forget_, meaning once a deposit is made, users don't need to do anything else for the swap to take place. In a nutshell, the swapping process starts when a deposit is made to the _State Chain_ through a process called [Ingress](../../concepts/validator-network/ingress-witnessing-deposits).
+Chainflip swaps are _fire-and-forget_, meaning once a deposit is made, users don't need to do anything else for the swap to take place. In a nutshell, the swapping process starts when a deposit is made to the _State Chain_ through a process called [Ingress](/protocol/ingress-witnessing-deposits).
 
-The [State Chain](../../concepts/validator-network/the-state-chain) is an application-specific blockchain designed for the Chainflip protocol, making cross-chain swap transactions efficient.
-Whenever funds are deposited, the State Chain witnesses the deposit, where they are bundled and processed to be swapped in the [Just-In-Time AMM](../../concepts/swaps-amm/just-in-time-amm-protocol) protocol — all in the same block.
-Once the funds are swapped, the new assets are ready to be sent to the destination address by a process called [Egress](../../concepts/validator-network/egress-broadcasting-funds).
+The [State Chain](/protocol/protocol-overview#the-state-chain) is an application-specific blockchain designed for the Chainflip protocol, making cross-chain swap transactions efficient.
+Whenever funds are deposited, the State Chain witnesses the deposit, where they are bundled and processed to be swapped in the [Just-In-Time AMM](/protocol/just-in-time-amm-protocol) protocol — all in the same block.
+Once the funds are swapped, the new assets are ready to be sent to the destination address by a process called [Egress](/protocol/egress-broadcasting-funds).
 To learn more on how Chainflip swaps work on the protocol level, check the [Native Swap Flow](/protocol/how-swapping-works) guide.
 
 At a high level, the process can be described with the following steps:
 
 <Steps>
     ### Initiating a swap
-    This first step can be done through the [Swapping app](https://swap.chainflip.io/) (frontend), the [Javascript SDK](integrations/javascript-sdk/introduction), or directly using the [Chainflip CLI client](integrations/running-a-broker/broker-api#broker_request_swap_deposit_address). There are two primary methods to start a Chainflip Swap:
-    * **Generating a Deposit Address**: This method involves creating a unique deposit address where the user can send the funds. Once the deposit is made, the swap process is automatically triggered. See [Request Deposit Address](integrations/javascript-sdk/swap-assets/request-deposit-address-v2.md) method.
-    * **Direct call to the Chainflip Vault:** This method is a function call to a smart contract for EVM chains and a program call to a program for Solana, including a payload. This makes *aggregation* easier for application developers (think DEX Aggregators). For more details see [Vault swaps](integrations/advanced/vault-swaps/vault-swaps).
+    This first step can be done through the [Swapping app](https://swap.chainflip.io/) (frontend), the [Javascript SDK](integrations/javascript-sdk/introduction), or directly using the [Chainflip CLI client](/brokers/broker-api/requests#broker_request_swap_deposit_address). There are two primary methods to start a Chainflip Swap:
+    * **Generating a Deposit Address**: This method involves creating a unique deposit address where the user can send the funds. Once the deposit is made, the swap process is automatically triggered. See [Request Deposit Address](/brokers/javascript-sdk/functions#requestdepositaddressv2) method.
+    * **Direct call to the Chainflip Vault:** This method is a function call to a smart contract for EVM chains and a program call to a program for Solana, including a payload. This makes *aggregation* easier for application developers (think DEX Aggregators). For more details see [Vault swaps](/brokers/broker-vault-swaps).
 
     ### Witnessing the deposit
-    The Validator network will monitor open [Deposit Channels](../../concepts/swaps-amm/deposit-channels-and-brokers) for incoming transactions and Vault Contracts for swap calls. Upon seeing a deposit for a Swap, it will be witnessed and registered on the State Chain.
+    The Validator network will monitor open [Deposit Channels](/brokers/broker-deposit-channels-swaps#deposit-channels) for incoming transactions and Vault Contracts for swap calls. Upon seeing a deposit for a Swap, it will be witnessed and registered on the State Chain.
 
     <Callout type="warning">
         There's a delay between the deposit transaction and its confirmation on the
@@ -40,7 +40,7 @@ At a high level, the process can be described with the following steps:
     > At this point, you can use the [Block Explorer](https://scan.chainflip.io/swaps) to see the swap '_in progress_'.
 
     ### Processing the swap
-    Once the swap is Witnessed it is ready to be swapped in the [Just-In-Time AMM](../../concepts/swaps-amm/just-in-time-amm-protocol) protocol. Swaps are automatically bundled and processed so that LPs can bid on swaps in the same block where they occur.\
+    Once the swap is Witnessed it is ready to be swapped in the [Just-In-Time AMM](/protocol/just-in-time-amm-protocol) protocol. Swaps are automatically bundled and processed so that LPs can bid on swaps in the same block where they occur.\
     For swap routes that require more than one pool, i.e. BTC -> ETH, **each swap is conducted sequentially, usually in the same block:** BTC -> USDC, and then USDC -> ETH.
 
 </Steps>
@@ -49,7 +49,7 @@ At a high level, the process can be described with the following steps:
 
 Essentially, the process of JIT swaps on Chainflip looks like this for a user:
 
-1. A user initiates a swap by depositing **10,000 USDC** **to buy** **BTC**. The deposit is made through a swap [Deposit Channel](../../concepts/swaps-amm/deposit-channels-and-brokers) linked to their BTC address.
+1. A user initiates a swap by depositing **10,000 USDC** **to buy** **BTC**. The deposit is made through a swap [Deposit Channel](/brokers/broker-deposit-channels-swaps#deposit-channels) linked to their BTC address.
 2. Market Makers monitor the Ethereum blockchain for the deposit and anticipate its execution on the Chainflip State Chain.
 3. **After 3 Ethereum blocks**, the deposit transaction is considered **final in the State Chain**, and is expected to be executed in about 48 seconds (8 Chainflip State Chain blocks).
 4. Market Makers now **must include any limit or range order updates** to compete for the trade on the **BTC-USDC pool**. They use risk model calculations and their capital on other exchanges to determine their best possible price for the trade.
@@ -60,7 +60,7 @@ Essentially, the process of JIT swaps on Chainflip looks like this for a user:
 
 The process is almost identical to the previous example, but in this case, there are **two pools involved**:
 
-1. A user initiates a swap by depositing **1 BTC** **to buy** **ETH**. The deposit is made through a swap [Deposit Channel](../../concepts/swaps-amm/deposit-channels-and-brokers) linked to their ETH address.
+1. A user initiates a swap by depositing **1 BTC** **to buy** **ETH**. The deposit is made through a swap [Deposit Channel](/brokers/broker-deposit-channels-swaps) linked to their ETH address.
 2. Market Makers monitor the Bitcoin blockchain for the deposit and anticipate its execution on the Chainflip State Chain.
 3. **After 3 Bitcoin blocks** (\~30 minutes), the deposit transaction is considered **final in the State Chain**, it is expected to be executed in about 48 seconds (8 Chainflip State Chain blocks).
 4. Market Makers now **must include any limit or range order updates** to compete for the trade on the **BTC-USDC and ETH-USDC pools**. They use risk model calculations and their capital on other exchanges to determine their best possible price for the trade.
@@ -140,4 +140,4 @@ The minimum chunk sizes is set for each individual input asset and can be access
 It's important to note how Chainflip uses USD as the default pairing for all liquidity pools, with USDC (ERC20) as collateral. This design choice optimizes pricing while reducing liquidity fragmentation and aggregates slippage.
 USDC is chosen as the primary stablecoin base asset due to its high liquidity, adoption in DeFi, and secure structure compared to other options like USDT and algorithmic-stablecoins.
 
-Learn more about the need of a common pair and [the role of USDC in Chainflip's AMM](../../concepts/swaps-amm/usdusdc-denominated-pools.md).
+Learn more about the need of a common pair and [the role of USDC in Chainflip's AMM](/protocol/usdusdc-denominated-pools).

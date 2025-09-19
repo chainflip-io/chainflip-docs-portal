@@ -14,10 +14,10 @@ Let's look at how native cross-chain swaps are done from end to end in the Chain
 
 ## Initiating a Swap
 
-Either through the [Swapping App](https://swap-perseverance.chainflip.io/) or the [Chainflip SDK](../../integration/getting-started), there are two methods to start a Chainflip swap:
+Either through the [Swapping App](https://swap-perseverance.chainflip.io/) or the [Chainflip SDK](/brokers/javascript-sdk), there are two methods to start a Chainflip swap:
 
-1. Registering an intent to swap using a [Broker and creating a Deposit Channel](deposit-channels-and-brokers.md)
-2. Calling the swap function in Chainflip [Vault contracts](/swapping/integrations/advanced/vault-swaps/vault-swaps) — which can either be done by the user or by other contracts for maximum composability
+1. Registering an intent to swap using a [Broker and creating a Deposit Channel](/brokers/broker-deposit-channels-swaps#deposit-channels)
+2. Calling the swap function in Chainflip [Vault contracts](/brokers/broker-vault-swaps) — which can either be done by the user or by other contracts for maximum composability
 
 <Callout type="warning">
   Funds sent straight to Chainflip Vaults without using one of these methods
@@ -42,7 +42,7 @@ Once a method is chosen, the user can send their funds on the external chain (BT
 
 ## Witnessing the Deposit
 
-The network will monitor open Deposit Channels for transactions and the Vault Contracts for swap calls. Upon seeing a deposit for a Swap, it will be [Witnessed](../validator-network/ingress-witnessing-deposits#witnessing) by the network and registered on the State Chain.
+The network will monitor open Deposit Channels for transactions and the Vault Contracts for swap calls. Upon seeing a deposit for a Swap, it will be [Witnessed](/protocol/ingress-witnessing-deposits#witnessing) by the network and registered on the State Chain.
 
 The delay between the deposit transaction being made on the source chain and its confirmation on the State Chain through Witnessing depends mainly on the source chain. On Ethereum, the threshold is currently 6 blocks (\~90 seconds), whereas Bitcoin is 3 blocks (\~30 minutes).
 
@@ -57,24 +57,24 @@ The delay between the deposit transaction being made on the source chain and its
 
 Once the swap is Witnessed it is ready to be swapped in the **JIT AMM**.
 
-At the end of each block, Swaps are automatically bundled and processed. This is so that liquidity providers can bid on swaps in the same block where they occur. Liquidity providers monitor incoming deposits to bid on them at [their best price](just-in-time-amm-protocol.md).
+At the end of each block, Swaps are automatically bundled and processed. This is so that liquidity providers can bid on swaps in the same block where they occur. Liquidity providers monitor incoming deposits to bid on them at [their best price](/protocol/just-in-time-amm-protocol).
 
 - For each asset in each pool, swaps that take place in the same block are bundled together and swapped in one step to eliminate frontrunning and MEV potential. This is done separately for each direction of trade.
 - For swap routes that require multiple swaps through pools, for example, BTC -> USDC -> ETH, each swap is conducted sequentially, usually in the same block.
-- Whenever the swap input is first denominated in USD, the Chainflip Network fee is deducted. This could be at the start, middle, or end of swap processing depending on the route. This always occurs at some stage in the swapping process as a function of having [USDC denominated pools](usdusdc-denominated-pools.md "mention").
+- Whenever the swap input is first denominated in USD, the Chainflip Network fee is deducted. This could be at the start, middle, or end of swap processing depending on the route. This always occurs at some stage in the swapping process as a function of having [USDC denominated pools](/protocol/usdusdc-denominated-pools "mention").
 - For each swap conducted, liquidity fees are collected and the output is forwarded to the next step.
 
 Once all required swaps have been completed, the swap output is ready for the final stage of processing.
 
 ## Broadcasting the Swap Output
 
-Once a swap has been automatically executed on the State Chain, the assets to be paid out to the user are listed as a [Pending Egress Transaction](../validator-network/egress-broadcasting-funds.md).
+Once a swap has been automatically executed on the State Chain, the assets to be paid out to the user are listed as a [Pending Egress Transaction](/protocol/egress-broadcasting-funds).
 
 Using the Destination Address specified in the user’s Swap Initiation step, and bundling the Pending Egress Transaction with others into a single batch, estimated gas fees are deducted from the final Swap Output amount to compensate the network for making the Broadcast.
 
 If the user has included external call data in their swap request, that transaction will be broadcast separately to account for additional gas costs incurred at the user's request that shouldn't be socialised, but the egress is executed using the same TSS and broadcast method.
 
-The final **Egress Payout Transaction** is constructed, and the Authority Set conducts a Signing Ceremony to produce a valid signed transaction for that chain, which is [Broadcasted](../validator-network/egress-broadcasting-funds#broadcasting) automatically by the network.
+The final **Egress Payout Transaction** is constructed, and the Authority Set conducts a Signing Ceremony to produce a valid signed transaction for that chain, which is [Broadcasted](/protocol/egress-broadcasting-funds#broadcasting) automatically by the network.
 
 The user now has their shiny new native assets sitting peacefully in their wallet (or anywhere else that they specified).
 

@@ -18,7 +18,7 @@ Let's dive into how Validators win auctions and earn rewards.
 
 The Validator slots are granted based on the results of regular Auctions, whereby the highest bidders that complete Keygen at the end of each Auction are selected as the Authority Set for the next Epoch and a Rotation is conducted to handover Authority from one set to the next. On Perseverance, the time between each is usually 3 hours long but will be longer in production.
 
-Bidding is done from a Validator's State Chain account, which is funded through the [State Chain FLIP Gateway](state-chain-flip-gateway.md).
+Bidding is done from a Validator's State Chain account, which is funded through the [State Chain FLIP Gateway](/protocol/funding-state-chain-account#state-chain-flip-gateway).
 
 Auctions begin halfway between the start and the expected end of an Epoch. During Auctions:
 
@@ -26,7 +26,7 @@ Auctions begin halfway between the start and the expected end of an Epoch. Durin
 - **Non-Bidding Validators** (without a current bond) can redeem funds as normal, and *can* change their state to bidding at any time, including during the auction
 - **All Validators** can add extra funds at any time
 
-In order for a node to retire, it must enter a non-bidding state before the next Auction begins. See [Validator Types & States](validator-types-and-states.md "mention") section for more information.
+In order for a node to retire, it must enter a non-bidding state before the next Auction begins. See [Validator Types & States](/validators/validator-types-and-states "mention") section for more information.
 
 ### Resolving an Auction
 
@@ -34,7 +34,7 @@ The aim of an Auction is to derive a list of Primary and Secondary candidates fo
 
 1. Determine the maximum set size $$P$$ for the next Epoch (default 150).
 
-2. Sort all Qualified nodes by descending bid. These are the Auction Bidders. Non-Qualified Nodes are never considered in an Auction (see [Validator Types & States](validator-types-and-states.md))
+2. Sort all Qualified nodes by descending bid. These are the Auction Bidders. Non-Qualified Nodes are never considered in an Auction (see [Validator Types & States](/validators/validator-types-and-states))
 
 3. The $$P$$ highest bidders are deemed the auction winners and will be the **Primary KeyGen Candidates**.
 
@@ -56,7 +56,7 @@ There is also a minimum set size, which if reached will cause the KeyGen to be a
 
 Once the Auction is resolved, KeyGen is successful, and the Authority Set rotates, all successful Authorities for the new Epoch are **Bonded** to the value of the Minimum Active Bid of that auction. Any amount staked in excess of the **Bond** at the conclusion of an Auction can be withdrawn by the bidder between Auctions.
 
-Validators selected from the Secondary set or who have been [slashed](reputation-and-slashing.md) may have a balance lower than the bonded amount. This means they will not be able to make any withdrawals until they have a balance in excess of their Bond, or the Bond is lifted through retirement or losing an Auction.
+Validators selected from the Secondary set or who have been [slashed](/validators/reputation-and-slashing) may have a balance lower than the bonded amount. This means they will not be able to make any withdrawals until they have a balance in excess of their Bond, or the Bond is lifted through retirement or losing an Auction.
 
 The balance of bidders with or without a Bond will be considered as an implicit bid in the next Auction, including any rewards the Validator has earned from their node. This still means that current Validators might have to top up their bid between auctions to keep their slot, but if it’s high enough, do not need to do anything extra to succeed in each subsequent auction cycle.
 
@@ -69,7 +69,7 @@ Every Authority member **earns equal rewards** during an Epoch, regardless of th
 
 ### Backup Rewards
 
-Although not directly related to the Auction outcomes, a fixed reward (much less than the Authority Set reward) is split between **Backup Validators** each Epoch. To be a Backup Validator, Validators must be **Qualified** and have one of the top 50 bids of non-Authorities (see [Validator Types & States](validator-types-and-states.md "mention")). 
+Although not directly related to the Auction outcomes, a fixed reward (much less than the Authority Set reward) is split between **Backup Validators** each Epoch. To be a Backup Validator, Validators must be **Qualified** and have one of the top 50 bids of non-Authorities (see [Validator Types & States](/validators/validator-types-and-states "mention")).
 
 Backup Rewards are paid to each Backup reward-earning Validator each heartbeat interval based on their stake. This amount is proportional to their share of staked FLIP in the total number of FLIP staked in current Backup Validators. However, individual Backup reward-earning Validators can't earn more than Authority Validators.
 

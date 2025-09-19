@@ -17,10 +17,10 @@ Parameters:
 - `destination_asset`: Egress [asset](#assets).
 - `destination_address`: Egress [Address](#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent or 0.01%). Broker operators can choose to charge a fee for the use of their endpoint, and can be set at any value from 1 basis point to 1000 basis points (0.01% - 10%).
-- `channel_metadata`: (Optional) Json object with the [cross-chain messaging]((../advanced/cross-chain-messaging/cross-chain-messaging.mdx) metadata:
+- `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
 - `message`: Hex encoded call data used after the message is egressed.
 - `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
-- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](../advanced/cross-chain-messaging/sol-ccm.mdx#solana-ccm-additional-data).
+- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
 - `refund_parameters`: (Optional) [Minimum accepted price](../../swapping-basics#minimum-accepted-price-slippage-protection) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price).
@@ -197,7 +197,7 @@ Parameters:
 - `input_amount`: Amount of the input asset in the smallest unit.
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `from_token_account`: (Optional) Associated token account (ATA) of the `from` account.
-- `channel_metadata`: (Optional) Json object with the [cross-chain messaging](../advanced/cross-chain-messaging/cross-chain-messaging.mdx) metadata:
+- `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
 - `message`: Hex encoded call data used after the message is egressed.
 - `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
 - `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
@@ -266,7 +266,7 @@ Parameters:
 
 Return:
 
-Input parameter for the given vault swap. See [vault swaps](../advanced/vault-swaps/vault-swaps.mdx) for more details.
+Input parameter for the given vault swap. See [vault swaps](/brokers/broker-vault-swaps) for more details.
 
 - `source_asset`: Source asset for the vault swap.
 - `destination_asset`: Egress [asset](#assets).
@@ -286,10 +286,10 @@ Input parameter for the given vault swap. See [vault swaps](../advanced/vault-sw
 - `input_amount`: Amount of the input asset in the smallest unit.
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `from_token_account`: Associated token account (ATA) of the `from` account.
-- `channel_metadata`: Json object with the [cross-chain messaging](../advanced/cross-chain-messaging/cross-chain-messaging.mdx) metadata:
+- `channel_metadata`: Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
 - `message`: Hex encoded call data used after the message is egressed.
 - `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
-- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](../advanced/cross-chain-messaging/sol-ccm.mdx#solana-ccm-additional-data).
+- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
 - `dca_parameters`: DCA parameters for swaps through the channel as JSON object: `{ "number_of_chunks": <number>, "chunk_interval": <number> }`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
@@ -402,7 +402,7 @@ Example output:
 
 A private Bitcoin channel is a dedicated persistent deposit channel unique to a single broker.
 
-Opening a private Bitcoin channel is a requirement for Brokers who wish to support [Vault Swaps](../advanced/vault-swaps/bitcoin.mdx) with Bitcoin as the source asset. This is a one-time operation and requires the Broker to post a bond of 100 $FLIP, meaning the Broker must maintain a balance of at least 100 FLIP. The bond will be unlocked once the Broker [closes the channel](#broker_close_private_btc_channel) again.
+Opening a private Bitcoin channel is a requirement for Brokers who wish to support [Vault Swaps](/brokers/vault-swaps-api/bitcoin) with Bitcoin as the source asset. This is a one-time operation and requires the Broker to post a bond of 100 $FLIP, meaning the Broker must maintain a balance of at least 100 FLIP. The bond will be unlocked once the Broker [closes the channel](#broker_close_private_btc_channel) again.
 
 Note that even though the *channel* is considered persistent, the corresponding *deposit address* will change every Epoch.
 

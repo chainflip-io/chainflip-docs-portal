@@ -20,7 +20,7 @@ The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript dev
 4. **Get status:** The `getStatus` method provides real-time updates about the status of a swap operation.
 
 <Callout type="info">
-    If you want to learn more about how Chainflip swaps work, check the [Swapping Basics](../../swapping-basics.mdx) section
+    If you want to learn more about how Chainflip swaps work, check the [Swapping Basics](/protocol/how-swapping-works) section
 </Callout>
 
 
@@ -36,7 +36,7 @@ The user sends funds to this address to initiate a swap.
 The user signs and submits this transaction to initiate the swap.
 
 <Callout type="info">
-    Check [How Swapping Works](/protocol/how-swapping-works.md) and [Swapping Basics](../../../swapping-basics.md) for more information about how Chainflip swaps work.
+    Check [How Swapping Works](/protocol/how-swapping-works) and [Swapping Basics](/brokers/swapping-basics) for more information about how Chainflip swaps work.
 </Callout>
 
 
@@ -69,9 +69,9 @@ The `options` object accepts the following properties:
 
 | Param | Description | Data type |
 | :---- | :---------- | :-------- |
-| `network`(optional) | The [Chainflip network](../../supported-chains-and-assets/supported-chains-and-assets#chainflip-networks) to interact with. Defaults to `perseverance`. | `'sisyphos' \| 'perseverance' \| 'mainnet'` |
+| `network`(optional) | The [Chainflip network](/protocol/supported-chains-assets/chains-assets#chainflip-networks) to interact with. Defaults to `perseverance`. | `'sisyphos' \| 'perseverance' \| 'mainnet'` |
 | `backendServiceUrl`(optional) | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network. | `string` |
-| `broker`(optional) | The URL of the [Broker API](../running-a-broker/broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network. | `` `{ url: string }` `` |
+| `broker`(optional) | The URL of the [Broker API](/brokers/running-broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network. | `` `{ url: string }` `` |
 | `rpcUrl`(optional) | The URL of the [Chainflip RPC node](/validators/misc/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network. | `String` |
 | `enabledFeatures`(optional) | Features that must be explicitly opted into. | `` `{ dca?: boolean }` `` |
 

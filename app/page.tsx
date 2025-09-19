@@ -1,18 +1,11 @@
-import {ArrowRightIcon} from '@components/icons'
 import type {Metadata} from 'next'
-import Image from 'next/image'
 import {Link} from 'nextra-theme-docs'
-import {MdxIcon, GlobeIcon, GoIcon, GitHubIcon} from 'nextra/icons'
-import docsCardDark from 'public/assets/card-1.dark.png'
-import docsCard from 'public/assets/card-1.png'
+import {GlobeIcon} from 'nextra/icons'
 import {Feature, Features} from './_components/features'
-import {MotionDiv, MotionH3} from './_components/framer-motion'
-import {I18n} from './_components/i18n-demo'
 import styles from './page.module.css'
 import './page.css'
 import type {FC} from 'react'
 import {BoxesIcon, SquareChevronRightIcon} from "lucide-react";
-import {Cards} from "nextra/components";
 import SocialCards from "private-next-root-dir/app/_components/social-cards";
 
 export const metadata: Metadata = {
@@ -109,7 +102,7 @@ const IndexPage: FC = () => {
                             </h3>
                             <p className="mr-6">
                                 Kickstart your journey by
-                                learning  {' '}
+                                learning {' '}
                                 <Link href="/protocol/how-swapping-works">
                                     how swapping works
                                 </Link>
@@ -138,116 +131,6 @@ const IndexPage: FC = () => {
                                 </Link>
                             </p>
                         </Feature>
-
-
-                        {/*<Feature*/}
-                        {/*    index={7}*/}
-                        {/*    centered*/}
-                        {/*    className="feat-darkmode flex items-center justify-center"*/}
-                        {/*>*/}
-                        {/*  <MotionDiv*/}
-                        {/*      animate={{*/}
-                        {/*        backgroundPosition: [*/}
-                        {/*          '0% 0%',*/}
-                        {/*          '50% 40%',*/}
-                        {/*          '50% 40%',*/}
-                        {/*          '100% 100%'*/}
-                        {/*        ],*/}
-                        {/*        backgroundImage: [*/}
-                        {/*          'radial-gradient(farthest-corner, #e2e5ea, #e2e5ea)',*/}
-                        {/*          'radial-gradient(farthest-corner, #06080a, #e2e5ea)',*/}
-                        {/*          'radial-gradient(farthest-corner, #06080a, #e2e5ea)',*/}
-                        {/*          'radial-gradient(farthest-corner, #e2e5ea, #e2e5ea)'*/}
-                        {/*        ]*/}
-                        {/*      }}*/}
-                        {/*      transition={{*/}
-                        {/*        backgroundPosition: {*/}
-                        {/*          times: [0, 0.5, 0.5, 1],*/}
-                        {/*          repeat: Infinity,*/}
-                        {/*          duration: 10,*/}
-                        {/*          delay: 1*/}
-                        {/*        },*/}
-                        {/*        backgroundImage: {*/}
-                        {/*          times: [0, 0.2, 0.8, 1],*/}
-                        {/*          repeat: Infinity,*/}
-                        {/*          duration: 10,*/}
-                        {/*          delay: 1*/}
-                        {/*        }*/}
-                        {/*      }}*/}
-                        {/*      style={{*/}
-                        {/*        position: 'absolute',*/}
-                        {/*        top: 0,*/}
-                        {/*        left: 0,*/}
-                        {/*        width: '100%',*/}
-                        {/*        height: '100%',*/}
-                        {/*        backgroundImage:*/}
-                        {/*            'radial-gradient(farthest-corner, #06080a, #e2e5ea)',*/}
-                        {/*        backgroundSize: '400% 400%',*/}
-                        {/*        backgroundRepeat: 'no-repeat'*/}
-                        {/*      }}*/}
-                        {/*  />*/}
-                        {/*  <MotionH3*/}
-                        {/*      animate={{*/}
-                        {/*        color: ['#dae5ff', '#fff', '#fff', '#dae5ff']*/}
-                        {/*      }}*/}
-                        {/*      transition={{*/}
-                        {/*        color: {*/}
-                        {/*          times: [0.25, 0.35, 0.7, 0.8],*/}
-                        {/*          repeat: Infinity,*/}
-                        {/*          duration: 10,*/}
-                        {/*          delay: 1*/}
-                        {/*        }*/}
-                        {/*      }}*/}
-                        {/*      style={{*/}
-                        {/*        position: 'relative',*/}
-                        {/*        mixBlendMode: 'difference'*/}
-                        {/*      }}*/}
-                        {/*  >*/}
-                        {/*    Dark <br />*/}
-                        {/*    mode <br />*/}
-                        {/*    included*/}
-                        {/*  </MotionH3>*/}
-                        {/*</Feature>*/}
-                        {/*<Feature*/}
-                        {/*    index={8}*/}
-                        {/*    large*/}
-                        {/*    id="search-card"*/}
-                        {/*    href="/docs/docs-theme/theme-configuration#search"*/}
-                        {/*>*/}
-                        {/*  <h3>*/}
-                        {/*    Full-text search,*/}
-                        {/*    <br />*/}
-                        {/*    zero-config needed*/}
-                        {/*  </h3>*/}
-                        {/*  <p className="z-2">*/}
-                        {/*    Nextra indexes your content automatically at build-time and*/}
-                        {/*    performs incredibly fast full-text search via{' '}*/}
-                        {/*    <Link href="https://github.com/cloudcannon/pagefind">*/}
-                        {/*      Pagefind*/}
-                        {/*    </Link>*/}
-                        {/*    .*/}
-                        {/*  </p>*/}
-                        {/*  <div className="z-1 absolute inset-0 size-full bg-[linear-gradient(to_right,white_250px,_transparent)] max-sm:hidden dark:bg-[linear-gradient(to_right,#202020_250px,_transparent)]" />*/}
-                        {/*  <video*/}
-                        {/*      autoPlay*/}
-                        {/*      loop*/}
-                        {/*      muted*/}
-                        {/*      playsInline*/}
-                        {/*      className="x:focus-visible:nextra-focus block dark:hidden"*/}
-                        {/*  >*/}
-                        {/*    <source src="/assets/search.mp4" type="video/mp4" />*/}
-                        {/*  </video>*/}
-                        {/*  <video*/}
-                        {/*      autoPlay*/}
-                        {/*      loop*/}
-                        {/*      muted*/}
-                        {/*      playsInline*/}
-                        {/*      className="x:focus-visible:nextra-focus hidden -translate-x-4 dark:block"*/}
-                        {/*  >*/}
-                        {/*    <source src="/assets/search-dark.mp4" type="video/mp4" />*/}
-                        {/*  </video>*/}
-                        {/*</Feature>*/}
-
                     </Features>
                 </div>
             </div>
@@ -274,15 +157,15 @@ const IndexPage: FC = () => {
                         <Link
                             href="https://members.delphidigital.io/reports/simon-harman-exploring-chainflips-cross-chain-native-amm/">
                             Delphi Podcast
-                        </Link>, {' '}
+                        </Link>, or {' '}
                         <Link
                             href="https://podcasts.apple.com/dk/podcast/zoomerjd-interviews-14-simon-harman/id1517044959?i=1000526213082">
                             Zoomer JD Interviews
-                        </Link>, or {' '}
-                        <Link
-                            href="https://www.cryptounstacked.com/deep-dive-chainflip-how-to-design-for-frictionless-cryptocurrency-swaps/#play">
-                            Crypto Unstacked
-                        </Link>, {' '}
+                        </Link>{' '}.
+                        {/*<Link*/}
+                        {/*    href="https://www.cryptounstacked.com/deep-dive-chainflip-how-to-design-for-frictionless-cryptocurrency-swaps/#play">*/}
+                        {/*    Crypto Unstacked*/}
+                        {/*</Link>, {' '}*/}
                     </p>
                 </div>
 

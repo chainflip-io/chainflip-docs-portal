@@ -94,7 +94,21 @@ const RootLayout: FC<{
               light: 45,
               dark: 50
           }
-      }}/>
+      }}>
+          {/* Basic Open Graph */}
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="Chainflip Docs" />
+          <meta property="og:description" content="Chainflip Documentation Website" />
+          <meta property="og:url" content="https://docs.chainflip.io" />
+          <meta property="og:image" content="https://docs.chainflip.io/chainflip-og-image.png" />
+          <meta property="og:image:alt" content="Preview of Chainflip Docs Website" />
+
+          {/* Twitter card */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="Chainflip Docs" />
+          <meta name="twitter:description" content="Chainflip Documentation Website" />
+          <meta name="twitter:image" content="https://docs.chainflip.io/chainflip-og-image.png" />
+      </Head>
       <body>
         <Layout
           // banner={banner}

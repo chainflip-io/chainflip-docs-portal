@@ -60,7 +60,7 @@ const navbar = (
   <Navbar
     logo={
         <div className="flex font-medium text-lg">
-            <img height="25" width="25" src="/chainfliplogo.png"  alt="logo"/>
+            <img height="25" width="25" src="/chainfliplogo.svg"  alt="logo"/>
             <span className="custom-header hidden lg:flex text-xl font-semibold" style={{ marginLeft: "8px" }}>Chainflip Docs</span>
         </div>
     }

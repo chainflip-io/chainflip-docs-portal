@@ -1,19 +1,10 @@
 ---
 title: Introduction
-description:
-    The Liquidity Provisioning (LP) on Chainflip allows liquidity providers to place orders programmatically through the Just-In-Time AMM.
+description: The Liquidity Provisioning (LP) introduction
 ---
 
-import { Cards, Image } from 'nextra/components'
-import { cloneElement } from 'react'
-
-export default function MdxLayout(props) {
-  return cloneElement(props.children, {
-    components: {
-      img: Image
-    }
-  })
-}
+import { Cards } from 'nextra/components'
+import ThemedImage from "../_components/themed-image";
 
 ## Introduction
 
@@ -30,12 +21,23 @@ Liquidity providers (LPs) are entities that supply assets to Chainflip's liquidi
 To start using supplying liquidity on Chainflip, you can choose what liquidity provisioning strategy is best fit for your risk tolerance. You can either use passive liquidity or active liquidity strategies:
 
 <Cards num={2}>
-  <Cards.Card arrow title="Passive Liquidity" href="/docs/docs-theme/start">
-    <>![passive-liquidity](/assets/passive-liquidity-light.png)</>
+  <Cards.Card arrow title="Passive Liquidity" href="/lp/passive-liquidity">
+      <ThemedImage
+          lightSrc="/assets/passive-liquidity-light.png"
+          darkSrc="/assets/passive-liquidity-dark.png"
+          alt="passive-liquidity-provisioning"
+          width={1751}
+          height={984}
+      />
   </Cards.Card>
-  <Cards.Card arrow title="Active Liquidity" href="/docs/blog-theme/start">
-    <>![active-liquidity](/assets/active-liquidity-light.png)</>
-  </Cards.Card>
+  <Cards.Card arrow title="Active Liquidity" href="/lp/active-liquidity">
+      <ThemedImage
+          lightSrc="/assets/active-liquidity-light.png"
+          darkSrc="/assets/active-liquidity-dark.png"
+          alt="passive-active-provisioning"
+          width={1751}
+          height={984}
+      />  </Cards.Card>
 </Cards>
 
 

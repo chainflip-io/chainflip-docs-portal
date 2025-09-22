@@ -1,10 +1,10 @@
 ---
-title: Introduction
-description: The Chainflip Broker API bundle allows SDK users to run their own State Chain interface.
-
+title: Brokers
+description: Brokers introduction
 ---
 
-import {Callout, Cards} from "nextra/components";
+import ThemedImage from "../_components/themed-image";
+import {Cards} from "nextra/components";
 
 ## Introduction
 
@@ -56,9 +56,21 @@ To integrate Chainflip swapping, you can integrate via:
 
 <Cards num={2}>
     <Cards.Card arrow title="Deposit Channels Swaps" href="brokers/broker-deposit-channels-swaps">
-        <>![deposit-channel](/assets/deposit-channel-light.png)</>
+        <ThemedImage
+            lightSrc="/assets/deposit-channel-light.png"
+            darkSrc="/assets/deposit-channel-dark.png"
+            alt="deposit-channel-swaps"
+            width={1293}
+            height={727}
+        />
     </Cards.Card>
     <Cards.Card arrow title="Vault Swaps" href="brokers/broker-vault-swaps">
-        <>![vault-swaps](/assets/vault-swaps-light.png)</>
+        <ThemedImage
+            lightSrc="/assets/vault-swaps-light.png"
+            darkSrc="/assets/vault-swaps-dark.png"
+            alt="vault-swaps"
+            width={1293}
+            height={727}
+        />
     </Cards.Card>
 </Cards>

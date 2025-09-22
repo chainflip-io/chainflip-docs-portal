@@ -31,7 +31,7 @@ export async function GET(req: Request): Promise<Response> {
             backgroundPosition: '-30px -10px'
           }}
         >
-          <ChainflipLogo height="40" />
+          <ChainflipLogo height="81" />
           <h1
             tw="text-transparent text-[82px] m-0 mb-10 tracking-tighter leading-[1.1]"
             style={{

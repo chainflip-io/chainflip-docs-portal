@@ -97,7 +97,7 @@ const RootLayout: FC<{
       }}/>
       <body>
         <Layout
-          banner={banner}
+          // banner={banner}
           navbar={navbar}
           pageMap={pageMap}
           docsRepositoryBase="https://github.com/chainflip-io/chainflip-docs-portal/tree/main"

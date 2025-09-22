@@ -69,9 +69,9 @@ const IndexPage: FC = () => {
                             <p>
                                 Provide liquidity, earn fees and native Bitcoin yield. All through our full-suite
                                 Liquidity Provision system, built for both {' '}
-                                <Link href="/lp">
+                                <Link href="/lp/active-liquidity">
                                     automated market-making
-                                </Link>{' '} and {' '} <Link href="/lp/trading-strategies">passive liquidity</Link>{' '}
+                                </Link>{' '} and {' '} <Link href="/lp/passive-liquidity">passive liquidity</Link>{' '}
                             </p>
                         </Feature>
                         <Feature

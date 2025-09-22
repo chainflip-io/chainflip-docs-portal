@@ -1,5 +1,5 @@
 /* eslint react/no-unknown-property: ['error', { ignore: ['tw'] }] */
-import { NextraLogo } from '@components/icons'
+import { ChainflipLogo } from '@components/icons'
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
@@ -15,7 +15,10 @@ export async function GET(req: Request): Promise<Response> {
 
     // ?title=<title>
     const title =
-      searchParams.get('title')?.slice(0, 75) || 'Nextra Documentation'
+      searchParams.get('title')?.slice(0, 75) || 'Chainflip Docs'
+
+    const description =
+      searchParams.get('description') || 'Whether you\'re looking to integrate cross-chain swapping functionality, enable liquidity provisioning, or simply explore the potential of the Chainflip Protocol, these docs will serve as a valuable resource.'
 
     return new ImageResponse(
       (
@@ -28,7 +31,7 @@ export async function GET(req: Request): Promise<Response> {
             backgroundPosition: '-30px -10px'
           }}
         >
-          <NextraLogo height="40" />
+          <ChainflipLogo height="40" />
           <h1
             tw="text-transparent text-[82px] m-0 mb-10 tracking-tighter leading-[1.1]"
             style={{
@@ -42,7 +45,7 @@ export async function GET(req: Request): Promise<Response> {
             {title}
           </h1>
           <p tw="m-0 text-3xl tracking-tight">
-            Create beautiful websites with Next.js & MDX.
+              {description}
           </p>
         </div>
       ),

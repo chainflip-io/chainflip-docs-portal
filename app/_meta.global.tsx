@@ -1,223 +1,223 @@
-import type { MetaRecord } from 'nextra'
-import { LinkArrowIcon } from 'nextra/icons'
-import type { FC, ReactNode } from 'react'
-import { useMDXComponents } from '../mdx-components'
+import type {MetaRecord} from 'nextra'
+import {LinkArrowIcon} from 'nextra/icons'
+import type {FC, ReactNode} from 'react'
+import {useMDXComponents} from '../mdx-components'
 
 // eslint-disable-next-line react-hooks/rules-of-hooks -- isn't react hook
-const { code: Code } = useMDXComponents()
+const {code: Code} = useMDXComponents()
 
-const ExternalLink: FC<{ children: ReactNode }> = ({ children }) => {
-  return (
-    <>
-      {children}&thinsp;
-      <LinkArrowIcon
-        // based on font-size
-        height="1em"
-        className="x:inline x:align-baseline x:shrink-0"
-      />
-    </>
-  )
+const ExternalLink: FC<{ children: ReactNode }> = ({children}) => {
+    return (
+        <>
+            {children}&thinsp;
+            <LinkArrowIcon
+                // based on font-size
+                height="1em"
+                className="x:inline x:align-baseline x:shrink-0"
+            />
+        </>
+    )
 }
 
 export default {
-  index: {
-    type: 'page',
-    display: 'hidden'
-  },
-  protocol: {
-    type: 'page',
-    title: 'The Protocol',
-    items: {
-      index: '',
-      'protocol-overview': '',
-      'just-in-time-amm-protocol': '',
-      'ingress-witnessing-deposits': '',
-      'egress-broadcasting-funds': '',
-      'governance-and-security': '',
-      'mev-potential-on-chainflip': '',
-      'usdusdc-denominated-pools': '',
-      'boost': '',
-      __: {
-        type: 'separator',
-        title: 'Guides'
-      },
-      'how-swapping-works': '',
-      'funding-state-chain-account': '',
-      'failed-transfer-recovery': '',
-      'running-an-rpc-node': '',
-      ___: {
-        type: 'separator',
-        title: 'Technical Reference'
-      },
-      'frost-signature-scheme': '',
-      'vaults': {
-        title: 'Vaults',
-        items: {
-          'bitcoin-vault-design': '',
-          'evm-ethereum-vault-design': '',
-          'substrate-dot-vault-design': '',
-          'solana-vault-design': '',
-        }
-      },
-      'supported-chains-assets': {
-        title: 'Supported Chains/Assets',
-        items: {
-          'chains-assets': '',
-          'testnet-addresses': '',
-          'mainnet-addresses': '',
-        }
-      },
-      'chainflip-cli': '',
-      'cross-chain-messaging': {
-        title: 'Cross-Chain Messaging',
-        items: {
-          'overview': '',
-          'evm-ccm': '',
-          'sol-ccm': '',
-          'hub-xcm': '',
-        }
-      },
-      'token-economics': {
-        title: 'Token Economics',
-        items: {
-          'current-token-economics-2025-and-beyond': '',
-          'incentive-design-emission-and-burning': '',
-          'genesis-token-economics-pre-2023': '',
-        }
-      },
-    }
-  },
-  lp: {
-    type: 'page',
-    title: 'Liquidity Providers',
-    items: {
-      index: '',
-      'active-liquidity': '',
-      'passive-liquidity': '',
-      'internal-swaps': {
-        href: '/internal-swaps',
-        title: <span className="badge-success after:content-['New']">Internal Swaps</span>
-      },
-      'lp-account': '',
-      __: {
-        type: 'separator',
-        title: 'Guides'
-      },
-      'how-to-provide-liquidity': '',
-      'how-to-register-as-lp': '',
-      'running-lp-api': '',
-      'how-boost-works': '',
-      ___: {
-        type: 'separator',
-        title: 'Technical Reference'
-      },
-      'lp-api': {
-        title: 'LP API',
-        items: {
-          index: '',
-          types: '',
-          requests: '',
-          subscriptions: '',
-        }
-      },
-      'lp-node-rpcs': {
-        title: 'Node RPCs useful for LPs',
-        items: {
-          index: '',
-          requests: '',
-          subscriptions: '',
-        }
-      },
-      'boost-rpcs': '',
+    index: {
+        type: 'page',
+        display: 'hidden'
     },
-  },
-  brokers: {
-    type: 'page',
-    title: 'Brokers',
-    items: {
-      index: '',
-      'swapping-basics': '',
-      'broker-deposit-channels-swaps': '',
-      'broker-vault-swaps': '',
-      'broker-account': '',
-      'broker-affiliates': '',
-      __: {
-        type: 'separator',
-        title: 'Guides'
-      },
-      'how-to-register-as-broker': '',
-      'running-broker-api': '',
-      'how-to-use-chainflip-sdk': '',
-      ___: {
-        type: 'separator',
-        title: 'Technical Reference'
-      },
-      'broker-api': {
-        title: 'Broker API',
+    protocol: {
+        type: 'page',
+        title: 'The Protocol',
         items: {
-          index: '',
-          types: '',
-          requests: '',
-          subscriptions: '',
+            index: '',
+            'protocol-overview': '',
+            'just-in-time-amm-protocol': '',
+            'ingress-witnessing-deposits': '',
+            'egress-broadcasting-funds': '',
+            'governance-and-security': '',
+            'mev-potential-on-chainflip': '',
+            'usdusdc-denominated-pools': '',
+            'swapping-basics': '',
+            'boost': '',
+            __: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'how-swapping-works': '',
+            'funding-state-chain-account': '',
+            'failed-transfer-recovery': '',
+            'running-an-rpc-node': '',
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'frost-signature-scheme': '',
+            'vaults': {
+                title: 'Vaults',
+                items: {
+                    'bitcoin-vault-design': '',
+                    'evm-ethereum-vault-design': '',
+                    'substrate-dot-vault-design': '',
+                    'solana-vault-design': '',
+                }
+            },
+            'supported-chains-assets': {
+                title: 'Supported Chains/Assets',
+                items: {
+                    'chains-assets': '',
+                    'testnet-addresses': '',
+                    'mainnet-addresses': '',
+                }
+            },
+            'chainflip-cli': '',
+            'cross-chain-messaging': {
+                title: 'Cross-Chain Messaging',
+                items: {
+                    'overview': '',
+                    'evm-ccm': '',
+                    'sol-ccm': '',
+                    'hub-xcm': '',
+                }
+            },
+            'token-economics': {
+                title: 'Token Economics',
+                items: {
+                    'current-token-economics-2025-and-beyond': '',
+                    'incentive-design-emission-and-burning': '',
+                    'genesis-token-economics-pre-2023': '',
+                }
+            },
         }
-      },
-      'javascript-sdk': {
-        title: 'Javascript SDK',
+    },
+    lp: {
+        type: 'page',
+        title: 'Liquidity Providers',
         items: {
-          index: '',
-          'params': '',
-          'functions': '',
-        }
-      },
-      'vault-swaps-api': {
-        title: 'Vault Swaps API',
+            index: '',
+            'active-liquidity': '',
+            'passive-liquidity': '',
+            'internal-swaps': {
+                href: '/internal-swaps',
+                title: <span className="badge-success after:content-['New']">Internal Swaps</span>
+            },
+            'lp-account': '',
+            __: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'how-to-provide-liquidity': '',
+            'how-to-register-as-lp': '',
+            'running-lp-api': '',
+            'how-boost-works': '',
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'lp-api': {
+                title: 'LP API',
+                items: {
+                    index: '',
+                    types: '',
+                    requests: '',
+                    subscriptions: '',
+                }
+            },
+            'lp-node-rpcs': {
+                title: 'Node RPCs useful for LPs',
+                items: {
+                    index: '',
+                    requests: '',
+                    subscriptions: '',
+                }
+            },
+            'boost-rpcs': '',
+        },
+    },
+    brokers: {
+        type: 'page',
+        title: 'Brokers',
         items: {
-          'bitcoin': 'Bitcoin',
-          'evm': 'EVM',
-          'solana': 'Solana',
-          'encoding-reference': '',
+            index: '',
+            'broker-deposit-channels-swaps': '',
+            'broker-vault-swaps': '',
+            'broker-account': '',
+            'broker-affiliates': '',
+            __: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'how-to-register-as-broker': '',
+            'running-broker-api': '',
+            'how-to-use-chainflip-sdk': '',
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'broker-api': {
+                title: 'Broker API',
+                items: {
+                    index: '',
+                    types: '',
+                    requests: '',
+                    subscriptions: '',
+                }
+            },
+            'javascript-sdk': {
+                title: 'Javascript SDK',
+                items: {
+                    index: '',
+                    'params': '',
+                    'functions': '',
+                }
+            },
+            'vault-swaps-api': {
+                title: 'Vault Swaps API',
+                items: {
+                    'bitcoin': 'Bitcoin',
+                    'evm': 'EVM',
+                    'solana': 'Solana',
+                    'encoding-reference': '',
+                }
+            },
         }
-      },
-    }
-  },
-  validators: {
-    type: 'page',
-    title: 'Validators',
-    items: {
-      index: '',
-      'validators-role': '',
-      'validator-auctions-bonds-and-rewards': '',
-      'validator-types-and-states': '',
-      'reputation-and-slashing': '',
-      _: {
-        type: 'separator',
-        title: 'Guides'
-      },
-      'mainnet': {
-        title: 'Mainnet',
+    },
+    validators: {
+        type: 'page',
+        title: 'Validators',
         items: {
-          'validator-setup': '',
-          'important-notes': '',
-          'funding': '',
-          'common-problems': '',
-          'submitting-an-issue': ''
+            index: '',
+            'validators-role': '',
+            'validator-auctions-bonds-and-rewards': '',
+            'validator-types-and-states': '',
+            'reputation-and-slashing': '',
+            _: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'mainnet': {
+                title: 'Mainnet',
+                items: {
+                    'validator-setup': '',
+                    'important-notes': '',
+                    'funding': '',
+                    'common-problems': '',
+                    'submitting-an-issue': ''
+                }
+            },
+            'testnet': {
+                title: 'Testnet',
+                items: {
+                    'validator-setup': '',
+                    'funding': '',
+                    'common-problems': '',
+                    'submitting-an-issue': ''
+                }
+            },
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'maintenance': '',
+            'default-filepaths-and-ports': ''
         }
-      },
-      'testnet': {
-        title: 'Testnet',
-        items: {
-          'validator-setup': '',
-          'funding': '',
-          'common-problems': '',
-          'submitting-an-issue': ''
-        }
-      },
-      ___: {
-        type: 'separator',
-        title: 'Technical Reference'
-      },
-      'maintenance': '',
-      'default-filepaths-and-ports': ''
-    }
-  },
+    },
 }

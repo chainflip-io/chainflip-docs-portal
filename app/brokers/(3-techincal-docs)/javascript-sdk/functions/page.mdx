@@ -515,7 +515,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
             <span className="param-required-label">(required)</span>
         </td>
         <td>
-            Parameters to set a <a href="/brokers/swapping-basics#minimum-accepted-price-slippage-protection">minimum accepted price</a>.
+            Parameters to set a <a href="/protocol/swapping-basics#minimum-accepted-price-slippage-protection">minimum accepted price</a>.
             This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).
         </td>
         <td><code>Object</code></td>
@@ -698,7 +698,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 
 #### DCA deposit address
 
-Check the [Dollar Cost Average](/brokers/swapping-basics#dollar-cost-average-dca-improving-price) section for more information about the DCA feature.
+Check the [Dollar Cost Average](/protocol/swapping-basics#dollar-cost-average-dca-improving-price) section for more information about the DCA feature.
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -1205,7 +1205,7 @@ The `cfParameters` object describes the swap for which the CF parameters data is
 |-------|-------------|-----------|
 |<code>quote</code><span className="param-required-label">(required)</span> | The object returned by [<code>getQuoteV2</code>](/brokers/javascript-sdk/functions#getquotev2) This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).| <code>Quote</code> |
 |<code>destAddress</code><span className="param-required-label">(required)</span>| Address where the swapped tokens will be sent to on the destination chain. | <code>string</code>|
-|[<code>fillOrKillParams</code><span className="param-required-label">(required)</span>](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/brokers/swapping-basics#slippage-protection-minimum-accepted-price) This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).| <code>Object</code>|
+|[<code>fillOrKillParams</code><span className="param-required-label">(required)</span>](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection-minimum-accepted-price) This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).| <code>Object</code>|
 |<code>srcAddress</code><span className="param-optional-label">(optional)</span>| Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana. | <code>string</code>|
 |<code>brokerAccount</code><span className="param-optional-label">(optional)</span>| account that receives the commission for the swap. | <code>string</code>|
 |<code>brokerCommissionBps</code><span className="param-optional-label">(optional)</span>| Commission charged by the broker of the swap, in basis points. This option is only available when setting a <code>brokerAccount</code> or the SDK is initialized with a <code>brokerUrl</code>| <code>number</code>|

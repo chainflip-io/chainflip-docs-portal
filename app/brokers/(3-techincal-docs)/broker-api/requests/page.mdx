@@ -23,7 +23,7 @@ Parameters:
 - `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
-- `refund_parameters`: (Optional) [Minimum accepted price](/brokers/swapping-basics#slippage-protection-minimum-accepted-price) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price).
+- `refund_parameters`: (Optional) [Minimum accepted price](/protocol/swapping-basics#slippage-protection-minimum-accepted-price) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price).
 - `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
 
 Where every affiliate broker is defined as follow:

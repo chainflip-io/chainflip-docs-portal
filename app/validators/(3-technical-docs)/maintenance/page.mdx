@@ -253,3 +253,82 @@ sudo apt purge chainflip-engine
 
 1. Setup the config file as explained in [Engine Settings](/validators/mainnet/validator-setup#5-engine-settings) section.
 2. Then start the node and engine services as explained in [Start up](/validators/mainnet/validator-setup#starting-the-node) section.
+
+
+
+## Purging Chaindata
+
+<Callout type="warning">
+    Do not run `rm -rf /etc/chainflip/chaindata/*`. This command will delete your session keys, making your node unable to author blocks. Consequently, your node will be forced out of the validator set.
+</Callout>
+
+### Why would you want to purge the chaindata?
+
+In certain situations, you might need to purge the chaindata and start syncing from a fresh state. Common reasons include:
+
+- You want to recover from a corrupted database or a full disk.
+- You started to sync a node in full sync mode and want to switch to warp sync.
+
+In the case of a full disk, you might need to purge the chaindata to free up space while you expand your disk. Please note that purging chain isn't pruning, it simply deletes the chaindata folder. Upon restarting your node, it will begin syncing from scratch and will download the state of old blocks from peers while importing latest blocks (in the case of warp sync).
+
+Purging the chaindata deletes all chain data and initiates syncing from scratch. While using warp sync can expedite the process, purging the chain requires validator downtime. If done at an unfortunate time, it could result in your node being suspended or removed from the validator set altogether.
+
+
+```bash copy
+    chainflip-node purge-chain --chain /etc/chainflip/berghain.chainspec.json --base-path /etc/chainflip/chaindata/
+```
+
+
+## Recover Private Keys
+
+<Callout type="error">
+    All the information you get back when running any of the commands below is
+    private sensitive data. **Do not share it with anyone. Whoever has access to
+    these keys can take all your `FLIP` added to your validator node**
+</Callout>
+
+You should always have a copy of all your keys somewhere safe outside the Server on which the node is running.
+
+If for whatever reason you lost your keys but still have access to your server, don't freak out (yet).
+
+You can run some magical commands to get the keys.
+
+### Getting Node ID
+
+The following command will return the Node ID of your validator node:
+
+```bash copy
+sudo chainflip-node key inspect-node-key --file /etc/chainflip/keys/node_key_file
+```
+
+### Getting The Secret Seed
+
+This command will return the private key of your node and other keys. **DO NOT share this with anyone**.
+
+Chainflip **will never** ask you to reveal these keys under any circumstances.
+
+To get your Secret Seed that was used to generate your signing key, run the following command:
+
+```bash copy
+chainflip-node key inspect "0x$(sudo cat /etc/chainflip/keys/signing_key_file)"
+```
+
+The output will look like this:
+
+```bash copy
+Secret Key URI `0x` is account:
+  Network ID:        chainflip
+  Secret seed:       <YOUR SECRET SEED> # <-- Don't share it with anyone
+  Public key (hex):  0x1803aecb4e11790e73f775206836f25b4348a3290a190319b4b075d9ccbd6349
+  Account ID:        0x1803aecb4e11790e73f775206836f25b4348a3290a190319b4b075d9ccbd6349
+  Public key (SS58): cFJQy58CJKJhNCBnV89qQhcQYQSgC6cg8dGWiTJb8xqWsMyQ3
+  SS58 Address:      cFJQy58CJKJhNCBnV89qQhcQYQSgC6cg8dGWiTJb8xqWsMyQ3
+```
+
+
+## Modifying your systemd config
+
+You may want to modify the default command line arguments supplied with the `systemd` config files. If so, **do not edit** the config located in `/lib/systemd/system/`. This will just be immediately overwritten the second you update. Instead, follow the instructions laid out in this StackOverflow post.&#x20;
+
+[How do I override or configure systemd services?](https://askubuntu.com/questions/659267/how-do-i-override-or-configure-systemd-services)
+

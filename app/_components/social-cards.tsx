@@ -16,7 +16,7 @@ interface CardProps {
 
 const SocialCard: React.FC<CardProps> = ({ Icon, title, description, href }) => {
     return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center p-4 rounded-2xl shadow-md bg-neutral-100 border-1 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 cursor-pointer hover:shadow-lg hover:shadow-gray-300 dark:hover:shadow-gray-800 transition-shadow duration-300 ease-in-out">
+        <a href={href} rel="noopener noreferrer" className="flex items-center p-4 rounded-2xl shadow-md bg-neutral-100 border-1 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 cursor-pointer hover:shadow-lg hover:shadow-gray-300 dark:hover:shadow-gray-800 transition-shadow duration-300 ease-in-out">
             {/* Icon */}
             <div className="h-12 w-12 flex items-center justify-center rounded-xl text-black dark:text-neutral-200">
                 {Icon}

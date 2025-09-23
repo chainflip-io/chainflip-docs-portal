@@ -44,7 +44,6 @@ export const Feature: FC<
         <Link
           className={cn('x:focus-visible:nextra-focus', styles.link)}
           href={href}
-          target="_blank"
           rel="noreferrer"
         >
           <ArrowRightIcon height="24" />

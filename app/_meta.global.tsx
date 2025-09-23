@@ -115,21 +115,27 @@ export default {
             'lp-api': {
                 title: 'LP API',
                 items: {
-                    index: '',
-                    types: '',
-                    requests: '',
-                    subscriptions: '',
+                    index: 'Index',
+                    types: 'Types',
+                    requests: 'Requests',
+                    subscriptions: 'Subscriptions',
                 }
             },
             'lp-node-rpcs': {
                 title: 'Node RPCs useful for LPs',
                 items: {
-                    index: '',
-                    requests: '',
-                    subscriptions: '',
+                    index: 'Index',
+                    requests: 'Requests',
+                    subscriptions: 'Subscriptions',
                 }
             },
-            'boost-rpcs': '',
+            'boost-rpcs': {
+                title: 'Boost RPCs',
+                items: {
+                    index: 'Index',
+                    requests: 'Requests',
+                }
+            }
         },
     },
     brokers: {
@@ -155,10 +161,10 @@ export default {
             'broker-api': {
                 title: 'Broker API',
                 items: {
-                    index: '',
-                    types: '',
-                    requests: '',
-                    subscriptions: '',
+                    index: 'Index',
+                    types: 'Types',
+                    requests: 'Requests',
+                    subscriptions: 'Subscriptions',
                 }
             },
             'javascript-sdk': {
@@ -196,20 +202,20 @@ export default {
             'mainnet': {
                 title: 'Mainnet',
                 items: {
-                    'validator-setup': '',
-                    'important-notes': '',
-                    'funding': '',
-                    'common-problems': '',
-                    'submitting-an-issue': ''
+                    'validator-setup': 'Validator Setup',
+                    'important-notes': 'Important Notes',
+                    'funding': 'Funding',
+                    'common-problems': 'Common Problems',
+                    'submitting-an-issue': 'Submitting an Issue'
                 }
             },
             'testnet': {
                 title: 'Testnet',
                 items: {
-                    'validator-setup': '',
-                    'funding': '',
-                    'common-problems': '',
-                    'submitting-an-issue': ''
+                    'validator-setup': 'Validator Setup',
+                    'funding': 'Funding',
+                    'common-problems': 'Common Problems',
+                    'submitting-an-issue': 'Submitting an Issue'
                 }
             },
             ___: {

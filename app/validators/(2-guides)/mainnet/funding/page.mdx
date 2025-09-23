@@ -98,8 +98,8 @@ Similarly to redemptions, rebalancing is subject to certain restrictions:
 
 - The destination account must already exist: account creation through a rebalance operation is not possible.
 If the source account is currently bidding in an auction, the destination account must also be in a bidding state.
-- [Bound addresses](./advanced-account-management) on the destination account must match the source account.
-- If the funds to be transferred are associated with a [restricted source address](./advanced-account-management#restricted-balances), the transferred funds will have the same restrictions in the destination account.
+- [Bound addresses](/validators/mainnet/funding#advanced-account-management) on the destination account must match the source account.
+- If the funds to be transferred are associated with a [restricted source address](/validators/mainnet/funding#restricted-balances), the transferred funds will have the same restrictions in the destination account.
 
 To rebalance, use the `chainflip-cli`. For example, to move 10,000 $FLIP to account `cFK1qK1oSfZqZzka4ABWRybf24GtUjYJuWj2A1g9aHpcGny5e`:
 
@@ -291,4 +291,4 @@ This is used primarily to enforce vesting restrictions. Some of the `$FLIP` toke
 >
 > *Imagine an account has 1,000 `$FLIP` funded from address `0xabc` and earns a return of 10 `$FLIP` after some period of time. Subject to other restrictions (bond etc.) those 10 `$FLIP` can be redeemed to any address. Any more than that can only be redeemed from the restricted balance of 1,000 `$FLIP`, and only to the originating address `0xabc`.*
 
-In case of Restricted addresses the limitation of [Redeem Address Binding](./advanced-account-management#redeem-address-binding) and [Redemption Execution Address Binding](./advanced-account-management#redemption-execution-address-binding) are not applied. Withdrawals to restricted addresses ignore any address bindings.
+In case of Restricted addresses the limitation of [Redeem Address Binding](/validators/mainnet/funding#redeem-address-binding) and [Redemption Execution Address Binding](/validators/mainnet/funding#redemption-execution-address-binding) are not applied. Withdrawals to restricted addresses ignore any address bindings.

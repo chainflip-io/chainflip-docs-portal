@@ -230,7 +230,7 @@ The swap parameters are encoded in the `nulldata UTXO` payload using [Parity's S
 | `chunk_interval` | DCA: The delay between DCA chunks in number of 6-second blocks | `u16` |
 | `boost_fee` | Maximum accepted boost fee in basis points (100th of a percent) | `u8` |
 | `broker_fee` | Broker fee in basis points | `u8` |
-| `affiliates` | List of up to 2 [affiliate short IDs](brokers/broker-api/requests#broker_register_affiliate) and fee (basis points) | `Vec<(u8, u8)>`|
+| `affiliates` | List of up to 2 [affiliate short IDs](/brokers/broker-api/requests#broker_register_affiliate) and fee (basis points) | `Vec<(u8, u8)>`|
 
 <Callout type="info">
 The encoded data in `nulldata_payload` returned by [broker_request_swap_parameter_encoding](/brokers/broker-api/requests#broker_request_swap_parameter_encoding) does not include any OP codes. Depending on how you build your transaction, you may need to add these manually.

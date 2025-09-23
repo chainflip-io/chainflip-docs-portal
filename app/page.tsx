@@ -20,7 +20,7 @@ const IndexPage: FC = () => {
             <div className="inline-flex flex-col items-center w-full">
                 <img className="h-36 xs:h-48 sm:h-56 lg:h-72 py-8" src="/landing-page/chainflip-waves.png"/>
                 <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-semibold text-center">
-                    Welcome to Chainflip Docs
+                    Welcome to Chainflip's Docs
                 </h1>
                 <p className="subtitle px-4 text-center max-w-10/12">
                     Whether you're looking to integrate cross-chain swapping functionality, enable liquidity
@@ -50,7 +50,7 @@ const IndexPage: FC = () => {
                             <p>
                                 Start providing crosschain trading to your end users. {' '}
                                 <Link href="/brokers/broker-api">
-                                    Get deep technical reference guide
+                                    Get the technical reference guide
                                 </Link>{' '}
                                 {' '} on the different RPC API endpoints you need to manage your integration.
                             </p>
@@ -67,10 +67,10 @@ const IndexPage: FC = () => {
                                 Setup an LP account
                             </h3>
                             <p>
-                                Provide liquidity, earn fees and native Bitcoin yield. All through our full-suite
+                                Provide liquidity, earn fees, and native Bitcoin yield. All through our full-suite
                                 Liquidity Provision system, built for both {' '}
                                 <Link href="/lp/active-liquidity">
-                                    automated market-making
+                                    programmatic strategies
                                 </Link>{' '} and {' '} <Link href="/lp/passive-liquidity">passive liquidity</Link>{' '}
                             </p>
                         </Feature>
@@ -82,22 +82,21 @@ const IndexPage: FC = () => {
                         >
                             <BoxesIcon className="w-7 h-7 my-4 ms-1 text-neutral-700 dark:text-neutral-400"/>
                             <h3 className="text-left">
-                                Become a validator and deploy nodes <br className="show-on-mobile"/>
+                                Become a Validator operator and deploy nodes <br className="show-on-mobile"/>
                                 in <span className="font-light">minutes</span>
                             </h3>
                             <p>
-                                The Chainflip Network is distributed, permissionless, Proof-of-Stake system running
-                                on {' '}
+                                The Chainflip Network is distributed, permissionless, proof-of-stake system run
+                                by {' '}
                                 <Link href="/validators">
-                                    150 Validators network
-                                </Link>{' '} securing a crosschain trading protocol without intermediaries or
-                                centralized control.
+                                    150 Validators wokring together to
+                                </Link>{' '} secure a the protocol without intermediaries centralised control.
                             </p>
                         </Feature>
 
                         <Feature index={4} href="/protocol">
                             <h3>
-                                Explore Chainflip, <br/>
+                                Explore Chainflip's, <br/>
                                 concepts and ecosystem
                             </h3>
                             <p className="mr-6">
@@ -108,7 +107,7 @@ const IndexPage: FC = () => {
                                 </Link>
                                 , discover {' '}
                                 <Link href="/protocol/just-in-time-amm-protocol">
-                                    Just In Time AMM Protocol
+                                    the Just In Time AMM Protocol
                                 </Link>
                                 {' '}, or understand how {' '}
                                 <Link href="/protocol/boost">
@@ -120,9 +119,9 @@ const IndexPage: FC = () => {
                         <Feature index={5} large>
                             <h3>And more...</h3>
                             <p>
-                                Your complete guide to building on Chainflip ecosystem.
-                                Chainflip's enhanced developer docs provide all the guidance and resources you need to
-                                launch and scale your projects within the Chainflip ecosystem.
+                                Your complete guide to building within Chainflip's ecosystem.
+                                Chainflip's developer docs provide all the guidance and resources you need to
+                                launch and scale your projects leveraging and being a part of the Chainflip ecosystem.
 
                             </p>
                             <p className="subtitle">
@@ -138,35 +137,8 @@ const IndexPage: FC = () => {
             <div className="content-container">
                 <div className="flex justify-center items-center mt-20">
                     <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-center">
-                        Connect with us at Chainflip Labs
+                        Connect with the Chainflip COmmunity
                     </h1>
-                </div>
-                <div className="">
-                    <p className="subtitle text-center">
-                        For further information on our Protocol Design and what we are building here at Chainflip Labs,
-                        please read our
-                        {' '}
-                        <Link href="https://assets.chainflip.io/whitepaper.pdf">
-                            White paper
-                        </Link>
-                        or our {' '}
-                        <Link href="https://assets.chainflip.io/lightpaper.pdf">
-                            Light paper
-                        </Link>. {' '}
-                        You can also listen to {' '}
-                        <Link
-                            href="https://members.delphidigital.io/reports/simon-harman-exploring-chainflips-cross-chain-native-amm/">
-                            Delphi Podcast
-                        </Link>, or {' '}
-                        <Link
-                            href="https://podcasts.apple.com/dk/podcast/zoomerjd-interviews-14-simon-harman/id1517044959?i=1000526213082">
-                            Zoomer JD Interviews
-                        </Link>{' '}.
-                        {/*<Link*/}
-                        {/*    href="https://www.cryptounstacked.com/deep-dive-chainflip-how-to-design-for-frictionless-cryptocurrency-swaps/#play">*/}
-                        {/*    Crypto Unstacked*/}
-                        {/*</Link>, {' '}*/}
-                    </p>
                 </div>
 
                 <SocialCards className="mt-10 mb-20"/>

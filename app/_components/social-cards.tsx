@@ -45,13 +45,13 @@ const SocialCards: React.FC<{className?: string}> = ({className}) => {
                 <SocialCard
                     Icon={<TelegramIcon/>}
                     title="Telegram"
-                    description="Join our Liquidity Provision Group"
+                    description="Join our Telegram group for LPs"
                     href="https://t.me/chainflip_lp"
                 />
                 <SocialCard
                     Icon={<DiscordIcon/>}
                     title="Discord"
-                    description="Join our Developer Community"
+                    description="Join our Developer Community on Discord"
                     href="https://discord.gg/chainflip-community"
                 />
             </div>
@@ -61,7 +61,7 @@ const SocialCards: React.FC<{className?: string}> = ({className}) => {
                 <SocialCard
                     Icon={<XIcon/>}
                     title="X Account"
-                    description="In pursuit of a more open and fair financial system, the Chainflip Labs foundation supports the growth, decentralization, and sustainability of the Chainflip community."
+                    description="Follow Chainflip Labs on X/Twitter for the latest updates on the protocol and ecosystem"
                     href="https://twitter.com/Chainflip"
                 />
             </div>

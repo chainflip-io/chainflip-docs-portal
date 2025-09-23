@@ -20,8 +20,8 @@ The subscription is designed to help liquidity providers see what swaps are comi
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset)
-- `quote_asset`: [Asset](lp-api#asset)
+- `base_asset`: [Asset](/lp/lp-api/types#asset)
+- `quote_asset`: [Asset](/lp/lp-api/types#asset)
 
 Returns:
 
@@ -35,12 +35,12 @@ where `ScheduledSwap` contains the following details of an upcoming swap as a js
 
 - `swap_id`: number
 - `swap_request_id`: number - Each swap request might be broken up into multiple chunks, each with their own swap_id.
-- `base_asset`: [Asset](lp-api#asset)
-- `quote_asset`: [Asset](lp-api#asset)
-- `side`: [Side](lp-api#side)
-- `amount`: [Amount](lp-api#amount) - The size of the swap chunk.
-- `source_asset`: [Asset](lp-api#asset) (optional)
-- `source_amount`: [Amount](lp-api#amount) (optional)
+- `base_asset`: [Asset](/lp/lp-api/types#asset)
+- `quote_asset`: [Asset](/lp/lp-api/types#asset)
+- `side`: [Side](/lp/lp-api/types#side)
+- `amount`: [Amount](/lp/lp-api/types#amount) - The size of the swap chunk.
+- `source_asset`: [Asset](/lp/lp-api/types#asset) (optional)
+- `source_amount`: [Amount](/lp/lp-api/types#amount) (optional)
 - `execute_at`: number
 - `remaining_chunks`: number - The number of swap chunks of the same size that are remaining for this request.
 - `chunk_interval`: number - The number of blocks between each swap chunk (a new chunk will not be scheduled until the previous one succeeds). Each block is 6 seconds.
@@ -186,14 +186,14 @@ It returns the price at the time of beginning the subscription as the first item
 
 Parameters:
 
-- `from_asset`: [Asset](lp-api#asset)
-- `to_asset`: [Asset](lp-api#asset)
+- `from_asset`: [Asset](/lp/lp-api/types#asset)
+- `to_asset`: [Asset](/lp/lp-api/types#asset)
 
 Returns:
 
-- `price`: [Price](lp-api#price)
-- `sqrt_price`: [Square Root Price](lp-api#square-root-price)
-- `tick`: [Tick](lp-api#tick)
+- `price`: [Price](/lp/lp-api/types#price)
+- `sqrt_price`: [Square Root Price](/lp/lp-api/types#square-root-price)
+- `tick`: [Tick](/lp/lp-api/types#tick)
 
 #### Example
 
@@ -239,16 +239,16 @@ It returns an update at every block, even if there are no price changes.
 
 Parameters:
 
-- `base_asset`: [Asset](lp-api#asset)
-- `quote_asset`: [Asset](lp-api#asset)
+- `base_asset`: [Asset](/lp/lp-api/types#asset)
+- `quote_asset`: [Asset](/lp/lp-api/types#asset)
 
 Returns:
 
 - `block_hash`: string
 - `block_number`: number
-- `sell`: Option\<[Square Root Price](lp-api#square-root-price)\>
-- `buy`: Option\<[Square Root Price](lp-api#square-root-price)\>
-- `range_order`: [Square Root Price](lp-api#square-root-price)
+- `sell`: Option\<[Square Root Price](/lp/lp-api/types#square-root-price)\>
+- `buy`: Option\<[Square Root Price](/lp/lp-api/types#square-root-price)\>
+- `range_order`: [Square Root Price](/lp/lp-api/types#square-root-price)
 
 #### Example
 

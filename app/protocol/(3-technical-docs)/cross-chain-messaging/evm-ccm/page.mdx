@@ -12,7 +12,7 @@ import { Callout } from "nextra/components";
 
 ### EVM Considerations
 
-Besides the general [implementation checklist](cross-chain-messaging#implementation-checklist), there are some specific considerations for EVM chains.
+Besides the general [implementation checklist](/protocol/cross-chain-messaging/overview#implementation-checklist), there are some specific considerations for EVM chains.
 - The gas limit on the destination chain (EVM) will be capped to 10 million gas.
 - The receiver contract on the destination chain must implement the `cfReceive` function specified in [this section](#smart-contract-interface---receive-call-and-asset-on-the-receiver-contract-ccm).
 - If the amount of gas requested (`gas_budget`) is not enough to cover the gas costs of the receiver's logic on the destination chain, the transaction won't be broadcasted. An example of a gas estimation is provided [below](#gas-budget-estimation).

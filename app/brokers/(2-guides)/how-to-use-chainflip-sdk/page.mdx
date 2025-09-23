@@ -29,10 +29,10 @@ The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript dev
 There are two ways to initiate a swap on Chainflip.
 Both options are **fire-and-forget** - once the assets are sent to a deposit channel or the vault swap transaction is submitted, the user doesn't need to do anything for the swap to take place.
 
-1. **Request a deposit address:** The [`requestDepositAddress` method](/brokers/javascirpt-sdk/functions#request-deposit-address-v2) generates a deposit address on the source chain.
+1. **Request a deposit address:** The [`requestDepositAddress` method](/brokers/javascript-sdk/functions#request-deposit-address-v2) generates a deposit address on the source chain.
 The user sends funds to this address to initiate a swap.
 
-2. **Trigger a vault swap:** The [`encodeVaultSwapData` method](/brokers/javascirpt-sdk/functions#encode-vault-swap-data) returns an unsigned transaction that encodes the details of the swap.
+2. **Trigger a vault swap:** The [`encodeVaultSwapData` method](/brokers/javascript-sdk/functions#encode-vault-swap-data) returns an unsigned transaction that encodes the details of the swap.
 The user signs and submits this transaction to initiate the swap.
 
 <Callout type="info">

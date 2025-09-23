@@ -261,12 +261,12 @@ The `quoteRequest` object describes the swap for which a quote is returned.
     </tr>
     <tr>
         <td><code>isVaultSwap</code><span className="param-optional-label">(optional)</span></td>
-        <td>Flag for requesting a quote for a <a href="swap-assets/encode-vault-swap-data">vault swap</a>. Network related fees can be different for vault swaps compared to channel swaps</td>
+        <td>Flag for requesting a quote for a <a href="/brokers/javascript-sdk/functions#encode-vault-swap-data">vault swap</a>. Network related fees can be different for vault swaps compared to channel swaps</td>
         <td><code>boolean</code></td>
     </tr>
     <tr>
         <td><code>ccmParams</code><span className="param-optional-label">(optional)</span></td>
-        <td>Additional params for requesting a quote for a <a href="swap-assets/overview#cross-chain-messaging-ccmparams">CCM swap</a>. This is only used to increase the accuracy of the broadcast fee estimation for CCM swaps. A rough estimation of the values is good enough if the actual values are unknown at this stage.</td>
+        <td>Additional params for requesting a quote for a <a href="/protocol/cross-chain-messaging/overview#type-reference">CCM swap</a>. This is only used to increase the accuracy of the broadcast fee estimation for CCM swaps. A rough estimation of the values is good enough if the actual values are unknown at this stage.</td>
         <td><code>Object</code></td>
     </tr>
     </tbody>
@@ -494,7 +494,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
             <code>quote</code><span className="param-required-label">(required)</span>
         </td>
         <td>
-            The object returned by <a href="/brokers/javascript-sdk/functions/get-quote-v2"><code>getQuoteV2</code></a>.
+            The object returned by <a href="/brokers/javascript-sdk/functions#get-quote-v2"><code>getQuoteV2</code></a>.
             This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote),
             and the boost parameters (if it is a boost quote).
         </td>
@@ -793,7 +793,7 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
             <code>quote</code><span className="param-required-label">(required)</span>
         </td>
         <td>
-            The object returned by <a href="/brokers/javascript-sdk/functions/get-quote-v2"><code>getQuoteV2</code></a>.
+            The object returned by <a href="/brokers/javascript-sdk/functions#get-quote-v2"><code>getQuoteV2</code></a>.
             This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote),
             and the boost parameters (if it is a boost quote).
         </td>
@@ -1286,8 +1286,8 @@ The `SwapStatusRequest` object includes the following arguments:
         <td>
             <p>One of the following:</p>
             <ul>
-                <li>The <code>depositChannelId</code> from the <a href="swap-assets/request-deposit-address-v2">Request deposit address</a> method</li>
-                <li>The <code>transactionHash</code> from the <a href="swap-assets/encode-vault-swap-data">Encode vault swap data</a> method</li>
+                <li>The <code>depositChannelId</code> from the <a href="/brokers/javascript-sdk/functions#request-deposit-address-v2">Request deposit address</a> method</li>
+                <li>The <code>transactionHash</code> from the <a href="/brokers/javascript-sdk/functions#encode-vault-swap-data">Encode vault swap data</a> method</li>
             </ul>
         </td>
         <td>string</td>

@@ -48,7 +48,7 @@ const IndexPage: FC = () => {
                                 Become a Broker
                             </h3>
                             <p>
-                                Start providing crosschain trading to your end users. {' '}
+                                Start providing cross-chain trading to your end users. {' '}
                                 <Link href="/brokers/broker-api">
                                     Get the technical reference guide
                                 </Link>{' '}
@@ -82,14 +82,13 @@ const IndexPage: FC = () => {
                         >
                             <BoxesIcon className="w-7 h-7 my-4 ms-1 text-neutral-700 dark:text-neutral-400"/>
                             <h3 className="text-left">
-                                Become a Validator operator and deploy nodes <br className="show-on-mobile"/>
-                                in <span className="font-light">minutes</span>
+                                Become a Validator operator and deploy nodes in minutes
                             </h3>
                             <p>
                                 The Chainflip Network is distributed, permissionless, proof-of-stake system run
                                 by {' '}
                                 <Link href="/validators">
-                                    150 Validators wokring together to
+                                    150 Validators working together to
                                 </Link>{' '} secure a the protocol without intermediaries centralised control.
                             </p>
                         </Feature>
@@ -137,7 +136,7 @@ const IndexPage: FC = () => {
             <div className="content-container">
                 <div className="flex justify-center items-center mt-20">
                     <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-center">
-                        Connect with the Chainflip COmmunity
+                        Connect with the Chainflip Community
                     </h1>
                 </div>
 

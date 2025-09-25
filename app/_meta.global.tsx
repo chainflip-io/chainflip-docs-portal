@@ -38,6 +38,10 @@ export default {
             'usdusdc-denominated-pools': '',
             'swapping-basics': '',
             'boost': '',
+            'delegation': {
+                href: '/delegation',
+                title: <span className="badge-success after:content-['New']">Delegation</span>
+            },
             __: {
                 type: 'separator',
                 title: 'Guides'
@@ -195,6 +199,10 @@ export default {
             'validator-auctions-bonds-and-rewards': '',
             'validator-types-and-states': '',
             'reputation-and-slashing': '',
+            'delegation': {
+                href: '/delegation',
+                title: <span className="badge-success after:content-['New']">Delegation</span>
+            },
             _: {
                 type: 'separator',
                 title: 'Guides'

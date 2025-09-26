@@ -300,6 +300,8 @@ type QuoteDetails = {
   poolInfo: PoolInfo[];
   /** recommended tolerance to prevent refunds while protecting against big price movements based on current market conditions */
   recommendedSlippageTolerancePercent: number;
+  /** recommended live price slippage tolerance to help improve the execution price of a swap based on the global index price. If undefined, live price protection is not available for the asset pair */
+  recommendedLivePriceSlippageTolerancePercent: number | undefined;
   /** recommended amount of minutes to retry a swap that has failed to meet the provided slippage tolerance */
   recommendedRetryDurationMinutes: number;
   /** see below */
@@ -376,6 +378,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
     {
       egressAmount: '309311018',
       recommendedSlippageTolerancePercent: 0.5,
+      recommendedLivePriceSlippageTolerancePercent: 0.125,
       recommendedRetryDurationMinutes: 5,
       includedFees: [
         { type: 'INGRESS', chain: 'Ethereum', asset: 'USDC', amount: '1395704' },
@@ -403,6 +406,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
     {
       egressAmount: '309311018',
       recommendedSlippageTolerancePercent: 0.5,
+      recommendedLivePriceSlippageTolerancePercent: 0.125,
       includedFees: [
         { type: 'INGRESS', chain: 'Ethereum', asset: 'USDC', amount: '1395704' },
         { type: 'NETWORK', chain: 'Ethereum', asset: 'USDC', amount: '48604' },
@@ -462,7 +466,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number,
     refundAddress: string,
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent: number;
+    livePriceSlippageTolerancePercent?: number | false;
   };
   srcAddress?: string;
   brokerCommissionBps?: number;
@@ -576,7 +580,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number,
     refundAddress: string,
     slippageTolerancePercent: number,
-    livePriceSlippageTolerancePercent: number;
+    livePriceSlippageTolerancePercent?: number | false;
   };
   depositChannelId: string;
   depositAddress: string;
@@ -600,7 +604,7 @@ You can configure the URL of your Broker API when initializing the SDK.
 ```typescript copy
 import { SwapSDK } from '@chainflip/sdk/swap';
 
-const sdk = new SDK({
+const sdk = new SwapSDK({
   network: 'perseverance',
   broker: { url: 'https://my.broker.io' },
 });
@@ -627,9 +631,10 @@ const swapDepositAddressRequest = {
   quote,
   destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
     refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF', // address to which assets are refunded
     retryDurationMinutes: quote.recommendedRetryDurationMinutes, // use recommended retry duration from quote
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
   brokerCommissionBps: 100, // 100 basis point = 1%
   affiliateBrokers: [
@@ -690,9 +695,10 @@ const swapDepositAddressRequest = {
   quote: quote.boostQuote,
   destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
     refundAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
     retryDurationBlocks: 100,
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
@@ -721,9 +727,10 @@ const swapDepositAddressRequest = {
   destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
   brokerCommissionBps: 100,
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
     refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
     retryDurationBlocks: 100,
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
@@ -754,13 +761,14 @@ This method uses the `broker_request_swap_parameter_encoding` RPC method of the 
 ```typescript copy
 function encodeVaultSwapData(vaultSwapRequest: VaultSwapRequest): Promise<VaultSwapResponse>
 
-type VaultSwapResponse = {
+type VaultSwapRequest = {
   quote: Quote;
   destAddress: string;
   fillOrKillParams: {
     retryDurationBlocks: number,
     refundAddress: string,
     slippageTolerancePercent: number;
+    livePriceSlippageTolerancePercent?: number | false;
   };
   srcAddress?: string;
   brokerAccount?: `cF${string}`;
@@ -936,9 +944,10 @@ const vaultSwapRequest = {
   srcAddress: wallet.address,
   destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
     refundAddress: wallet.address, // address to which assets are refunded
     retryDurationBlocks: 100, // 100 blocks * 6 seconds = 10 minutes before deposits are refunded
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
@@ -1011,9 +1020,10 @@ const vaultSwapRequest = {
   srcAddress: walletAddress,
   destAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
     refundAddress: walletAddress,
     retryDurationBlocks: 100,
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
@@ -1116,9 +1126,10 @@ const vaultSwapRequest = {
   srcAddress: keypair.publicKey.toBase58(),
   destAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
     refundAddress: keypair.publicKey.toBase58(),
     retryDurationBlocks: 100,
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
   extraParams: {
     seed: randomBytes(32).toString('hex'),
@@ -1240,9 +1251,10 @@ const vaultSwapRequest = {
   quote,
   destAddress: 'tb1q65700ylwuua9669umxdep76a69jy3tfh55llf5',
   fillOrKillParams: {
-    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
     refundAddress: '0x36ead71325604dc15d35fae584d7b50646d81753', // address to which assets are refunded
     retryDurationBlocks: 100, // 100 blocks * 6 seconds = 10 minutes before deposits are refunded
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
 };
 const vaultSwapData = await swapSDK.encodeCfParameters(vaultSwapRequest);

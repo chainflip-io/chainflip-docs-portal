@@ -18,12 +18,12 @@ Parameters:
 - `destination_address`: Egress [Address](#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent or 0.01%). Broker operators can choose to charge a fee for the use of their endpoint, and can be set at any value from 1 basis point to 1000 basis points (0.01% - 10%).
 - `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
-- `message`: Hex encoded call data used after the message is egressed.
-- `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
-- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
+   - `message`: Hex encoded call data used after the message is egressed.
+   - `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
+   - `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
-- `refund_parameters`: (Optional) [Minimum accepted price](/protocol/swapping-basics#slippage-protection-minimum-accepted-price) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price).
+- `refund_parameters`: (Optional) [Slippage protection](/protocol/swapping-basics#slippage-protection) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price), and `max_oracle_price_slippage` is basis points.
 - `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
 
 Where every affiliate broker is defined as follow:
@@ -184,23 +184,24 @@ Parameters:
 - `destination_address`: Egress [Address](#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent).
 - `extra_parameters`: JSON object with different data depending on the chain of the input asset.
-- `chain`: The chain of the input asset. Use only one of the following, then provide the corresponding parameters:
-- `Bitcoin`:
-- `min_output_amount`: Minimum output amount in the smallest unit of the output asset.
-- `retry_duration`: Number of blocks to wait before refunding the swap.
-- `Ethereum` or `Arbitrum`:
-- `input_amount`: Amount of the input asset in the smallest unit.
-- `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
-- `Solana`:
-- `from`: [Address](#addresses) of the sender.
-- `event_data_account`: [Address](#addresses) of the event data account.
-- `input_amount`: Amount of the input asset in the smallest unit.
-- `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
-- `from_token_account`: (Optional) Associated token account (ATA) of the `from` account.
+  - `chain`: The chain of the input asset. Use only one of the following, then provide the corresponding parameters:
+    - `Bitcoin`:
+      - `min_output_amount`: Minimum output amount in the smallest unit of the output asset.
+      - `retry_duration`: Number of blocks to wait before refunding the swap.
+      - `max_oracle_price_slippage`: [Live price protection](/protocol/swapping-basics#maximum-oracle-price-slippage) in basis points (100th of a percent) as a `u8` number (set to 255 to disable).
+    - `Ethereum` or `Arbitrum`:
+      - `input_amount`: Amount of the input asset in the smallest unit.
+      - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
+    - `Solana`:
+      - `from`: [Address](#addresses) of the sender.
+      - `event_data_account`: [Address](#addresses) of the event data account.
+      - `input_amount`: Amount of the input asset in the smallest unit.
+      - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
+      - `from_token_account`: (Optional) Associated token account (ATA) of the `from` account.
 - `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
-- `message`: Hex encoded call data used after the message is egressed.
-- `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
-- `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
+  - `message`: Hex encoded call data used after the message is egressed.
+  - `gas_budget`: The amount of gas or compute units required by the user logic on the destination chain.
+  - `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
 - `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.

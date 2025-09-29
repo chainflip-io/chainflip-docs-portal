@@ -1405,8 +1405,8 @@ Parameters:
 - [`amount`](/lp/lp-api/types#amount): The amount of input asset to swap.
 - [`input_asset`](/lp/lp-api/types#asset): The asset to swap from.
 - [`output_asset`](/lp/lp-api/types#asset): The asset to swap into.
-- `retry_duration`: A number of blocks for which the swap will be retried if it fails (see [FoK](/protocol/swapping-basics#slippage-protection-minimum-accepted-price) section).
-- [`min_price`](#hex-price): The minimum price to swap at (see [FoK](/protocol/swapping-basics#slippage-protection-minimum-accepted-price) section).
+- `retry_duration`: A number of blocks for which the swap will be retried if it fails (see [FoK](/protocol/swapping-basics#slippage-protection) section).
+- `price_limits`: minimum [price](#hex-price) and maximum oracle slippage (basis points) in a Json object `{"min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}` (see [slippage protection](/protocol/swapping-basics#slippage-protection) section).
 - `dca_params`: (optional) `DcaParameters`, which determines whether (and how) the swap should be split into chunks (see [DCA](/protocol/swapping-basics#dollar-cost-average-dca-improving-price) section).
 - [`wait_for`](/lp/lp-api/types#wait-for)
 

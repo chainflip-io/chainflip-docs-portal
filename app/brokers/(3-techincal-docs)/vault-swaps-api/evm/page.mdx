@@ -1,9 +1,7 @@
 ---
-
 title: EVM Vault swaps
 
 description: Description of performing Vault Swaps for EVM networks
-
 ---
 
 import { Callout } from "nextra/components";
@@ -24,7 +22,7 @@ EVM Vault Swaps follow the same pattern mentioned in the [Vault Swaps introducti
 
 Example Request with refund parameters and a CCM message:
 
-```bash copy 
+```bash copy
 curl -H "Content-Type: application/json" -d '{
     "id": 1,
     "jsonrpc": "2.0",
@@ -87,17 +85,19 @@ Example response when the source asset is an **ERC-20 token** rather than native
 
 Note the return values from the above RPC call:
 
-| Field | Description |
-| ----- | ----------- |
-| `calldata` | Hex-encoded EVM calldata. |
-| `value` | Hex-encoded amount of native currency - (Eth for Ethereum or ArbEth or Arbitrum). Always returns 0 for ERC-20 tokens. |
-| `to` | Chainflip's Vault Smart Contract address for either Ethereum or Arbitrum. |
-| `source_token_address` | (Optional) The token address requiring approval. |
+| Field                  | Description                                                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `calldata`             | Hex-encoded EVM calldata.                                                                                             |
+| `value`                | Hex-encoded amount of native currency - (Eth for Ethereum or ArbEth or Arbitrum). Always returns 0 for ERC-20 tokens. |
+| `to`                   | Chainflip's Vault Smart Contract address for either Ethereum or Arbitrum.                                             |
+| `source_token_address` | (Optional) The token address requiring approval.                                                                      |
 
 The first three fields map closely to common EVM transaction building APIs and need to be included in the transaction. Other values such as `gas` or `gasPrice` can be estimated and set by the user or wallet.
 
 <Callout type="info">
-Note that if `source_token_address` is present, the returned address is the contract address of the ERC-20 token. This requires approval / whitelisting by the sender, *before* submitting the vault swap.
+  Note that if `source_token_address` is present, the returned address is the
+  contract address of the ERC-20 token. This requires approval / whitelisting by
+  the sender, *before* submitting the vault swap.
 </Callout>
 
 ```typescript copy
@@ -125,7 +125,9 @@ As a basic example, using `web3` and continuing from the previous code snippet:
 ```typescript copy
 // Assume a loaded `wallet`;
 const signedTx = await web3.eth.accounts.signTransaction(tx, wallet.privateKey);
-const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+const receipt = await web3.eth.sendSignedTransaction(
+  signedTx.rawTransaction as string
+);
 ```
 
 ## Full Example
@@ -190,12 +192,12 @@ const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as 
 **Incorrectly encoded parameters may result in the loss of user funds**.
 
 Therefore, it's advised to use the provided RPC to encode Vault Swap parameters. Otherwise make sure to thoroughly test your logic before initiating a swap with real funds. You can test against a local instance of the Chainflip network. Reach out on our Discord community server if you wish to know more.
+
 </Callout>
 
 The Vault smart contract can be called directly without using the provided RPCs to encode the transaction. Here is the reference for the Vault smart contract interface.
 
 In the case of swapping ERC-20 tokens corresponding token **approval is required**.
-
 
 ```solidity
     // Swap native token
@@ -241,13 +243,13 @@ In the case of swapping ERC-20 tokens corresponding token **approval is required
 
 ## Parameter reference
 
-| Param         | Description | Data Type |
-| ------------- | ----------- | --------- |
-| `dstChain`    | Destination [chain ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation) for the swap. | `uint32`   |
-| `dstAddress`  | Address where the swapped tokens will be sent to on the destination chain. Addresses must be encoded into a bytes type valid for the destination chain. You can check out a reference on how to do address encoding for each of the chains from our [SDK](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/67d43db80d734a206dd2a0cc8334cb118c711906/packages/shared/src/vault/executeSwap.ts#L31). | `address` |
-| `dstToken`    | Destination [token](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation)| `uint32` |
-| `srcToken`    | Address of the token to be swapped from the source chain. | `address` |
-| `amount`      | Amount of the source token to be swapped. When swapping a native asset, the `msg.value` passed in the call will be used instead. | `uint` |
-| `message`   | Message that is passed to the destination address on the destination chain. It must be shorter than 15k bytes. | `bytes` |
-| `gasAmount` | Gas budget for the call on the destination chain in gas units or compute units. This amount should cover the execution of the receiver's logic. | `uint` |
-| `cfParameters`| Additional metadata for additional features. It cannot be empty and must be correctly encoded according to [Chainflip Parameters](/brokers/vault-swaps-api/encoding-reference#chainflip-parameters-cf_parameters). | `bytes` |
+| Param          | Description                                                                                                                                                                                                                                                                                                                                                                                                   | Data Type |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `dstChain`     | Destination [chain ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation) for the swap.                                                                                                                                                                                                                                                                                          | `uint32`  |
+| `dstAddress`   | Address where the swapped tokens will be sent to on the destination chain. Addresses must be encoded into a bytes type valid for the destination chain. You can check out a reference on how to do address encoding for each of the chains from our [SDK](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/67d43db80d734a206dd2a0cc8334cb118c711906/packages/shared/src/vault/executeSwap.ts#L31). | `address` |
+| `dstToken`     | Destination [token](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation)                                                                                                                                                                                                                                                                                                           | `uint32`  |
+| `srcToken`     | Address of the token to be swapped from the source chain.                                                                                                                                                                                                                                                                                                                                                     | `address` |
+| `amount`       | Amount of the source token to be swapped. When swapping a native asset, the `msg.value` passed in the call will be used instead.                                                                                                                                                                                                                                                                              | `uint`    |
+| `message`      | Message that is passed to the destination address on the destination chain. It must be shorter than 15k bytes.                                                                                                                                                                                                                                                                                                | `bytes`   |
+| `gasAmount`    | Gas budget for the call on the destination chain in gas units or compute units. This amount should cover the execution of the receiver's logic.                                                                                                                                                                                                                                                               | `uint`    |
+| `cfParameters` | Additional metadata for additional features. It cannot be empty and must be correctly encoded according to [Chainflip Parameters](/brokers/vault-swaps-api/encoding-reference#chainflip-parameters-cf_parameters).                                                                                                                                                                                            | `bytes`   |

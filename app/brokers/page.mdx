@@ -4,15 +4,13 @@ description: Brokers introduction
 ---
 
 import ThemedImage from "../_components/themed-image";
-import {Cards} from "nextra/components";
+import { Cards } from "nextra/components";
 
 ## Introduction
 
 A Broker, in the context of the Chainflip protocol, is an entity that facilitates the process of initiating a swap on behalf of end users. They provide an endpoint to interact with the State Chain, reducing the complexity of transactions and lowering gas fees.
 
 Brokers forward users' swap requests to the network, paying transaction fees on their behalf and potentially taking a commission for each swap. Successful brokers need to provide and market a swapping interface and ensure they are resistant to spam attacks.
-
-
 
 ## Brokers
 
@@ -47,30 +45,33 @@ It also removes some incentives to fragment the cross-chain swapping app by offe
 
 With that said, many Brokers will probably not take a fee, particularly private Brokers set up by professional traders to rapidly interact with the network for software trading strategies. However, Brokers that decide to take fees can withdraw these balances at any time through the CLI.
 
-
 ## Quick Start
 
-If you are a developer of wallets, aggregators or DEXes, you can earn revenue by bringing volume to Chainflip's ecosystem. Any _State Chain_ account can register as a Broker, and start submitting **Deposit Channel Request** or  **Vault swaps** on users' behalf.
+If you are a developer of wallets, aggregators or DEXes, you can earn revenue by bringing volume to Chainflip's ecosystem. Any _State Chain_ account can register as a Broker, and start submitting **Deposit Channel Request** or **Vault swaps** on users' behalf.
 
 To integrate Chainflip swapping, you can integrate via:
 
 <Cards num={2}>
-    <Cards.Card arrow title="Deposit Channels Swaps" href="brokers/broker-deposit-channels-swaps">
-        <ThemedImage
-            lightSrc="/assets/deposit-channel-light.png"
-            darkSrc="/assets/deposit-channel-dark.png"
-            alt="deposit-channel-swaps"
-            width={1293}
-            height={727}
-        />
-    </Cards.Card>
-    <Cards.Card arrow title="Vault Swaps" href="brokers/broker-vault-swaps">
-        <ThemedImage
-            lightSrc="/assets/vault-swaps-light.png"
-            darkSrc="/assets/vault-swaps-dark.png"
-            alt="vault-swaps"
-            width={1293}
-            height={727}
-        />
-    </Cards.Card>
+  <Cards.Card
+    arrow
+    title="Deposit Channels Swaps"
+    href="brokers/broker-deposit-channels-swaps"
+  >
+    <ThemedImage
+      lightSrc="/assets/deposit-channel-light.png"
+      darkSrc="/assets/deposit-channel-dark.png"
+      alt="deposit-channel-swaps"
+      width={1293}
+      height={727}
+    />
+  </Cards.Card>
+  <Cards.Card arrow title="Vault Swaps" href="brokers/broker-vault-swaps">
+    <ThemedImage
+      lightSrc="/assets/vault-swaps-light.png"
+      darkSrc="/assets/vault-swaps-dark.png"
+      alt="vault-swaps"
+      width={1293}
+      height={727}
+    />
+  </Cards.Card>
 </Cards>

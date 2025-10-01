@@ -56,7 +56,7 @@ const rehypeOpenGraphImage: RehypePlugin = () => (ast: any) => {
   }
   const [prop] = createAstObject({
     openGraph: createAstObject({
-      images: `https://nextra.site/og?title=${title}`
+      images: `https://docs.chainflip.io/og?title=${title}`
     })
   }).properties
   properties.push(prop)

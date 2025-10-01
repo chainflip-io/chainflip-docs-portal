@@ -95,19 +95,19 @@ const RootLayout: FC<{
               dark: 50
           }
       }}>
-          {/*/!* Basic Open Graph *!/*/}
-          {/*<meta property="og:type" content="website" />*/}
-          {/*<meta property="og:title" content="Chainflip Docs" />*/}
-          {/*<meta property="og:description" content="Whether you're looking to integrate cross-chain swapping functionality, enable liquidity provisioning, or simply explore the potential of the Chainflip Protocol, these docs will serve as a valuable resource." />*/}
-          {/*<meta property="og:url" content="https://docs.chainflip.io" />*/}
-          {/*<meta property="og:image" content="https://docs.chainflip.io/chainflip-og-image.png" />*/}
-          {/*<meta property="og:image:alt" content="Preview of Chainflip Docs Website" />*/}
+          {/* Basic Open Graph */}
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="Chainflip Docs" />
+          <meta property="og:description" content="Whether you're looking to integrate cross-chain swapping functionality, enable liquidity provisioning, or simply explore the potential of the Chainflip Protocol, these docs will serve as a valuable resource." />
+          <meta property="og:url" content="https://docs.chainflip.io" />
+          <meta property="og:image" content="https://docs.chainflip.io/chainflip-og-image.png" />
+          <meta property="og:image:alt" content="Preview of Chainflip Docs Website" />
 
-          {/*/!* Twitter card *!/*/}
-          {/*<meta name="twitter:card" content="summary_large_image" />*/}
-          {/*<meta name="twitter:title" content="Chainflip Docs" />*/}
-          {/*<meta name="twitter:description" content="Whether you're looking to integrate cross-chain swapping functionality, enable liquidity provisioning, or simply explore the potential of the Chainflip Protocol, these docs will serve as a valuable resource." />*/}
-          {/*<meta name="twitter:image" content="https://docs.chainflip.io/chainflip-og-image.png" />*/}
+          {/* Twitter card */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="Chainflip Docs" />
+          <meta name="twitter:description" content="Whether you're looking to integrate cross-chain swapping functionality, enable liquidity provisioning, or simply explore the potential of the Chainflip Protocol, these docs will serve as a valuable resource." />
+          <meta name="twitter:image" content="https://docs.chainflip.io/chainflip-og-image.png" />
       </Head>
       <body>
         <Layout

@@ -56,7 +56,7 @@ const rehypeOpenGraphImage: RehypePlugin = () => (ast: any) => {
   }
   const [prop] = createAstObject({
     openGraph: createAstObject({
-      images: `https://nextra.site/og?title=${title}`
+      images: `https://docs.chainflip.io/og?title=${title}`
     })
   }).properties
   properties.push(prop)
@@ -67,12 +67,12 @@ const withNextra = nextra({
     renderer: 'mathjax'
   },
   defaultShowCopyCode: true,
-  mdxOptions: {
-    rehypePlugins: [
-      // Provide only on `build` since turbopack on `dev` supports only serializable values
-      process.env.NODE_ENV === 'production' && rehypeOpenGraphImage
-    ].filter(v => !!v),
-  },
+  // mdxOptions: {
+  //   rehypePlugins: [
+  //     // Provide only on `build` since turbopack on `dev` supports only serializable values
+  //     process.env.NODE_ENV === 'production' && rehypeOpenGraphImage
+  //   ].filter(v => !!v),
+  // },
   whiteListTagsStyling: ['figure', 'figcaption']
 })
 

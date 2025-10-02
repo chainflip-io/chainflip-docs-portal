@@ -6,6 +6,8 @@ description: What is Chainflip Delegation and how does it work?
 
 ---
 
+import { Callout } from "nextra/components";
+
 ## What is Delegation?
 
 Delegation is the process of contributing your $FLIP tokens to support validators in return for a share of network rewards. Unlike traditional Proof of Stake networks, Chainflip uses a unique auction-based system where validators compete for authority slots.
@@ -77,3 +79,80 @@ After the bonding period ends, you are free to withdraw your funds. This process
 - Redeem your funds back to your Ethereum wallet
 - Delegate to a different operator
 - Keep your funds uncommitted until you're ready to delegate again
+
+
+## Gross Earning Potential Estimates
+
+<Callout type="info">
+    This is just an estimate. The actual numbers may vary. Please use these figures as a guide for understanding the potential economics of Chainflip delegation.
+</Callout>
+
+This section provides an estimated breakdown of potential costs and revenues for Chainflip Operators. These calculations are designed to give you a foundational understanding of the economic factors involved in participating in the network, taking into account different operational setups.
+
+
+### Constants and assumptions
+
+The following variables and assumptions underpin these example calculations. These figures are crucial for interpreting the revenue and cost estimates provided in the subsequent case studies:
+
+| **Network Estimates**                          |             |
+|:-----------------------------------------------|------------:|
+| FLIP Price ($)                                 |       $0.70 |
+| Nodes in Active Set                            |         150 |
+| Operator Commission                            |      15.00% |
+| **Operator Revenue Estimates**                 |             |
+| Min Operator Stake per Node (FLIP)             |      20,000 |
+| MAB per Node (FLIP)                            |     100,000 |
+| Total Emissions per Month (FLIP)               |  310,455.75 |
+| Min Operator Stake per Node ($)                |  $14,000.00 |
+| MAB per Node ($)                               |  $70,000.00 |
+| Total Emissions per Month ($)                  | $217,319.03 |
+| **Operator Costs Estimate**                    |             |
+| Managed RPC per Node ($/mo)                    |     $300.00 |
+| Managed Validator Overhead per Node ($/mo)     |      $50.00 |
+| Self-Hosted Base RPC ($/mo)                    |   $1,700.00 |
+| Self-Hosted Validator Overhead per Node ($/mo) |      $50.00 |
+
+### Case1: Managed RPCs
+
+This scenario outlines the estimated earnings and costs for Operators utilizing a managed Remote Procedure Call (RPC) service. Managed RPCs typically offer convenience and lower operational overhead but may incur higher direct service fees compared to self-hosting.
+
+|                                    |     1 Node |    3 Nodes |    5 Nodes |    10 Nodes |
+|:-----------------------------------|-----------:|-----------:|-----------:|------------:|
+| **Total Node Revenue (FLIP)**      |   2,069.71 |   6,209.12 |  10,348.53 |   20,697.05 |
+| **Revenue for Operator (FLIP)**    |     413.94 |   1,241.82 |   2,069.71 |    4,139.41 |
+| **Revenue from commission (FLIP)** |     248.36 |     745.09 |   1,241.82 |    2,483.65 |
+| **Net Operator Revenue (FLIP)**    |     662.31 |   1,986.92 |   3,311.53 |    6,623.06 |
+| **Net Operator Revenue ($)**       |    $463.61 |  $1,390.84 |  $2,318.07 |   $4,636.14 |
+| **Validator RPC (managed)**        |    $300.00 |    $900.00 |  $1,500.00 |   $3,000.00 |
+| **Validator cost**                 |     $50.00 |    $150.00 |    $250.00 |     $500.00 |
+| **Total Cost**                     |    $350.00 |  $1,050.00 |  $1,750.00 |   $3,500.00 |
+| **Minimum Token Cost (FLIP)**      |  20,000.00 |  60,000.00 | 100,000.00 |  200,000.00 |
+| **Minimum Token Cost ($)**         | $14,000.00 | $42,000.00 | $70,000.00 | $140,000.00 |
+| **Revenue Yield Monthly**          |      3.31% |      3.31% |      3.31% |       3.31% |
+| **Revenue Yield Yearly**           |     39.74% |     39.74% |     39.74% |      39.74% |
+| **Net Yield Monthly**              |      0.81% |      0.81% |      0.81% |       0.81% |
+| **Net Yield Yearly**               |      9.74% |      9.74% |      9.74% |       9.74% |
+
+### Case 2: Self Hosted RPCs
+
+This scenario details the estimated economics for Operators who choose to self-host their Remote Procedure Call (RPC) services. Self-hosting can potentially reduce recurring costs but often requires more technical expertise and management.
+
+|                                    |     1 Node |    3 Nodes |    5 Nodes |    10 Nodes |
+|:-----------------------------------|-----------:|-----------:|-----------:|------------:|
+| **Total Node Revenue (FLIP)**      |   2,069.71 |   6,209.12 |  10,348.53 |   20,697.05 |
+| **Revenue for stake (FLIP)**       |     413.94 |  $1,241.82 |  $2,069.71 |   $4,139.41 |
+| **Revenue from commission (FLIP)** |     248.36 |     745.09 |   1,241.82 |    2,483.65 |
+| **Net Operator Revenue (FLIP)**    |     662.31 |   1,986.92 |   3,311.53 |    6,623.06 |
+| **Net Operator Revenue ($)**       |    $463.61 |  $1,390.84 |  $2,318.07 |   $4,636.14 |
+| **Validator RPC (Self Hosted)**    |  $1,700.00 |  $1,700.00 |  $1,700.00 |   $1,700.00 |
+| **Validator cost**                 |     $50.00 |    $150.00 |    $250.00 |     $500.00 |
+| **Total Cost**                     |  $1,750.00 |  $1,850.00 |  $1,950.00 |   $2,200.00 |
+| **Minimum Token Cost (FLIP)**      |  20,000.00 |  60,000.00 | 100,000.00 |  200,000.00 |
+| **Minimum Token Cost ($)**         | $14,000.00 | $42,000.00 | $70,000.00 | $140,000.00 |
+| **Revenue Yield Monthly**          |      3.31% |      3.31% |      3.31% |       3.31% |
+| **Revenue Yield Yearly**           |     39.74% |     39.74% |     39.74% |      39.74% |
+| **Net Yield Monthly**              |     -9.19% |     -1.09% |      0.53% |       1.74% |
+| **Net Yield Yearly**               |   -110.26% |    -13.12% |      6.31% |      20.88% |
+
+
+

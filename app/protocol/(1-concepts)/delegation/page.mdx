@@ -6,30 +6,74 @@ description: What is Chainflip Delegation and how does it work?
 
 ---
 
-## Delegation
+## What is Delegation?
 
-Delegation is the process of contributing your $FLIP tokens to a Validator in return for a share of the network rewards.
+Delegation is the process of contributing your $FLIP tokens to support validators in return for a share of network rewards. Unlike traditional Proof of Stake networks, Chainflip uses a unique auction-based system where validators compete for authority slots.
 
-## Chainflip Ain't A PoS Chain
+## Delegation Rules
 
-Although it might seem this way on the surface, Chainflip is not a Proof of Stake network. Unlike PoS, Chainflip rewards are paid out equally among all Authority Slots rather than proportionally according to their individual stakes. Validators compete for these slots by bidding in regular [Auctions](/validators/validator-auctions-bonds-and-rewards). It follows that Delegation must adapt to this model.
+There are two important rules to understand when delegating:
 
-As a result of this, one major distinction compared to other networks is that Chainflip delegators do not delegate directly to Validators, but indirectly via accounts known as Operators. Operators are the representatives of a pool of one or more Validators. An Operator aggregates delegated funds and spreads these optimally across its managed Validators during auction bidding. This reduces the need for Validators and Delegators to actively monitor the auction state. In return, the operator takes a fee.
+- **One operator per Ethereum address**: You can only delegate to one operator per Ethereum address. This is because we use the Ethereum address to create a State Chain account, which simplifies the staking process.
+- **One operator at a time**: You can only delegate to one operator at a time. This simplifies the accounting process considerably. You can always switch operators between epochs if needed.
 
-Another consequence of the auction system is that delegation is not immediate. On the Chainflip network, the act of delegation indicates the intent to contribute your $FLIP to a specific Operator. But whether or not staking rewards are earned depends on the Operator successfully bidding for Authority slots for its stable of Validators. If the Operator is successful, one or more of its Validators will earn network rewards and these will trickle down to the delegators who contributed to winning the auction.
+## How to Delegate
 
-Likewise, Delegators can withdraw their support or switch their allegiance to another Operator at any time, however their reward rate will remain unaffected (and funds will remain bonded) until the conclusion of the next auction.
+To delegate your FLIP tokens to an operator:
 
-## Shut Up And Take My Money!
+1. Visit the [Delegate](https://auctions.chainflip.io/delegate) App.
+2. Connect your Ethereum wallet that contains FLIP tokens.
+3. Follow the on-screen steps to complete your delegation.
 
-"But how can I delegate?", you may ask.
+The delegation process will guide you through selecting an operator and confirming your delegation transaction.
 
-The simplest way for **Delegators** to, well, delegate, is to interact directly from their Ethereum wallets. Assuming you already own some $FLIP tokens go to the [staking page](https://auctions.perseverance.chainflip.io/delegate) and follow the instructions.
+## How Chainflip Delegation Works
 
-If you are a budding **Operator** or an existing **Validator**, check out the corresponding section in the [validator docs](/validators/delegation) section of the docs.
+### The Auction System
 
-## Give Me My Money Back!
+Chainflip is not a traditional Proof of Stake network. Instead, validators compete for authority slots through regular [auctions](/validators/validator-auctions-bonds-and-rewards). Rewards are distributed equally among all authority slots rather than proportionally based on stake amounts.
 
-You can't have it, at least not right away. As a Delegator, you can withdraw your support for an Operator at any time, but your funds will remain locked (aka. bonded) until the end of the following auction, which takes at most three days.
+### Operators: The Middle Layer
 
-After that, you are free to withdraw, known as *redeeming* in Chainflip parlance.
+In Chainflip's system, delegators don't delegate directly to validators. Instead, they delegate to **Operators**, who manage pools of one or more validators. Operators:
+
+- Aggregate delegated funds from multiple delegators
+- Strategically distribute these funds across their managed validators during auctions
+- Handle the complexity of auction bidding on behalf of delegators
+- Take a commission fee for their services. **The minimum commission is 15%**.
+
+This system reduces the need for delegators to actively monitor auction states while optimising the chances of earning rewards.
+
+### Delegation Timing
+
+Delegation in Chainflip is not immediate. When you delegate, you're expressing intent to contribute your $FLIP to a specific Operator. Actual rewards depend on whether that Operator successfully wins authority slots for their validators in the next auction.
+
+Delegators can withdraw their support or switch to another operator at any time, but their reward rate remains unchanged (and funds remain bonded) until the conclusion of the next auction.
+
+## Getting Started with Delegation
+
+### For Delegators
+
+The simplest way to delegate is through your Ethereum wallet. If you already own $FLIP tokens:
+
+1. Visit the [Delegate App](https://auctions.chainflip.io/delegate)
+2. Connect your Ethereum wallet
+3. Follow the instructions to complete your delegation
+
+### For Operators and Validators
+
+If you're interested in becoming an **Operator** or are an existing **Validator**, check out the detailed guides in the [Validator Documentation](/validators/delegation).
+
+## Withdrawing Your Delegation
+
+### Bonding Period
+
+As a delegator, you can withdraw your support for an operator at any time, but your funds will remain locked (bonded) until the end of the following auction. This bonding period lasts at most three days.
+
+### Redeeming Funds
+
+After the bonding period ends, you are free to withdraw your funds. This process is called *redeeming* in Chainflip terminology. You can then:
+
+- Redeem your funds back to your Ethereum wallet
+- Delegate to a different operator
+- Keep your funds uncommitted until you're ready to delegate again

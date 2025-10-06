@@ -24,13 +24,13 @@ The `fillOrKillParams` object sets two different types of slippage protection wh
    i.e the slippage tolerance will "follow" the global price of the asset. In case the price
    moves against the swapper, it will still execute as long as the execution price is above the minimum accepted price.
 
-| Param                                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                          |           Data type           |
-| :---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------: |
-| `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                                                                                                                                                                           |           `string`            |
-| `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                                                                                                                                                                |           `string`            |
-| `livePriceSlippageTolerancePercent` \(optional) | The percentage of deviation from the global index price that is acceptable for the swap to execute. If the deviation is exceeded, the swap will be refunded to the specified refund address. If not set, the default value from the `quote` will be used. Set the value to `false` to disable live price protection. If the quote does not have a recommended live price slippage tolerance, this setting is not available for the asset pair and should not be set. | `string` `false` `undefined ` |
-| `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                                                                                                                                                                    |           `string`            |
-| `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds.                                                                                                                                                                                                                                                                                                                  |           `number`            |
+| Param                                           | Description                                                                                                                                                                                                                                                                                                          |           Data type           |
+| :---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------: |
+| `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                           |           `string`            |
+| `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                |           `string`            |
+| `livePriceSlippageTolerancePercent` \(optional) | The percentage of deviation from the global index price that is acceptable for the swap to execute. If the deviation is exceeded, the swap will be refunded to the specified refund address. If not set, the default value from the `quote` will be used. Set the value to `false` to disable live price protection. | `string` `false` `undefined ` |
+| `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                    |           `string`            |
+| `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds.                                                                                                                                                                  |           `number`            |
 
 Slippage tolerance can be specified by using the `slippageTolerancePercent`
 property. `slippageTolerancePercent` must be a number between 0 and 100. This
@@ -51,12 +51,20 @@ Live price slippage can be specified by using the `livePriceSlippageTolerancePer
 property. It must be a number between 0 and 100. The default behavior is to use the recommended
 value from the quote but can be overridden or set to `false` to disable live price protection.
 If the quote does not have a recommended live price slippage tolerance, this setting is not
-available for the asset pair and should not be set.
+available for the asset pair and should NOT be set.
 
 If either of the slippage tolerance properties are invalidated, the swap will be refunded to
 the specified refund address. Refunds are subject to a broadcast fee on the source chain to pay for the
 transactions sent by the Chainflip protocol. The boost or deposit fee paid will not
 not be refunded.
+
+<Callout type="warning">
+  If overriding live price slippage protection - the tolerance should account
+  for network fees and broker fees. For example, if the network fee is 0.1% and
+  the broker fee is 0.15% - the live price slippage tolerance should be set to
+  at least 0.25% to avoid refunds. The recommended value returned from the quote
+  <strong>already</strong> accounts for these fees.
+</Callout>
 
 <Callout type="warning">
   Slippage tolerance is applied relative to the quoted price unlike live price

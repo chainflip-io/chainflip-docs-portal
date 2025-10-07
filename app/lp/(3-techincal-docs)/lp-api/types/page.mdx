@@ -289,3 +289,11 @@ def price_to_sqrt_price(price, decimals_of_quote_asset, decimals_of_base_asset):
 ### Side
 
 The "side" of a limit order indicates if the limit order is buying the pool's base asset, or is selling the pool's base asset. It can have two values either `"buy"` or `"sell"`.
+
+### Notification Behaviour
+
+Some subscriptions take an optional parameter `notification_behaviour` , this allows you to control under what condition the subscription will return events. It can have these values:
+
+- `Finalized`: This will cause the subscription to send notifications about finalized blocks
+- `Best`: This will cause the subscription to send notifications about best blocks. In the case of a re-org it might drop events.
+- `New`: This will cause the subscription to send notifications about new blocks. In the case of a re-org it might duplicate events. It is responsability of the user to de-duplicate the events.

@@ -63,7 +63,7 @@ Caused by:
 
 ### Solution
 
-You have not selected the correct Ethereum network. In this case, you have selected `mainnet`. The Chainflip network uses Sepolia. Please reread [#pointing-to-the-ethereum-client](/validators/testnet/validator-setup#pointing-to-the-ethereum-client).
+You have not selected the correct Ethereum network. In this case, you have selected `mainnet`. The Chainflip testnet network uses Sepolia. Please reread [#pointing-to-the-ethereum-client](/validators/testnet/validator-setup#pointing-to-the-ethereum-client).
 
 ### Logs
 
@@ -111,7 +111,8 @@ It means that your node is running OOM and it is getting killed by the OS.
 
 ### Solution
 
-You need to create a swapfile (8GB), you can follow this guide in order to do so: https://linuxize.com/post/create-a-linux-swap-file/
+You either need to resize your server to have more RAM or create a swapfile (8GB should be enough), you can follow this guide in order to do so: https://linuxize.com/post/create-a-linux-swap-file/
+Having a swapfile or swap partition is recommended in any case.
 
 ## Auctions App
 
@@ -279,11 +280,9 @@ This will take effect in the next epoch and you'll continue to miss authorship s
 
 - **System Clock is not synced**: If your system clock isn't synced with the network, then you'll miss authorship slots. The reason is that the block you are trying to author will be rejected by the network because it's timestamp is not within the allowed range. You can check your system clock by running `date` and you can sync it by running:
 ```bash copy
-sudo apt-get update
-sudo apt-get install ntp
-sudo systemctl restart ntp
-sudo systemctl status ntp
-ntpq -p
+sudo apt update
+sudo apt install -y chrony
+sudo systemctl enable --now chrony
 ```
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 

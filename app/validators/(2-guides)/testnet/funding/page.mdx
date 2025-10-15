@@ -51,8 +51,8 @@ To become an active validator, you'll need to win an Auction. To win an auction,
 In order to fund your account, you should use the Auctions App. You could also interact with the Smart Contract directly, but since that's ugly we'll use the Dashboard for the purposes of this tutorial.
 
 1. Make sure you have `tFLIP` in your Metamask.
-2. Go to [Chainflip Auctions page](https://auctions.perseverance.chainflip.io/) > "**My Nodes**"
-3. Connect your Metamask wallet with the `tFLIP`
+2. Go to [Chainflip Auctions page](https://auctions.perseverance.chainflip.io/)
+3. Connect your Metamask wallet with the `tFLIP` and then go to "**My Nodes**"
 4. Click the button "**+ Add Node**" > You should see the "**Register new node**" modal
 5. Enter the Validator ID you got during [Generating Keys](/validators/mainnet/validator-setup#validator-keys) step — your `Public Key(SS58)`— and the amount of `tFLIP` you want to add funds to. Click on "**Add Funds**"
 6. Metamask will ask you to sign two transactions. The first one is a token approval and the second one transfers and add funds to your validator.
@@ -79,7 +79,7 @@ Before you start bidding to become an Authority node, you need to tell the netwo
 If you don't follow all of these steps, **your Validator cannot be selected to win an Auction.**
 
 <Callout type="warning">
-Please ensure that all connections on ports `30333` and `8078` are not blocked! Some VPS providers enable an all-port firewall by default, but if this is not the case your node will not be able to participate in Keygen / Signing ceremonies.
+Please ensure that all connections on ports `30333` and `8078` are not blocked! Some VPS providers enable an all-port open firewall by default, but if this is not the case you need to open such ports, otherwise your node will not be able to participate in Keygen / Signing ceremonies.
 **As a result of this you node will never become active and you'll be slashed and might lose all your `tFLIP`**.
 </Callout>
 

@@ -13,14 +13,16 @@ import { Tabs } from "nextra/components";
 
 ### `lp_subscribe_order_fills`
 
-A subscription that lists all the orders that have been filled/partially filled by swaps in each finalized block. Note swaps are only considered done once they are in a finalized block.
+A subscription that lists all the orders that have been filled/partially filled by swaps in each block. By default swaps are only considered done once they are in a finalized block.
+You can override this setting by specifying the notification behaviour in the params.
 
-Parameters: None
+Parameters: 
+- [`notification_behaviour`](/lp/lp-api/types#notification-behaviour) (Optional): Default to Finalized if not provided
 
 Return:
 - Block hash
 - Block number
-- JSON array of all the fills in this finalized block.
+- JSON array of all the fills in the block.
 - For range order fills these look like this:
 
 ```json

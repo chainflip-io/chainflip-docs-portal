@@ -17,17 +17,16 @@ This is the one and only official guide for setting up your Chainflip Validator.
 If you've never used Linux before, you will need some help understanding the basics of how to set up your machine and use it. **If you feel proficient with Linux, feel free to skip this article.** For those that don't, let's clear some stuff up right away:
 
 - **Do not** use your home computer (or laptop) to run a Validator unless you REALLY know what you're doing.
-- To run a Validator, you will need to **rent a server (either a Dedicated Server or a Virtual Private Server (VPS)**. There are many places to do this. You should be willing to spend **at least $50 USD** to run a server for a month.
-- To access the server from your home computer, you will need to use an SSH client. This will allow you to access the server's **command line**. Most of the validator setup you do will be through a terminal. It's _not as hard_ as it sounds but there _is_ a learning curve, and **if you can't use Google you will struggle**.
-- If all of this sounds too much to you, there's only one way to find out if you can do it: give it a go! We would never recommend that inexperienced users risk their funds by running a mainnet node themselves, but seeing as it's a testnet, **here's your chance to learn more about how the internet is run.**
-
+- To run a Validator, you will need to **rent a server (either a Dedicated Server or a Virtual Private Server (VPS)**. There are many providers to choose from. You should be willing to spend **at least $50 USD** to run a server for a month.
+- To access the server from your home computer, you will need to use an SSH client. This will allow you to access the server's **command line**. Most of the validator setup you do will be through a terminal. It's _not as hard_ as it sounds but there _is_ a learning curve, and **if you can't use web search or AI assistants you will struggle**.
+- If all of this sounds too much to you, there's only one way to find out if you can do it: give it a go! We would never recommend that inexperienced users risk their funds by running a mainnet node themselves, but seeing as it's a testnet, **here's your chance to learn more about how Linux and blockchain infrastructure works under the hood.** Having said that, we recommend getting a bit familiar with how Linux command line works before starting this guide.
 ### Some Handy Tips and Resources
 
-- There are many great hosting providers out there. In no particular order, there is Hetzner, OVH, Digital Ocean, AWS, Microsoft Azure, Kamatera, and many more. If you really have no idea what you're doing, you can follow this [guide for creating and connecting to DigitalOcean "droplets"](https://flaviocopes.com/digitalocean-create-vps/) which is just a fancy name DigitalOcean gives its VPS offering. However, be warned that DigitalOcean is more expensive than other offerings and you will need to spend upwards of $80 per month for a good server. Renting servers is pretty easy so our recommendation would be to just ask in the [`🛠︱technical-discussion`](https://discord.com/channels/824147014140952596/824147608377098241) channel in Discord for help choosing a provider.
+- There are many great hosting providers out there. In no particular order, there is Hetzner, Vultr, OVH, Digital Ocean, AWS, Microsoft Azure, Kamatera, and many more. If you really have no idea what you're doing, you can follow this [guide for creating and connecting to DigitalOcean "droplets"](https://flaviocopes.com/digitalocean-create-vps/) which is just a fancy name DigitalOcean gives its VPS offering. However, be warned that DigitalOcean is more expensive than other offerings and you will need to spend upwards of $80 per month for a good server. Renting servers is pretty easy so our recommendation would be to just ask in the [`🛠︱technical-discussion`](https://discord.com/channels/824147014140952596/824147608377098241) channel in Discord for help choosing a provider.
 - [A great guide for connecting to your server from any desktop computer using SSH](https://www.howtogeek.com/311287/how-to-connect-to-an-ssh-server-from-windows-macos-or-linux/). If you don't know how to do this **you aren't going to make it.**
-- You should know how to navigate folders using the command line. You will need to use a few commands to set up a validator, which can be googled individually as you need them. The way how changing directories and moving files work can be super confusing, so if you are stuck, try Googling what you need to do, even if it's as simple as editing a file or navigating to a directory. You'll get the hang of it. [Here's a good list of some basic commands everyone should know](https://bjpcjp.github.io/pdfs/devops/linux-commands-handbook.pdf), many of which you'll need. **HOT TIP:** You can always hit the TAB key to autocomplete a path. For example, if there's a folder called `chainflip`, and you want to change to it, you can type `cd c` and then hit tab. Linux will autocomplete the folder or filename for you, leaving you with `cd chainflip` ready to go (there are some caveats, [but hitting the tab key never hurt anyone](https://www.youtube.com/watch?v=siaxGjttoVM))!
+- You should know how to navigate folders using the command line. You will need to use a few commands to set up a validator, which can be googled individually as you need them. The way how changing directories and moving files work can be super confusing, so if you are stuck, try Googling what you need to do, even if it's as simple as editing a file or navigating to a directory. You'll get the hang of it. [Here's a good list of some basic commands everyone should know](https://www.lcg.ufrj.br/nodejs/books/linux-commands-handbook.pdf), many of which you'll need. **HOT TIP:** You can always hit the TAB key to autocomplete a path. For example, if there's a folder called `chainflip`, and you want to change to it, you can type `cd c` and then hit tab. Linux will autocomplete the folder or filename for you, leaving you with `cd chainflip` ready to go (there are some caveats, [but hitting the tab key never hurt anyone](https://www.youtube.com/watch?v=siaxGjttoVM))!
 - Control + C is _normally_ how copy-paste works in windows. That is **not** the case here. If you use Ctrl + C in a terminal in windows, you will force exit the program you are using. To copy content from a Terminal, highlight the text you want and right-click. Similarly, if you are trying to paste content, right-click on a blank section of the terminal. Either it will just work or a context menu will appear, allowing you to "Copy" and "Paste." This will differ depending on your operating system and SSH client. If you're stuck, ask in Discord.
-- We've tried to write the instructions so that people with minimal experience will be able to figure it out and copy-paste their way through most of it. Hopefully if you've figured out how to connect to the server's root account through SSH, you shouldn't have any showstopping problems with these docs. If you're stuck and you think there's some key information missing from these docs, please post it in the [`🙋︱help-and-support`](https://discord.com/channels/824147014140952596/824147718444023848) channel in Discord.
+- We've tried to write the instructions so that people with minimal experience will be able to figure it out and copy-paste their way through most of it. Hopefully if you've figured out how to connect to the server's root account (or a user with sudo permissions) through SSH, you shouldn't have any showstopping problems with these docs. If you're stuck and you think there's some key information missing from these docs, please post it in the [`🙋︱help-and-support`](https://discord.com/channels/824147014140952596/824147718444023848) channel in Discord.
 - Don't forget to have fun!
 
 
@@ -64,7 +63,7 @@ You'll also need to have sETH in your wallet to cover the gas fees for Adding an
 
 <Callout type="info">
     If Sepolia Ethereum Testnet is not showing on your Wallet, make sure to enable
-    Testnets in your wallet settings.
+    Testnets or Custom Network in your wallet settings.
 </Callout>
 
 You will need a way for your validator to monitor the Sepolia Ethereum Blockchain. The Chainflip Engine software allows you to use any endpoint you specify in its config file. You can either [run a geth client](https://github.com/ethereum/go-ethereum) (make sure to set this up on the Sepolia testnet!), or you can rely on a third-party remote client provider such as [Alchemy](https://alchemy.com/), [Infura](https://infura.io/), or [Rivet](https://rivet.cloud/).
@@ -98,22 +97,22 @@ This machine must be available 24/7 and thus it is recommended that you only try
 
 You should ensure that all connections on ports `30333 (TCP)` and `8078 (TCP)` are not blocked! Moreover make sure your firewall allows NTP outbound traffic on port `123 (UDP)`
 
-Some VPS providers enable an all-port firewall by default, but if this is not the case your node will not be able to participate in Keygen / Signing ceremonies and as a result will never become active.
+Some VPS providers enable an all-port open firewall by default, but if this is not the case and you don't open the required ports, your node will not be able to participate in Keygen / Signing ceremonies and as a result will never become active.
 
 **Static IP**
 
 To ensure uninterrupted operation of your node, you should setup your server to have a static public IP address. If your server gets a new IP address, you will need to update your node's configuration and restart it.
+If you are using a VPS, you will have a static IP address assigned already.
 
 **NTP Daemon**
 
-In some cases, the system time will drift causing the authoring or importing of blocks to fail. To prevent this, you should install and enable an NTP daemon on your server. This will ensure that your system time is always correct.
-Feel free to use your NTP daemon of choice, but we recommend `ntp`. You can install it and enable it with the following commands:
+In some cases, the system time will drift causing the authoring or importing of blocks to fail. To prevent this, you should install and enable an NTP daemon on your server.
+Current Ubuntu distributions come with chrony by default, but if this is not the case you can install it with the following commands:
 
-```bash copy
-sudo apt install ntp
-sudo systemctl start ntp
-sudo systemctl status ntp
-sudo systemctl enable ntp
+```bash
+sudo apt update 
+sudo apt install -y chrony
+sudo systemctl enable --now chrony
 ```
 
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
@@ -122,6 +121,7 @@ Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 ## 2. Creating a new Linux User
 
 Using the `root` user to run a Validator works. However, it is a good security practice to create a separate user with limited access to run the Chainflip binaries.
+Depending on your VPS provider, you may already have a sudo user created for you (like `ubuntu`). If this is the case, you can skip these steps.
 
 You can call the new user whatever you like. In the following commands we will call it `flip`.
 
@@ -216,17 +216,17 @@ gpg --export BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6 | gpg --show-keys
     **Important:** Make sure you see the following output from the terminal:
 
     ```
-    pub   rsa3072/0xFB3E88547C6B47C6 2022-11-08 [SC]
-    Key fingerprint = BDBC 3CF5 8F62 3694 CD9E  3F5C FB3E 8854 7C6B 47C6
-    uid                              Chainflip Labs GmbH <dev@chainflip.io>
-    sub   rsa3072/0x48249A1599E31935 2022-11-08 [E]
+    pub   rsa3072 2022-11-08 [SC]
+          BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6
+    uid                      Chainflip Labs GmbH <dev@chainflip.io>
+    sub   rsa3072 2022-11-08 [E]
     ```
 </Callout>
 
 3. Add Chainflip's Testnet Repo to `apt` sources list:
 
 ```bash copy
-gpg --export BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6 | sudo tee /etc/apt/trusted.gpg.d/chainflip-perseverance.gpg
+gpg --export BDBC3CF58F623694CD9E3F5CFB3E88547C6B47C6 | sudo tee /etc/apt/trusted.gpg.d/chainflip-perseverance.gpg 1>/dev/null
 echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/chainflip-perseverance.gpg] https://repo.chainflip.io/perseverance/jammy jammy main" | sudo tee /etc/apt/sources.list.d/chainflip.list
 ```
 
@@ -253,7 +253,7 @@ First, download the latest chaindata snapshot and unpack it to the correct locat
 
 ```bash copy
 
-mkdir -p /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
+sudo mkdir -p /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
 
 wget https://snapshots.chainflip.io/perseverance/cf_chaindata_pruned_paritydb.tar.{gz.sha512.asc,gz.sha512,gz}
 
@@ -264,10 +264,11 @@ gpg --verify cf_chaindata_pruned_paritydb.tar.gz.sha512.asc cf_chaindata_pruned_
 
 sha512sum -c cf_chaindata_pruned_paritydb.tar.gz.sha512
 
-tar -xzf ./cf_chaindata_pruned_paritydb.tar.gz -C /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
+sudo tar -xzf ./cf_chaindata_pruned_paritydb.tar.gz -C /etc/chainflip/chaindata/chains/Chainflip-Perseverance/
 
 rm -f ./cf_chaindata_pruned_paritydb.tar.{gz.sha512.asc,gz.sha512,gz}
 ```
+Some of the steps can take a couple of minutes to run, so be patient.
 
 After that, create a systemd override file for the `chainflip-node` service to use the correct parameters in order for the snapshot to be used.
 
@@ -305,7 +306,7 @@ Validator nodes take actions on behalf of the Chainflip network, and all of thes
 Generate and save the required keys using the following `chainflip-cli` command:
 
 ```bash copy
-chainflip-cli generate-keys --path /etc/chainflip/keys
+sudo chainflip-cli generate-keys --path /etc/chainflip/keys
 ```
 
 This should give you an output similar to the following:
@@ -337,6 +338,8 @@ Generated fresh Validator keys for your Chainflip Node!
 <Callout type="error">**The keys above are just for demonstration purposes. DO NOT send any funds to these addresses.**</Callout>
 
 **Make sure to back up your Seed Phrase and make a note of the public keys and account ID. You will need the Seed Phrase if you ever need to restore your node or recover your funds if you lose access to the node. DO NOT LOSE THIS.**
+
+**The seed phrase is the only valid backup, since all other keys are derived from it. Simply backing up the generated key files is NOT a sufficient backup!**
 
 <Callout type="info">
     We recommend generating keys on the validator machine then using GPG encryption to securely transfer the ciphertext to a backup location. This is to eliminate the risk of the keys being intercepted in transit or being cached in the clipboard in the case of copying them from the terminal.
@@ -400,7 +403,7 @@ chainflip-cli generate-keys \
     --seed-phrase 'slender pilot fiber auction junk sting ozone push shop reduce defense stamp'
 ```
 
-The output should be the same as above (except the `Node Key`), and the keys should be written to the provided path, as above.
+The output should be the same as above (except the `Node Public Key` and `Node Peer ID`), and the keys should be written to the provided path, as above.
 
 
 ## 5. Engine Settings
@@ -519,6 +522,10 @@ http_endpoint = "https://assethub.perseverance.chainflip.io:443"
 
 <Callout type="warning">
     At least one of the RPC endpoints (primary or backup) *must* be an archive node.
+</Callout>
+
+<Callout type="info">
+The public address of your node can be obtained with: `curl -s icanhazip.com` or  `curl -s -w "\n" ifconfig.me`
 </Callout>
 
 ### Pointing to the Ethereum Client

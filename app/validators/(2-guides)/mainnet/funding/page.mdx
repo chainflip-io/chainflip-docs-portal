@@ -1,7 +1,7 @@
 ---
 
-title: Funding on Mainnet
-description: How to fund your account on Mainnet.
+title: Funding and Redemption on Mainnet
+description: How to fund and redeem your account on Mainnet.
 
 ---
 
@@ -63,7 +63,7 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 ```
 
 <Callout type="warning">
-Make sure you rotate session keys and execute the commnad to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
+Make sure you rotate session keys and execute the command to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
 </Callout>
 
 ### Set Vanity Name
@@ -146,12 +146,23 @@ First of all, you need to end your participation in auctions. To do so, use the 
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip validator stop-bidding
 ```
+> Note: This command will not execute and stop bidding if the auction has already begun (check the Auctions page and try again when appropriate).
 
-Your node will cease to participate in auctions. When your node has left the validator set, it will still be a `Keyholder` for another epoch. You then have to wait another epoch until your `$FLIP` can be redeemed, so that your node is no longer a `Keyholder`. Once your node is no longer a Keyholder you can redeem all your `$FLIP` by following the next steps.
+On successful completion of this command, your node will cease to participate in auctions. When your node has left the validator set, it will still be a `Keyholder` for another epoch. You then have to wait another epoch until your `$FLIP` can be redeemed, so that your node is no longer a `Keyholder`. Once your node is no longer a Keyholder you can redeem all your `$FLIP` by following the next steps.
+
+### Deregistration
+Before making a **final** redemption, your account must be deregistered:
+
+```bash copy
+sudo chainflip-cli validator deregister-account
+```
+
+Deregistration is not possible until your account has stopped bidding and is no longer a key holder for an active Epoch (usually this implies that at least one Epoch has passed since your account was last in the authority set).
+
 
 ### Redemption Process in Auctions App
 
-The redemption process is initiated via the [Chainflip Auctions App](https://auctions.chainflip.io/auctions) > **My Nodes (legacy)** alongside the Chainflip CLI. You will need the address of the Ethereum account to which you want your `$FLIP` to be sent.
+The redemption process is initiated via the [Chainflip Auctions App](https://auctions.chainflip.io/operators) > **My Nodes (Legacy)** alongside the Chainflip CLI. You will need the address of the Ethereum account to which you want your `$FLIP` to be sent.
 
 In the Auctions App, select "Redeem". This will guide you through the process.
 
@@ -159,15 +170,14 @@ You have two options. By default, the command will redeem the maximum available 
 
 **Example:**
 
-Imagine your account balance is **1000** `$FLIP` and the bond is **800** `$FLIP`.
+Imagine your account balance is **1000** `$FLIP` and the bond is **800** `$FLIP` (you have **200** `$FLIP` in rewards to harvest).
 
-You can redeem **200** `$FLIP` minus the tax, to the Ethereum account `0xcf..cf`:
-
-**195** `$FLIP` net.
+You can redeem **200** `$FLIP` minus the tax, to the Ethereum account `0xcf..cf` (**195** `$FLIP` net):
 
 ```bash copy
 sudo chainflip-cli redeem 0xcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf
 ```
+> Note: This is the command that redeems all available `$FLIP` so it is the one you run when decommissioning a Node and unbonding everything.
 
 Alternatively, you can specify an exact amount you wish to redeem, say **50** `$FLIP`:
 
@@ -177,35 +187,29 @@ sudo chainflip-cli redeem --exact 50 0xcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf
 
 This process will generate a **Redemption Certificate** that will be sent to the Ethereum network.
 
-Once you have completed the request, continue in the Auctions App, where the redemption should display.
+Once you have completed the request, continue in the Auctions App, where the redemption should display. If you cannot find your Node on the Auctions page anymore, Disconnect and Reconnect your Wallet.
+
+<Callout type="warning">
+Your redemption process has not finished, you have simply signalled to the Network that you want to redeem. You **must** continue the redemption process on the Auctions page (after a 48hr wait); you **must** redeem during the Execution window.
+</Callout>
 
 ### Redemption Tax
 
 The network requires a **Redemption Tax of 5 `$FLIP`** per redemption. This is to reduce *redemption request spam*. These requests are expensive for the network to process, and the cost for this is now carried by the requester, via the tax.
 
-### Waiting Period (48h)
+### Waiting Period (48hrs)
 
 A waiting period of **48 hours** applies before a certificate can be used to redeem. This delay is a security measure to limit the risk in Chainflip's Vaults.
 
-### Execution window (24h)
+### Execution window (24hrs)
 
-There is a window of 24h to execute the redemption (these 24h starts as soon as the waiting period ends).
+There is a window of 24hrs to execute the redemption (these 24hrs starts as soon as the waiting period ends).
 
 The redemption certificate has an expiration time of **24 hours** once the waiting period is over. If the redemption certificate expires, you will need to refund the `$FLIP` amount back to your State Chain account balance and start the process over. To do so, you only need to click on 'Refund FLIP to your balance'.
 
-### Deregistration and Account Deletion
+### Account Deletion
 
 Accounts are automatically deleted once all funds have been redeemed.
-
-Before making this final redemption, your account must be deregistered:
-
-```bash copy
-sudo chainflip-cli validator deregister-account
-```
-
-Deregistration is not possible until your account has stopped bidding and is no longer a key holder for an active Epoch (usually this implies that at least one Epoch has passed since your account was last in the authority set).
-
-
 
 ## Advanced Account Management
 

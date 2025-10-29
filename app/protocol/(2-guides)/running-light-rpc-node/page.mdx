@@ -1,0 +1,109 @@
+---
+
+title: Light RPC node
+
+description: Running Light RPC node guide.
+
+---
+
+
+## Light RPC node
+
+As of version `1.12.0`, you can run a light-rpc node which requires few resources but allows only to query recent blocks.
+
+
+
+### Setup
+
+**Pre-requisites**
+- Docker (https://docs.docker.com/get-docker/)
+- JQ (https://stedolan.github.io/jq/download/)
+
+**Clone the repo**
+
+
+```bash
+git clone https://github.com/chainflip-io/chainflip-mainnet-apis.git
+cd chainflip-mainnet-apis
+```
+
+### Running the light-rpc node
+
+* Start a basic RPC node and wait for it to sync:
+```bash
+docker compose --profile rpc-node up -d
+```
+
+* View the logs to monitor sync progress
+```bash
+docker compose --profile rpc-node logs -f
+```
+
+You should see something like this:
+
+```
+node-1  | 2025-10-29 14:33:10 Chainflip Node
+node-1  | 2025-10-29 14:33:10 ✌️  version 1.12.0-11b2cc9c943
+node-1  | 2025-10-29 14:33:10 ❤️  by Chainflip Team <https://github.com/chainflip-io>, 2021-2025
+node-1  | 2025-10-29 14:33:10 📋 Chain specification: Chainflip-Berghain
+node-1  | 2025-10-29 14:33:10 🏷  Node name: subsequent-size-1441
+node-1  | 2025-10-29 14:33:10 👤 Role: FULL
+node-1  | 2025-10-29 14:33:10 💾 Database: RocksDb at /etc/chainflip/chaindata/chains/Chainflip-Berghain/db/full_light
+node-1  | 2025-10-29 14:33:10 ⚡  Light-RPC mode enabled
+node-1  | 2025-10-29 14:33:10 Deleting old db files and recreating a new RocksDB database on startup.
+node-1  | 2025-10-29 14:33:12 🔨 Initializing Genesis block/state (state: 0xceb9…3b8d, header-hash: 0x8b8c…6eb9)
+node-1  | 2025-10-29 14:33:12 🏷  Local node identity is: 12D3KooWKKd5C739WEyesEB2CsjE4HuHzRYMXSuCbCpmA3kzpJZ4
+node-1  | 2025-10-29 14:33:12 Running libp2p network backend
+node-1  | 2025-10-29 14:33:12 💻 Operating system: linux
+node-1  | 2025-10-29 14:33:12 💻 CPU architecture: x86_64
+node-1  | 2025-10-29 14:33:12 💻 Target environment: gnu
+node-1  | 2025-10-29 14:33:12 💻 Memory: 23996MB
+node-1  | 2025-10-29 14:33:12 💻 Kernel: 6.10.14-linuxkit
+node-1  | 2025-10-29 14:33:12 💻 Linux distribution: Ubuntu 22.04.5 LTS
+node-1  | 2025-10-29 14:33:12 💻 Virtual machine: no
+node-1  | 2025-10-29 14:33:12 📦 Highest known block at #0
+node-1  | 2025-10-29 14:33:12 〽️ Prometheus exporter started at 127.0.0.1:9615
+node-1  | 2025-10-29 14:33:12 Running JSON-RPC server: addr=0.0.0.0:9944, allowed origins=["*"]
+```
+
+Make sure to see that light-rpc mode is enabled in the logs. Log line similar to: `⚡  Light-RPC mode enabled`
+
+* Wait until the node is synced before start making RPC calls. This should take around 2 minutes.
+
+> 💡 Note: Your node is considered synced when you see logs similar to:
+```log
+chainflip-mainnet-apis-node-1  | 2023-12-14 10:22:24 ✨ Imported #438968 (0x3fba…8e06)
+chainflip-mainnet-apis-node-1  | 2023-12-14 10:22:28 ⏩ Block history, #26112 (8 peers), best: #438968 (0x3fba…8e06), finalized #438966 (0x99bd…0628), ⬇ 3.4MiB/s ⬆ 182.8kiB/s
+```
+
+* You can check the node's health and verify it is synced by using this RPC call:
+```
+curl -H "Content-Type: application/json" \
+    -d '{"id":1, "jsonrpc":"2.0", "method": "system_health"}' \
+    http://localhost:9944
+```
+
+* To stop the node:
+```bash
+docker compose --profile rpc-node down
+```
+
+## Interacting with the APIs
+
+Now you can interact with the APIs using the `curl` command or any
+
+
+* For example, to get Chainflip's Ethereum vault
+```bash
+curl -H "Content-Type: application/json" \
+    -d '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}' \
+    http://localhost:9944
+```
+
+* To get a list of all RPC endpoints available on the node
+```bash
+curl -H "Content-Type: application/json" \
+    -d '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' \
+    http://localhost:9944 | tr ',' '\n'
+```
+

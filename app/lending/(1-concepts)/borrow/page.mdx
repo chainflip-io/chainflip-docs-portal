@@ -1,0 +1,33 @@
+---
+
+title: Borrow
+
+description: Chainflip Broker Account guide
+
+---
+
+## Borrow
+TODO: copied from Aave docs
+
+
+Borrowing tokens from the Chainflip lending Protocol allows users to access liquidity by using their supplied tokens as collateral, unlocking capital without selling their assets. However, borrowers face liquidation risk if the value of their collateral falls below the required threshold. Interest rates are determined dynamically, influenced by protocol factors and governance decisions, and can change over time based on community input. Interest accrues based on the utilisation rate, which reflects the percentage of supplied liquidity that is borrowed. Higher utilisation rates lead to higher interest rates, adjusting with demand. Each reserve has specific parameters designed to incentivize both borrowers and suppliers.
+
+To maintain a healthy ratio and avoid liquidation risk, borrowers should actively monitor their collateralization level, keeping their health factor in check, to assure their borrow positions remain overcollateralised even as market conditions change or interest accrues.
+
+## Borrower Role
+A borrower opens an over-collateralised loan against supported collateral to obtain a different asset, cross-chain, without wrapping or bridge IOUs. The system enforces a minimum collateralisation ratio at open (illustratively 130%, asset-dependent) and monitors the position continuously using oracle pricing. Borrowers may opt into auto-collateralisation from their state-chain balances to maintain headroom. Interest accrues per the utilisation curve and may be accounted for in the principal or collateral asset; the protocol natively converts collected interest so that lenders are paid in their supplied asset. If health falls towards thresholds, the DEX initiates soft liquidation to unwind risk gradually; if conditions worsen, hard liquidation accelerates settlement.
+
+## Repaying Loans
+TODO: copied from Aave docs
+
+Repaying borrowed tokens in the Chainflip lending Protocol is an important step for managing borrow positions. Borrowers can repay using the same tokens they borrowed, or repay with aTokens (collateral tokens) of the same underlying token. In addition, there are periphery contracts available that simplify the process by allowing repayment with other tokens, such as other collateral assets, without the need to manually convert them beforehand. This flexibility makes it easier for borrowers to manage and close their positions when needed.
+
+Repayment increases the collateralisation ratio, ensuring adequate collateralization and preventing liquidation. By boosting the collateral relative to what is borrowed, repayment prevents assets from being liquidated and allows borrowers to safely withdraw part of their collateral.
+
+## FAQs
+
+### When should I close my loan?
+
+### How do I close my loan?
+
+### How interest accrues?

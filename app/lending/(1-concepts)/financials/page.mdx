@@ -1,0 +1,40 @@
+---
+
+title: Financials
+
+description: How to Burrow guide
+
+---
+
+## Financials
+
+
+
+## Annual Percentage Yield (APY)
+
+TODO: copied from Euler docs
+
+Annual Percentage Yield (APY) is a crucial metric in Euler that helps users understand their potential returns or costs when interacting with the protocol. Unlike simple interest rates, APY accounts for the effects of compound interest, providing a more accurate picture of the actual yield over time. Whether you're supplying assets to earn yield or borrowing assets to access liquidity, understanding APY is essential for making informed decisions.
+
+* Supply APY
+When you supply assets to Euler, you earn yield through multiple sources. The total Supply APY you see in the interface combines three main components:
+
+* Lending APY
+The primary source of yield comes from lending your assets to borrowers. This is the base return you earn for providing liquidity to the protocol. The rate varies based on market conditions and the utilization of the asset in the protocol.
+
+
+
+## Fee Structure
+Fees: interest share to protocol, clearance fees, possible origination fees. [Owner: Irena, Reviewer David]
+Supply fees [Owner: Irena, Reviewer David]
+Lenders do not pay deposit or withdrawal fees beyond network costs unless specified by governance. A protocol “rent” is taken as a share of interest and lending-related fees earned by the pool to compensate for the validator-secured infrastructure. Comparable markets typically collect ~15–30% of gross interest and related fees at the protocol level; Chainflip adopts a similar approach. For CLL usage, lenders also accrue clearance fees and time-weighted interest paid by LPs. All pool-level fees are automatically normalised back into the lenders’ supplied asset by the protocol’s conversion logic.
+
+## Borrowing fees [Owner: Irena, Reviewer David]
+Borrowers pay variable interest determined by the market’s utilisation curve; rates adapt to demand and supply conditions. The protocol may introduce an origination fee on new loans, expected to be materially lower during early rollout and adjustable by governance once markets mature. In addition, borrowers indirectly bear liquidation costs when positions are unwound: soft liquidation targets near-market execution with minimal discount; hard liquidation permits a time-increasing discount to guarantee fill under stress. Interest accounting and any fees can be denominated in either the loan or collateral asset, with automatic conversion ensuring lenders receive the correct asset.
+
+## Liquidation fees [Owner: Irena, Reviewer David]
+When any portion of a position is liquidated, the protocol charges a liquidation fee on the amount settled. Under soft liquidation, orders use LPP at a tight band around oracle pricing, aiming to recover the loan with the smallest feasible discount and fee footprint while returning residual collateral to the borrower. Under hard liquidation, the engine widens LPP tolerances in a controlled schedule (illustratively beginning near 1% and stepping towards ~5%) to guarantee timely execution during volatility. The total borrower impact in hard cases therefore comprises the execution discount plus the liquidation fee specified for the market. Exact fee rates, step schedules, grace periods, staleness halts and re-arm conditions are parameterised per asset and subject to governance and risk reviews.
+
+## Value flow: FLIP buy‑and‑burn or staking rewards (FLIP 2.0). [Owner: Irena, Reviewer David]
+All net protocol revenue attributable to lending—interest shares, CLL clearance fees, origination fees and incremental DEX fees arising from liquidations—accrues to the Chainflip network. In today’s model this supports FLIP buy-and-burn, directly reducing circulating supply as activity grows. With FLIP 2.0, protocol revenue is directed to staking rewards for validators and delegators, aligning economic security with product usage. In both regimes, native BTC lending and short-term liquidity loans expand fee surfaces beyond pure swapping, adding durable, cross-chain revenue streams tied to outstanding loans, utilisation and liquidation volume, and thereby strengthening FLIP’s long-term value capture.
+

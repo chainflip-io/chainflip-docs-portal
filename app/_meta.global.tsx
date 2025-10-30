@@ -24,6 +24,28 @@ export default {
         type: 'page',
         display: 'hidden'
     },
+    lending: {
+        type: 'page',
+        title: 'Lending',
+        items: {
+            index: '',
+            'supply': '',
+            'borrow': '',
+            'liquidations' : '',
+            'financials' : '',
+            __: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'how-to-supply': '',
+            'how-to-borrow': '',
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'supported-chains-assets': ''
+        },
+    },
     protocol: {
         type: 'page',
         title: 'The Protocol',

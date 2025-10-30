@@ -8,16 +8,15 @@ description: Running Light RPC node guide.
 
 import { Tabs } from 'nextra/components'
 
-## Light RPC node
+## Running a Light RPC node
 
 As of version `1.12.0`, you can run a light-rpc node which requires fewer resources but allows only to query recent blocks.
-
 A light-rpc node is just a normal Chainflip node running in a specialized `--sync light-rpc` mode. This `light-rpc` mode prunes older blocks and permits querying only recent blocks, significantly reducing disk space requirements compared to running a full node. The recommended minimum requirements for running a light-rpc node include:
 * 2 vCPU
 * 4 GB RAM
 * 20 GB SSD
 
-## Running the light-rpc node
+## Starting the node
 
 * Clone the `chainflip-mainnet-apis` repo
 ```bash

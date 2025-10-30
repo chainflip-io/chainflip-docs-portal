@@ -6,30 +6,26 @@ description: Running Light RPC node guide.
 
 ---
 
+import { Tabs } from 'nextra/components'
 
 ## Light RPC node
 
-As of version `1.12.0`, you can run a light-rpc node which requires few resources but allows only to query recent blocks.
+As of version `1.12.0`, you can run a light-rpc node which requires fewer resources but allows only to query recent blocks.
 
+A light-rpc node is just a normal Chainflip node running in a specialized `--sync light-rpc` mode. This `light-rpc` mode prunes older blocks and permits querying only recent blocks, significantly reducing disk space requirements compared to running a full node. The recommended minimum requirements for running a light-rpc node include:
+* 2 vCPU
+* 4 GB RAM
+* 20 GB SSD
 
+## Running the light-rpc node
 
-### Setup
-
-**Pre-requisites**
-- Docker (https://docs.docker.com/get-docker/)
-- JQ (https://stedolan.github.io/jq/download/)
-
-**Clone the repo**
-
-
+* Clone the `chainflip-mainnet-apis` repo
 ```bash
 git clone https://github.com/chainflip-io/chainflip-mainnet-apis.git
 cd chainflip-mainnet-apis
 ```
 
-### Running the light-rpc node
-
-* Start a basic RPC node and wait for it to sync:
+* Start an RPC node and wait for it to sync:
 ```bash
 docker compose --profile rpc-node up -d
 ```
@@ -82,6 +78,10 @@ curl -H "Content-Type: application/json" \
     -d '{"id":1, "jsonrpc":"2.0", "method": "system_health"}' \
     http://localhost:9944
 ```
+You should a response showing that `isSyncing` is false, similar to:
+```
+{"jsonrpc":"2.0","result":{"peers":8,"isSyncing":false,"shouldHavePeers":true},"id":1}
+```
 
 * To stop the node:
 ```bash
@@ -90,20 +90,45 @@ docker compose --profile rpc-node down
 
 ## Interacting with the APIs
 
-Now you can interact with the APIs using the `curl` command or any
-
+Now you can interact with the APIs using any HTTP or WS client. Here we use the `curl` and `wscat` commands.
 
 * For example, to get Chainflip's Ethereum vault
-```bash
-curl -H "Content-Type: application/json" \
-    -d '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}' \
-    http://localhost:9944
-```
+<Tabs items={['curl', 'wscat']}>
+    <Tabs.Tab>
+        ```bash
+        curl -H "Content-Type: application/json" \
+        -d '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}' \
+        http://localhost:9944
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```bash
+        wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}'
+        ```
+    </Tabs.Tab>
+</Tabs>
 
 * To get a list of all RPC endpoints available on the node
+
+<Tabs items={['curl', 'wscat']}>
+    <Tabs.Tab>
+        ```bash
+        curl -H "Content-Type: application/json" \
+        -d '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' \
+        http://localhost:9944 | tr ',' '\n'
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```bash
+        wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' | tr ',' '\n'
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+* Subscribe to scheduled swaps. Note that subscriptions are only supported over WebSockets.
 ```bash
-curl -H "Content-Type: application/json" \
-    -d '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' \
-    http://localhost:9944 | tr ',' '\n'
+wscat -c ws://localhost:9944 -w 20 -x '{ "id":1, "jsonrpc":"2.0", "method":"cf_subscribe_scheduled_swaps", "params":{ "base_asset":{ "chain":"Ethereum", "asset":"USDT" }, "quote_asset":{ "chain":"Ethereum", "asset":"USDC" } }}'
 ```
+
+
 

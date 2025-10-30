@@ -1,0 +1,53 @@
+---
+title: Chainflip Lending
+description: Chainflip Lending introduction
+---
+
+import ThemedImage from "../_components/themed-image";
+import { Cards } from "nextra/components";
+
+## Introduction
+
+What is Chainflip Lending and Borrowing [Owner: Irena; Reviewer: Simon]
+
+Chainflip Lending enables over-collateralised, cross-chain money markets for assets such as BTC, ETH, SOL, USDC and USDT. Positions, interest accrual and risk controls live on the Chainflip state chain; assets reside in the existing Chainflip vault system, rather than isolated single-chain smart contracts. Interest rates are set dynamically by a utilisation curve so that borrowing costs rise with pool usage and fall when liquidity is abundant. Prices used for health checks and liquidation triggers come from external oracles (e.g., Chainlink), witnessed by validators on multiple chains for redundancy.
+
+
+## Wht does over-collateralisation mean?
+
+## LTV and LTV ratio
+
+## Lending pools
+
+TODO: copied from Aave docs
+
+A lending pool is an Chainflip market instance that enables users to participate as suppliers or borrowers. Governance-approved parameters, such as reserve configurations and collateralization thresholds, define each pool. Suppliers provide liquidity into the pool that borrowers can access through overcollateralised positions. In return, suppliers earn interest, while borrowers can obtain liquidity against their collateral, all facilitated through decentralised smart contracts.
+
+Chainflip liquidity pools operate on a blockchain network governed by decisions that define the chain and reserve parameters. Parameter decisions must balance liquidity demands for various actions with risk management. The use of smart contracts validate parameters, executing the actions of borrowing, repaying, and liquidation processes seamlessly without intermediaries. This decentralised approach enhances the transparency, efficiency, and security of financial interactions within the pool.
+
+
+## Quick start
+
+To start using supplying liquidity on Chainflip, you can choose what liquidity provisioning strategy is best fit for your risk tolerance. You can either use passive liquidity or active liquidity strategies:
+
+<Cards num={2}>
+    <Cards.Card arrow title="Supplying " href="/lending/supply">
+        <ThemedImage
+            lightSrc="/assets/passive-liquidity-light.png"
+            darkSrc="/assets/passive-liquidity-dark.png"
+            alt="passive-liquidity-provisioning"
+            width={1751}
+            height={984}
+        />
+    </Cards.Card>
+    <Cards.Card arrow title="Borrowing" href="/lending/borrow">
+        <ThemedImage
+            lightSrc="/assets/active-liquidity-light.png"
+            darkSrc="/assets/active-liquidity-dark.png"
+            alt="passive-active-provisioning"
+            width={1751}
+            height={984}
+        />  </Cards.Card>
+</Cards>
+
+

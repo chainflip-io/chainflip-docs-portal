@@ -49,7 +49,11 @@ export default {
             'how-swapping-works': '',
             'funding-state-chain-account': '',
             'failed-transfer-recovery': '',
-            'running-an-rpc-node': '',
+            'running-light-rpc-node': {
+                href: '/protocol/running-light-rpc-node',
+                title: <span className="badge-success after:content-['New']">Running light-rpc node</span>
+            },
+            'running-an-rpc-node': 'Running Full or Archive Node',
             ___: {
                 type: 'separator',
                 title: 'Technical Reference'
@@ -110,7 +114,14 @@ export default {
             },
             'how-to-provide-liquidity': '',
             'how-to-register-as-lp': '',
-            'running-lp-api': '',
+            'lp-light-rpc-node': {
+                href: '/lp-light-rpc-node',
+                title: <span className="badge-success after:content-['New']">LP Light-RPC node</span>
+            },
+            'running-lp-api' : {
+                href: '/lp/running-lp-api',
+                title: <span className="badge-danger after:content-['Deprecated']">LP-API binary</span>
+            },
             'how-boost-works': '',
             ___: {
                 type: 'separator',
@@ -156,7 +167,14 @@ export default {
                 title: 'Guides'
             },
             'how-to-register-as-broker': '',
-            'running-broker-api': '',
+            'broker-light-rpc-node': {
+                href: '/broker-light-rpc-node',
+                title: <span className="badge-success after:content-['New']">Broker Light-RPC node</span>
+            },
+            'running-broker-api' : {
+                href: '/running-broker-api',
+                title: <span className="badge-danger after:content-['Deprecated']">Broker-API binary</span>
+            },
             'how-to-use-chainflip-sdk': '',
             ___: {
                 type: 'separator',

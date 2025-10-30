@@ -115,10 +115,10 @@ export default {
             'how-to-provide-liquidity': '',
             'how-to-register-as-lp': '',
             'lp-light-rpc-node': {
-                href: '/lp/lp-light-rpc-node',
+                href: '/lp-light-rpc-node',
                 title: <span className="badge-success after:content-['New']">LP Light-RPC node</span>
             },
-            "running-lp-api'" : {
+            'running-lp-api' : {
                 href: '/lp/running-lp-api',
                 title: <span className="badge-danger after:content-['Deprecated']">LP-API binary</span>
             },
@@ -168,11 +168,11 @@ export default {
             },
             'how-to-register-as-broker': '',
             'broker-light-rpc-node': {
-                href: '/brokers/broker-light-rpc-node',
+                href: '/broker-light-rpc-node',
                 title: <span className="badge-success after:content-['New']">Broker Light-RPC node</span>
             },
-            "running-broker-api'" : {
-                href: '/brokers/running-broker-api',
+            'running-broker-api' : {
+                href: '/running-broker-api',
                 title: <span className="badge-danger after:content-['Deprecated']">Broker-API binary</span>
             },
             'how-to-use-chainflip-sdk': '',

@@ -44,6 +44,18 @@ docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chai
 cat chainflip/broker-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/broker/signing_key_file
 ```
 
+### Funding the Account
+> The minimum funding amount for registering as a Broker or LP role is technically 1 FLIP. However, we recommend funding your accounts with at least 5 FLIP to account for transaction fees.
+
+Get the public key of the Broker account:
+```bash
+cat chainflip/broker-keys.json | jq -r '.signing_account_id'
+```
+
+* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+
+* Click "Register Node" and follow the instructions to fund the account
+
 ### Running the node
 * Start a Broker RPC node and wait for it to sync:
 ```bash

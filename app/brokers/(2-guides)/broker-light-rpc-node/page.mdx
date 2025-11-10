@@ -20,6 +20,8 @@ This `light-rpc` mode prunes older blocks and permits querying only recent block
 
 ## Running the Broker light-rpc node using Docker
 
+Reference setup and compose profiles: [chainflip-mainnet-apis](https://github.com/chainflip-io/chainflip-mainnet-apis)
+
 ### Setup
 
 * Clone the `chainflip-mainnet-apis` repo
@@ -115,6 +117,13 @@ docker compose --profile broker down
 
 Now you can interact with the APIs using any HTTP or WS client. Here we use the `curl` and `wscat` commands.
 
+#### Register the Broker account via RPC
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"broker_registerAccount"}' \
+  http://localhost:9944
+```
 
 * For example, to open a private broker BTC channel :
 

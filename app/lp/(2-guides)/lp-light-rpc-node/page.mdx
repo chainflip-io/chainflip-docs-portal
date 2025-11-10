@@ -20,6 +20,8 @@ This `light-rpc` mode prunes older blocks and permits querying only recent block
 
 ## Running the LP light-rpc node using Docker
 
+Reference setup and compose profiles: [chainflip-mainnet-apis](https://github.com/chainflip-io/chainflip-mainnet-apis)
+
 ### Setup
 
 * Clone the `chainflip-mainnet-apis` repo
@@ -114,6 +116,14 @@ docker compose --profile lp down
 ### Interacting with the APIs
 
 Now you can interact with the APIs using any HTTP or WS client. Here we use the `curl` and `wscat` commands.
+
+#### Register the LP account via RPC
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1, "jsonrpc":"2.0", "method": "lp_register_account", "params": [0]}' \
+  http://localhost:9944
+```
 
 * For example, to request a liquidity deposit address for `ETH` :
 

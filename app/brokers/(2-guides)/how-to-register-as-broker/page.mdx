@@ -13,6 +13,18 @@ Brokers forward users' swap requests to the network, paying transaction fees on 
 
 Brokers need to **register** their account for the Broker role to gain access to swap-related functionality.
 
+### Prerequisites
+
+Before registering, you need to:
+1. **Create a State-Chain account** and generate keys
+2. **Fund the account** with FLIP
+3. **Set up a Light-RPC node** (recommended) to interact with the Broker API
+
+For complete setup instructions, see the [Broker-light-rpc-node](/brokers/broker-light-rpc-node) page, which includes:
+- Key generation steps
+- Account funding via the Auctions Web App
+- Docker-based Light-RPC node setup with Broker profile
+
 ### Register using [`chainflip-cli`](/protocol/chainflip-cli)
 
 ```bash copy
@@ -20,6 +32,14 @@ chainflip-cli broker register
 ```
 
 Once registered, the account will have full access to broker-related actions through the [Broker API](/brokers/broker-api).
+
+### Register via Light-RPC (RPC alternative)
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"broker_registerAccount"}' \
+  http://localhost:9944
+```
 
 ### Deregister using [`chainflip-cli`](/protocol/chainflip-cli)
 

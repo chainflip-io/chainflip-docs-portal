@@ -20,6 +20,8 @@ This `light-rpc` mode prunes older blocks and permits querying only recent block
 
 ## Running the Broker light-rpc node using Docker
 
+Reference setup and compose profiles: [chainflip-mainnet-apis](https://github.com/chainflip-io/chainflip-mainnet-apis)
+
 ### Setup
 
 * Clone the `chainflip-mainnet-apis` repo
@@ -41,6 +43,18 @@ mkdir -p ./chainflip/keys/broker
 docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-1.12.0 generate-keys --json > chainflip/broker-keys.json
 cat chainflip/broker-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/broker/signing_key_file
 ```
+
+### Funding the Account
+> The minimum funding amount for registering as a Broker or LP role is technically 1 FLIP. However, we recommend funding your accounts with at least 5 FLIP to account for transaction fees.
+
+Get the public key of the Broker account:
+```bash
+cat chainflip/broker-keys.json | jq -r '.signing_account_id'
+```
+
+* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+
+* Click "Register Node" and follow the instructions to fund the account
 
 ### Running the node
 * Start a Broker RPC node and wait for it to sync:
@@ -115,6 +129,13 @@ docker compose --profile broker down
 
 Now you can interact with the APIs using any HTTP or WS client. Here we use the `curl` and `wscat` commands.
 
+#### Register the Broker account via RPC
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"broker_registerAccount"}' \
+  http://localhost:9944
+```
 
 * For example, to open a private broker BTC channel :
 

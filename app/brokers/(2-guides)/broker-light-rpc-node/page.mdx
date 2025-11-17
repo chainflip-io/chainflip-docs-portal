@@ -178,5 +178,47 @@ To give you a better idea of the new architecture, here is a visual comparison o
 <img src="/light-rpc/new-broker-light-rpc.png" alt="Broker Light-RPC node" />
 
 
+## Running the Broker light-rpc node using `chainflip-node` binary
+
+This section is for users who do not want to use Docker compose, and want to directly use `chainflip-node` binary compiled from source code or obtained using `apt`.
+
+The main goal of Broker light-rpc mode is to enable brokers to track only latest chain blocks data and in particular be able to make rpc calls that require signed extrinsics such as
+[`broker_request_swap_deposit_address`](/brokers/broker-api/requests#broker_request_swap_deposit_address), [`broker_withdraw_fees`](/brokers/broker-api/requests#broker_withdraw_fees) etc ...
+
+* The first step is to inject the **Broker Signing Key** inside the chainflip node. This can be achieved using this command
+```bash
+/usr/local/bin/chainflip-node key insert \
+        --chain=/etc/chainflip/berghain.chainspec.json \
+        --base-path=/etc/chainflip/chaindata \
+        --suri=0x$$(cat /etc/chainflip-keys/broker/signing_key_file) \
+        --key-type=brok \
+        --scheme=sr25519
+```
+NB: please change `/etc/chainflip-keys/broker/signing_key_file` with location of your broker signing key file
+
+* Then run the node in **light-rpc mode**, by simply calling the `chainflip-node` binary with some special command line arguments that makes the node prune blocks minimising disk space.
+This will require about 20GB of disk space.
+
+```bash
+/usr/local/bin/chainflip-node \
+        --base-path=/etc/chainflip/chaindata \
+        --chain=/etc/chainflip/berghain.chainspec.json \
+        --max-runtime-instances=32 \
+        --rpc-cors=all \
+        --rpc-methods=safe \
+        --rpc-external \
+        --sync=light-rpc \
+        --blocks-pruning=128 \
+        --state-pruning=128 \
+        --disable-log-color \
+        --log info,grandpa=error,runtime::grandpa=off,aura=error,babe=error,txpool::api=error
+```
+If you inspect the above command we achieve disk space-saving by a combination of methods:
+* Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
+* Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
+* Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`
+
+
+
 
 

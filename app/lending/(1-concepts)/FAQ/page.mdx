@@ -1,0 +1,203 @@
+---
+title: Lending FAQ
+description: Common questions about Chainflip Lending
+---
+
+## Lending FAQ
+
+These questions supplement the core lending documentation and cover additional operational, integration, and risk-model topics.
+
+---
+
+## Account & Market Structure
+
+### Are loan positions isolated?
+No. Loan positions are not isolated.
+All collateral and all debt inside a borrower’s State Chain account contribute to a single combined LTV.
+If that LTV breaches a liquidation threshold, the **entire account** is liquidated — not individual loans.
+Per-loan liquidations are not supported in this version.
+
+### Are lending markets isolated per asset?
+Yes. Each asset has its own supply pool, utilisation curve, and reserves.
+Risk does not spill over between assets.
+
+### Can I deposit and withdraw freely?
+Yes. Deposits and withdrawals are permissionless.
+They may be temporarily paused only if:
+
+- oracle prices become stale
+- extreme volatility triggers a safety check
+- vault or network health triggers a protective pause
+
+Pauses lift automatically when conditions normalise.
+
+### Do suppliers and borrowers share a single account?
+Yes. The Chainflip State Chain account can hold balances, collateral, debt, and free funds.
+Loan positions are isolated; the **account** itself is unified.
+
+---
+
+## Event Streams, Bots & Integrations
+
+### How are liquidations announced through RPC/API?
+Liquidation tranches appear in the same event stream as internal swaps, with extra metadata:
+
+- position ID
+- tranche size
+- collateral/debt values
+- oracle reference price
+- LPP min/max bounds
+- tranche sequencing
+
+Large liquidations appear simply as multiple DCA-style tranches.
+
+### Are liquidation orders flagged separately?
+Yes. Each tranche carries a liquidation flag so LPs, bots and integrators can react appropriately.
+
+### What should LP bots expect during mass liquidations?
+LP bots should:
+
+- plan inventory to fill predictable tranche flow
+- expect frequent LPP updates
+- handle partial fills
+- keep quoting normally for non-liquidation swaps
+
+Liquidations do not degrade swapper UX.
+
+### Can integrators surface liquidation data in their own UIs?
+Yes. All liquidation activity is exposed through standard RPC events.
+
+---
+
+## Backstops, Insurance & Stability
+
+### Is there an insurance fund or stability pool?
+Not at launch.
+If collateral is insufficient during liquidation, losses are socialised to lenders of that asset only.
+Future backstops (insurance funds, reserve buffers, stability pools) may be added via governance.
+
+### Could a Liquity-style Stability Pool be added later?
+Technically yes, but with trade-offs:
+
+- lower capital efficiency
+- reduced market isolation
+- governance complexity
+- opportunity costs for suppliers
+
+Requires separate evaluation.
+
+### Will there be an official or treasury-run liquidator?
+No. All liquidations are permissionless.
+Introducing an official liquidator would be a governance decision.
+
+---
+
+## Capital Efficiency & Scaling
+
+### How can Chainflip scale lending without deep on-DEX liquidity?
+Scaling comes from:
+
+- utilisation curves and rate adjustments
+- supply-side growth (stablecoin lenders, integrators, aggregators)
+- diversified collateral support
+
+Chainflip does **not** need deep liquidity in each asset because liquidations use oracle-indexed DCA tranches, not large all-in-one sales.
+
+### How will stablecoin supply be bootstrapped?
+At launch:
+
+- incentive programs
+- wallet/exchange/integrator flows
+- aggregator routing (LI.FI, Squid, Rango, etc.)
+
+No wrapped or synthetic stablecoin is required.
+
+### Can external protocols supply liquidity via proxy contracts?
+Yes. Protocols can integrate via an EVM proxy that deposits into Chainflip pools.
+Risk boundaries remain isolated at the loan-position level.
+
+---
+
+## Governance & Parameter Changes
+
+### Who controls lending parameters like LTV, caps, and fees?
+Protocol governance.
+Changes follow the same upgrade path as other Chainflip modules (runtime upgrade + validator consensus).
+
+### Who defines new modules such as insurance funds or backstops?
+Governance — responsible for design, capitalisation, safety constraints, and fee routing.
+
+### Can governance pause lending during an emergency?
+Yes. Via Safe Mode, governance can temporarily pause:
+
+- new loan creation
+- liquidations
+- vault egresses
+
+Repayments or top-ups may remain enabled depending on Safe Mode level.
+
+---
+
+## Liquidity & Execution Behaviour
+
+### Are liquidations prioritised over normal swaps?
+Not artificially.
+Liquidations follow the same matching rules, but LPs may naturally prioritise them because:
+
+- pricing is oracle-indexed
+- LPP bounds create predictable incentives
+
+### Do liquidations affect normal user swaps?
+No. The JIT AMM ensures:
+
+- stable quoting
+- consistent spreads
+- normal refund behaviour
+- non-blocking execution
+
+### Can liquidation events cause swap failures or delays?
+Not under normal conditions.
+Liquidation and non-liquidation flow coexist without queueing or blocking.
+
+---
+
+## Collateral & Position Management
+
+### Does collateral automatically earn yield?
+No. Collateral is **not** supplied to pools in this version.
+Borrowers pay interest; suppliers earn interest.
+
+### Does auto-top-up guarantee no liquidation?
+It prevents liquidation as long as the account has enough free balance.
+If free balance is insufficient, liquidation proceeds normally.
+
+### Can I borrow against multiple collateral assets?
+Yes. LTV is calculated per-account using the aggregated oracle value of all collateral assets.
+
+---
+
+## Partial Repayments, Partial Liquidations & Edge Cases
+
+### Can I repay partially?
+Yes. Partial repayments reduce outstanding debt and improve LTV.
+
+### Are liquidations partial?
+Yes. Liquidations occur in tranches, not a single large sale.
+This reduces slippage and borrower loss.
+
+### What happens if liquidation recovers more than the debt?
+Excess collateral is returned to the borrower automatically.
+
+### What happens if collateral is insufficient?
+The shortfall is socialised to lenders of **that asset only**.
+
+---
+
+## Integrators & Frontend Behaviour
+
+### Can integrators set custom borrow limits or frontend LTV minimums?
+Yes. Frontends can enforce stricter UX/safety limits.
+
+### Can integrators trigger auto-repay or auto-collateralise flows?
+Yes, via RPC.
+The protocol does not restrict automated repayment or top-up flows.

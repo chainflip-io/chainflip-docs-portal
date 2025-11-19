@@ -38,6 +38,7 @@ export default {
             'oracles': '',
             'pricing': '',
             'economic': '',
+            'FAQ': '',
             'borrow': '',
             'liquidations' : '',
             'financials' : '',

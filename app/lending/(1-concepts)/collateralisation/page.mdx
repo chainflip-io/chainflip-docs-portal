@@ -12,10 +12,10 @@ Chainflip Lending uses external oracle prices to determine loan collateralisatio
 Collateral values are sourced from Chainlink feeds witnessed by the validator network across Ethereum and Arbitrum for redundancy. These oracle prices determine loan health through the Loan-to-Value ratio (LTV):
 
 <div style={{ textAlign: "left" }}>
-```math
+$$
 \text{LTV} = \frac{\text{Loan Value}}{\text{Collateral Value}}
+$$
 </div>
-```
 
 A minimum collateralisation level (maximum LTV) is required when creating a loan. Borrowers can freely add more collateral at any time. If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing Low LTV Penalty is applied. This discourages locking up unnecessary collateral that reduces system-wide economic security.
 

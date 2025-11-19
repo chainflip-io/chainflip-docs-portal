@@ -29,7 +29,8 @@ export default {
         title: <span className="badge-success after:content-['New']">Lending</span>,
         items: {
             index: '',
-            'concept': '',
+            'supply': '',
+            'concepts': '',
             'borrow': '',
             'liquidations' : '',
             'financials' : '',

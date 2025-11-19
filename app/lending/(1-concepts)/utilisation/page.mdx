@@ -10,8 +10,10 @@ description: How utilisation and interest rates work in Chainflip Lending
 Chainflip Lending uses a utilisation curve model to determine real-time borrowing and lending rates. Utilisation represents how much of a pool’s liquidity is currently borrowed:
 
 <div style={{ textAlign: "left" }}>
-```math
+$$
 \text{Utilisation} = \frac{\text{Borrowed Amount}}{\text{Total Supplied}}
+$$
+</div>
 
 As utilisation rises, available liquidity decreases, which increases borrowing rates and boosts yield for suppliers.
 
@@ -23,7 +25,10 @@ A utilisation curve keeps the lending market balanced by automatically:
 
 This dynamic ensures the pool remains healthy without manual intervention.
 
+---
+
 ### How the Utilisation Curve Works
+
 The Chainflip utilisation curve has two segments:
 
 #### Low to Optimal Utilisation
@@ -31,12 +36,15 @@ Interest rates rise gradually as utilisation increases. Borrowing remains inexpe
 
 #### Above Optimal Utilisation
 Once utilisation passes the optimal point, the curve becomes steep. Borrowing costs rise sharply to prevent liquidity exhaustion and to attract more supply.
+
 Higher yields naturally attract additional liquidity into the pool, increasing the amount available for borrowing. This provides a secondary mechanism, beyond borrower repayments, that helps bring utilisation and rates back down to normal levels.
+
 This behaviour gives borrowers confidence that rates can normalise through increased supply, not solely through their own repayments.
 
 ---
 
 ### Interest Accrual
+
 Interest is always accrued in the borrowed asset.
 
 Examples:
@@ -49,6 +57,7 @@ Interest is calculated every 10 blocks and distributed proportionally to all sup
 ---
 
 ### Network Fee Rate
+
 A flat additional 1% APR network fee is added on top of the supply rate to derive the final borrow rate.
 
 Example at 90% utilisation:
@@ -61,6 +70,7 @@ Network fees are periodically swapped into FLIP via the buy-and-burn mechanism.
 ---
 
 ### Collateral Does Not Auto-Supply
+
 In this version of Chainflip Lending, a borrower’s collateral is **not** automatically deployed into the lending pools.
 
 While some lending protocols allow collateral to generate yield by supplying it into the pool, Chainflip keeps collateral strictly separate. This:

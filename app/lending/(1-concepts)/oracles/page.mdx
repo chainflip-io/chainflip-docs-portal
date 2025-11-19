@@ -1,0 +1,100 @@
+---
+title: Oracles, Security & Custody
+description: How Chainflip Lending uses oracle pricing, vault custody, and State Chain execution for safety and reliability
+---
+
+## Oracles, Security & Custody
+
+### Oracle Pricing
+
+Chainflip Lending relies on external oracle prices to determine collateral values, loan health (LTV), and liquidation thresholds. This prevents internal pool price movements from affecting loan safety and ensures predictable liquidation behaviour.
+
+The protocol uses Chainlink price feeds, witnessed by the Chainflip validator network. Validators observe feed updates on:
+
+- Ethereum  
+- Arbitrum  
+
+This dual-chain oracle setup provides redundancy and ensures that prices used for LTV calculations remain consistent and tamper-resistant.
+
+Because Chainflip only supports highly liquid assets (BTC, ETH, SOL, USDC, USDT), the risks generally associated with oracle dependency are significantly reduced.
+
+---
+
+### Oracle Safety Controls
+
+To protect borrowers and lenders:
+
+- Loan creation halts if oracle prices become stale  
+- Liquidations halt if oracle feeds stop updating  
+- Borrowers may still repay, add collateral, or close positions during these pauses  
+
+Normal operation automatically resumes once the oracle becomes healthy again.
+
+At present, Chainflip enforces **oracle staleness checks only**.  
+(Price deviation checks between internal pool prices and the oracle feed are not currently implemented.)
+
+---
+
+### Native Cross-Chain Custody (Vaults)
+
+All assets deposited into Chainflip Lending are held in native-chain vaults secured by the Chainflip validator network using a **100-of-150 threshold signature scheme (TSS/MPC)**.
+
+Key properties:
+
+- Assets remain native at all times  
+  - BTC stays on Bitcoin  
+  - ETH stays on Ethereum  
+  - SOL stays on Solana  
+- No wrapping, bridging, or custodial intermediaries  
+- Validators collectively sign withdrawals and cross-chain operations  
+- Vault design protects against single-key compromise and central points of failure  
+
+The same custody infrastructure is used for both the DEX and Lending, inheriting the system’s full security guarantees.
+
+For more background, see **Protocol Overview → Vaults & Security**.
+
+---
+
+### State Chain Execution Environment
+
+All lending operations — loan creation, collateral updates, repayments, interest accrual, and liquidation scheduling — are executed on the Chainflip State Chain, a custom Rust-based chain designed for:
+
+- deterministic execution  
+- fast block times  
+- validator-based consensus  
+- cross-chain event tracking  
+- batching and sequencing of swaps and liquidations  
+
+Because the State Chain powers both the DEX and Lending:
+
+- risk parameters are enforced at the consensus level  
+- liquidations execute natively using on-chain logic  
+- DEX liquidity and Lending collateral are always in sync  
+- safety rules (oracle checks, paused states, etc.) apply uniformly  
+
+---
+
+### Operational History & Audits
+
+Chainflip’s cross-chain infrastructure has processed **$3.7B+ in cumulative swap volume** since late 2023 with:
+
+- multiple external audits  
+- zero major security incidents  
+- high operational uptime  
+- proven performance during periods of severe market volatility  
+
+Lending inherits the same security posture, operational track record, and validator-secured vault design that underpin the DEX.
+
+---
+
+### Summary of Security Guarantees
+
+- Native asset custody secured by a decentralised TSS/MPC validator set  
+- Oracle-driven liquidations ensure correct pricing  
+- Hard staleness checks prevent unsafe triggers  
+- Permissionless LP execution removes reliance on external liquidators  
+- Isolated markets & positions limit risk to individual asset pools  
+- Auto-top-up reduces accidental liquidations  
+- State Chain enforcement ensures deterministic behaviour and immutable safety rules  
+
+Chainflip’s Lending system benefits from the same robustness that already secures its cross-chain DEX infrastructure at scale.

@@ -1,0 +1,95 @@
+---
+title: Fees
+description: Fee structure for borrowing, liquidations, and network charges in Chainflip Lending
+---
+
+## Fees
+
+Chainflip Lending applies a small, transparent set of fees to borrowers. These fees fund lenders, support the protocol, and maintain the economic security of the system. All fees are denominated in the borrowed asset and are processed through the Chainflip State Chain.
+
+---
+
+## Origination Fee
+
+An origination fee is applied when opening a new loan position.
+
+**Origination Fee:** 1 bps (0.01%) of the borrowed amount
+
+**Distribution:**
+- 80% → paid to lenders of that asset
+- 20% → paid to the protocol (via FLIP buy-and-burn)
+
+This fee is applied once per loan creation. Updating collateral or repaying does not incur additional origination fees.
+
+---
+
+## Liquidation Fee
+
+If a loan enters soft or hard liquidation, a fee is applied to the portion of collateral that is liquidated.
+
+**Liquidation Fee:** 5 bps (0.05%) of the liquidated collateral
+
+**Distribution:**
+- 80% → paid to lenders
+- 20% → paid to the protocol (via FLIP buy-and-burn)
+
+This fee is separate from any discount or incentive used to attract LPs to fill liquidation orders.
+
+---
+
+## Interest Rate Mechanics
+
+Interest accrues continuously (every 10 blocks) on outstanding debt. It follows the utilisation-based rate model described above.
+
+Interest is accrued in the borrowed asset and paid to lenders in that same asset. Borrowers see their outstanding debt increase over time based on the borrow rate.
+
+**Interest flow:**
+- Borrowed asset → pool suppliers
+- Network Fee → protocol (1% APR added on top of the supply rate)
+
+**Example:**
+- Supply rate: 8% APR
+- Borrow rate: 9% APR (includes +1% network fee)
+
+---
+
+## Network Fee Rate
+
+The network charges a flat **1% APR** fee on borrowed positions.
+
+This does not affect supplier returns directly — it is simply added on top of the supply-side interest rate to determine the final borrow rate.
+
+All network fees are periodically swapped into FLIP via the buy-and-burn system.
+
+**Example:**
+- Supply APY: 8%
+- Borrow APY: 8% + 1% = 9%
+
+Network fees are swapped into FLIP once they accumulate to at least **$20 equivalent**, and no more frequently than every **10 blocks**.
+
+---
+
+## Low LTV Penalty
+
+Borrowers who maintain overly low LTVs (i.e., extremely overcollateralised positions) incur a small penalty designed to discourage inefficient use of system economic security.
+
+Applies only when **LTV < 50%**.
+
+**Penalty scales linearly from:**
+- 0% APR at 50% LTV
+- 1% APR at 0% LTV
+
+This penalty is added to the borrower’s effective interest rate and flows entirely to the protocol.
+
+---
+
+## Fee Processing and Settlement
+
+All fees (origination, liquidation, interest, penalties, network fees) follow this flow:
+
+- Denominated in the borrowed asset
+- Debited from borrower positions automatically
+- Distributed to lenders and the protocol in the correct proportions
+- Protocol fees aggregated and swapped into FLIP via buy-and-burn
+
+This system keeps accounting simple and ensures suppliers always earn yield in the asset they supplied.

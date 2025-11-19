@@ -32,6 +32,7 @@ export default {
             'concepts': '',
             'supply': '',
             'utilisation': '',
+            'collateralisation': '',
             'borrow': '',
             'liquidations' : '',
             'financials' : '',

@@ -26,43 +26,24 @@ export default {
     },
     lending: {
         type: 'page',
-        title: (
-            <span className="badge-success after:content-['New']">
-      Lending
-    </span>
-        ),
+        title: <span className="badge-success after:content-['New']">Lending</span>,
         items: {
-            // Main overview
             index: '',
-
-            // Core lending sections
-            'concepts-and-roles': '',
-            'supplying-and-borrowing': '',
-            'utilisation-and-interest-rates': '',
-            'collateralisation-and-liquidations': '',
-            fees: '',
-            'markets-parameters-and-risk': '',
-            'oracles-security-and-custody': '',
-            'pricing-matching-and-stress-behaviour': '',
-            'economic-security-and-governance': '',
-            faq: '',
-
-            // ---- GUIDES (moved to bottom, after FAQ) ----
+            'supply': '',
+            'borrow': '',
+            'liquidations' : '',
+            'financials' : '',
             __: {
                 type: 'separator',
-                title: 'Guides',
+                title: 'Guides'
             },
             'how-to-supply': '',
             'how-to-borrow': '',
-            'example-liquidation-flow': '',
-            'example-borrow-lifecycle': '',
-
-            // ---- TECHNICAL REFERENCE ----
             ___: {
                 type: 'separator',
-                title: 'Technical Reference',
+                title: 'Technical Reference'
             },
-            'supported-chains-assets': '',
+            'supported-chains-assets': ''
         },
     },
     protocol: {

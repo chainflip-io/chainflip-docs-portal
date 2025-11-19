@@ -10,91 +10,104 @@ import { Cards } from "nextra/components";
 
 ### What is Chainflip Lending?
 
-Chainflip Lending extends the existing Chainflip cross-chain infrastructure with permissionless, over-collateralised lending and borrowing. Users can supply and borrow assets using BTC, ETH, SOL, or other supported assets as collateral — all without wrapping, bridging, or leaving their native wallet environment.
+Chainflip Lending extends the existing Chainflip cross-chain infrastructure with permissionless, overcollateralised lending and borrowing. Users can supply and borrow assets natively using BTC, ETH, SOL, or other supported assets as collateral, all without wrapping, bridging, or leaving their native wallet environment.
 
-Positions, interest accrual, and risk controls live on the Chainflip State Chain, while assets are held in Chainflip Vaults on their native chains. Interest rates are set dynamically by a utilisation curve so that borrowing costs rise as pool usage increases and fall when liquidity is abundant.
+Deposited assets are held in Chainflip Vaults using a 100-of-150 threshold signature scheme. Borrowers can then create loan positions to borrow USDC, USDT, or other supported assets, and withdraw them directly to any wallet.
 
-Prices used for health checks and liquidation triggers come from external oracles (e.g. Chainlink), witnessed by validators on multiple chains for redundancy.
+See the **[Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview)** and the **[Vault System](https://docs.chainflip.io/protocol/vaults/bitcoin-vault-design)** for more details on native custody.
 
-See **[Protocol Overview](/protocol/protocol-overview)** and the **[Vault System](/protocol/vaults/bitcoin-vault-design)** for more background on native custody and system architecture.
+The lending market uses a utilisation-curve interest model similar to established DeFi lending protocols such as
+**[Aave](https://aave.com/docs)** and **[Morpho](https://docs.morpho.org/get-started/)**, and leverages Chainflip’s existing cross-chain swapping infrastructure to manage and process liquidations in the event of a default.
+
+For more background on the underlying system architecture, see
+**[System Overview](https://docs.chainflip.io/protocol/protocol-overview#system-overview)**.
+
+---
+
+## Who is this for?
+
+### Borrowers
+Users who want to unlock the underlying value of their crypto assets while maintaining full exposure to the upside of their holdings — without triggering a sale.
+
+**Example:**
+A user has 1 BTC and takes out a 50,000 USDC loan to invest or cover real-world expenses, while keeping BTC upside exposure throughout the loan.
+
+### Yield Seekers
+Users supplying stablecoins or other supported assets to earn yield driven by borrower demand, protected by overcollateralisation and liquidations executed directly via Chainflip’s native cross-chain DEX.
+
+### Liquidity Providers
+All Liquidity Providers in the Chainflip trading system can benefit from profitable liquidation trades in their usual course of business in the cross-chain JIT AMM market.
+
+### Integrators
+Partners utilising the Chainflip SDK and related tools can offer these in-app lending and borrowing opportunities to their users and collect a share of the fees — enabling a seamless multichain DeFi experience.
 
 ---
 
 ## What does over-collateralisation mean?
 
-Chainflip Lending only supports **over-collateralised** loans.
-This means the value of a borrower’s collateral must always be **higher** than the value of the debt.
+Over-collateralisation ensures that every loan remains safely backed by more collateral value than the amount borrowed.
+This protects lenders, stabilises markets, and provides borrowers with predictable liquidation behaviour.
 
-- If you deposit collateral worth **$100,000** and borrow **$50,000** USDC, your position is over-collateralised.
-- If the value of your collateral falls or your debt grows, your Loan-to-Value (LTV) ratio increases.
-- If LTV crosses certain thresholds, the system will begin liquidating collateral to restore health.
-
-Over-collateralisation reduces the risk that bad debt is left in the system and protects liquidity providers and lenders.
+Chainflip uses external oracle prices (e.g. Chainlink) to determine the value of collateral across chains.
+All collateral in a borrower’s State Chain account contributes to a single combined LTV used to judge loan health.
 
 ---
 
 ## LTV and LTV ratio
 
-The **Loan-to-Value (LTV) ratio** measures how large a loan is relative to the value of its collateral:
+The **Loan-to-Value ratio (LTV)** expresses how healthy a loan is:
 
-> **LTV = (Value of Debt) / (Value of Collateral)**
+- **Low LTV** → loan is safe and well-collateralised
+- **High LTV** → loan approaches liquidation thresholds
+- **Too high LTV** → liquidation begins, automatically or gradually
 
-- A lower LTV means the position is safer (more collateral relative to debt).
-- A higher LTV means the position is riskier and closer to liquidation.
+Because Chainflip uses a multi-collateral model, all supported collateral assets inside the account contribute to a single combined LTV.
 
-Chainflip enforces:
-
-- a **maximum LTV at loan creation** (you cannot open an unsafe loan), and
-- **soft and hard liquidation thresholds** where the protocol begins to sell collateral to repay debt.
-
-Borrowers can always add collateral, repay part of the loan, or close the position entirely to improve their LTV.
+Borrowers can add collateral, withdraw excess, partially repay, or close positions at any time.
 
 ---
 
-## Lending pools
+## Lending Pools
 
-A **lending pool** is a Chainflip market instance that enables users to participate as **suppliers** or **borrowers**.
+A lending pool is a Chainflip market instance that enables users to participate as suppliers or borrowers.
+Supply and borrowing occur through overcollateralised positions secured by Chainflip’s vaults and State Chain logic.
 
-- **Suppliers** deposit assets (e.g. USDC, USDT) into the pool. Their liquidity is made available to borrowers and earns yield based on utilisation and interest rates.
-- **Borrowers** take out over-collateralised loans against assets such as BTC, ETH, or SOL, paying interest to the pool.
+Suppliers deposit assets (commonly USDC or USDT) into the pool. Borrowers draw liquidity from the pool using their deposited collateral.
 
-Each market has governance-defined parameters such as:
+Key properties:
 
-- which assets can be used as collateral or borrowed
-- minimum collateralisation requirements
-- liquidation thresholds and penalties
-- interest-rate curve configuration
+- Pools are isolated per asset (e.g., USDC, USDT, ETH)
+- Interest rates follow a utilisation curve
+- Liquidations are executed directly through the Chainflip native DEX
+- Yield auto-compounds — no claiming needed
+- Risk does not spill into other markets
 
-All accounting, interest accrual, and liquidation logic runs on the Chainflip State Chain, while execution of liquidations happens through the cross-chain DEX and JIT AMM. This design keeps funds in native assets, avoids wrapped tokens, and leverages existing Chainflip infrastructure for settlement and security.
+Parameter decisions balance liquidity demands, borrower incentives, and system safety.
 
 ---
 
-## Quick start
+## Quick Start
 
-To start using Chainflip Lending, users will typically interact with two main flows:
-
-- **Supplying** – deposit stablecoins or other supported assets to earn yield from borrower demand.
-- **Borrowing** – lock up assets like BTC, ETH, or SOL as collateral to borrow stablecoins without selling your crypto.
-
-Below are entry points into each flow. The underlying pages can be expanded over time, but the navigation and cards are already wired:
+To begin supplying or borrowing in Chainflip Lending, choose the flow that matches your profile:
 
 <Cards num={2}>
-  <Cards.Card arrow title="Supplying" href="/lending/supply">
-    <ThemedImage
-      lightSrc="/assets/passive-liquidity-light.png"
-      darkSrc="/assets/passive-liquidity-dark.png"
-      alt="supplying-liquidity"
-      width={1751}
-      height={984}
-    />
-  </Cards.Card>
-  <Cards.Card arrow title="Borrowing" href="/lending/borrow">
-    <ThemedImage
-      lightSrc="/assets/active-liquidity-light.png"
-      darkSrc="/assets/active-liquidity-dark.png"
-      alt="borrowing-liquidity"
-      width={1751}
-      height={984}
-    />
-  </Cards.Card>
+    <Cards.Card arrow title="Supplying" href="/lending/supply">
+        <ThemedImage
+            lightSrc="/assets/passive-liquidity-light.png"
+            darkSrc="/assets/passive-liquidity-dark.png"
+            alt="supply-liquidity"
+            width={1751}
+            height={984}
+        />
+    </Cards.Card>
+
+    <Cards.Card arrow title="Borrowing" href="/lending/borrow">
+        <ThemedImage
+            lightSrc="/assets/active-liquidity-light.png"
+            darkSrc="/assets/active-liquidity-dark.png"
+            alt="borrow-assets"
+            width={1751}
+            height={984}
+        />
+    </Cards.Card>
 </Cards>

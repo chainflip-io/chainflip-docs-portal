@@ -1,32 +1,58 @@
 ---
+title: Concepts & Roles
+description: Core concepts behind Chainflip Lending
+---
 
-title: Supply
+## Core Concepts
 
-description: Chainflip Broker Account guide
+### Native Cross-Chain Custody
+Chainflip Lending is built into the existing Chainflip cross-chain infrastructure.
+When users deposit assets from their native chains into the Chainflip system, their funds are held in Vaults on the native chain, controlled by the decentralised validator network through a 100-of-150 threshold signature scheme.
+
+See the
+**[Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview)** and
+**[Vault System](https://docs.chainflip.io/protocol/vaults/bitcoin-vault-design)**
+for more details.
 
 ---
 
-## Supply
+### Permissionless Lending Architecture
+Using this core vault and State Chain infrastructure, Chainflip enables the permissionless creation of loan positions for both suppliers and borrowers.
+All positions, state transitions, health checks and liquidations are executed on the Chainflip State Chain.
 
-TODO: copied from Aave docs
+---
 
-Supplying tokens to the Chainflip Protocol allows users to earn interest on their digital assets and utilise supplied tokens as collateral. When tokens are supplied, they are transferred to the Chainflip liquidity pool, a system of smart contracts that facilitates overcollateralised borrowing of tokens. In Chainflip, supplied tokens automatically accrue interest based on the current market supply rate. As the balance of supplied tokens increases, interest is accrued dynamically, reflecting the current rate allocated to suppliers.
+### Isolated Markets & Account-Wide Liquidations
+Each lending market is isolated per asset.
+Activity in the BTC pool does not affect the USDC or ETH pools.
 
-Interest rates for supplied tokens are determined by the borrow utilisation rate, which measures the proportion of assets currently borrowed against the total supplied in the pool, and by governance parameters that can be adjusted through community decisions. These parameters, including collateralisation requirements and interest rates for suppliers and borrowers, are influenced by onchain inputs such as token balances, oracle prices, and the borrow utilisation ratio. As liquidity is supplied, borrowed, repaid, or withdrawn from the pool, the interest rates are updated accordingly.
+However, **liquidations are account-wide**:
 
-## Supplier Role
-A lender supplies assets into lending pools to earn yield from two sources: ongoing variable interest paid by borrowers (CGL) and intermittent clearance fees plus interest from short-term lines used by LPs (CLL). Supplied assets remain in Chainflip’s vaults and are never wrapped into third-party IOUs. Lenders bear standard money-market risks, including the socialisation of residual losses in extreme liquidation scenarios where collateral proves insufficient. The protocol retains a share of interest and lending fees as a network fee to compensate for economic security and operations; the remainder is distributed to lenders in their supplied asset.
+- All collateral and debt in a borrower’s State Chain account contribute to one combined LTV.
+- If this LTV breaches a threshold, the system liquidates **all loan positions in the account**, not just one.
 
-## Withdrawals
+Per-loan liquidations are **not supported** in this version.
 
-TODO: copied from Aave docs
+---
 
-Chainflip lending Protocol allows suppliers to withdraw their supplied tokens, including accrued interest, as long as there is sufficient unborrowed liquidity in the reserve. The withdrawal amount is limited by the available underlying assets, and that the user’s ability to maintain a sufficient collateral ratio for their borrow position. Periphery contracts with features such as withdraw and switch, allow users to redeem their supplied liquidity in a different token, providing more options for efficient asset management.
+### Deposit & Withdrawal Behaviour
+Deposits and withdrawals are permissionless and instant, except in rare cases where the system activates protective pauses such as:
 
-When withdrawing with an active borrow position, it’s crucial to maintain a healthy collateralisation ratio to avoid liquidation. Reducing collateral can lower the health factor, increasing the risk of liquidation. To remain safe, after the withdrawal, the account must stay above the liquidation threshold parameters. Therefore, withdrawals require careful management and consideration of the overall borrow positions to avoid liquidation.
+- oracle feed staleness
+- extreme volatility
+- system safety checks
 
-## FAQs
+These pauses lift automatically when conditions return to normal.
 
-### How much interest do I get?
+---
 
-### How do I close my loan?
+### Shared Infrastructure With the Chainflip DEX
+Lending is part of Chainflip’s core State Chain logic and inherits:
+
+- consensus safety guarantees
+- vault-level TSS/MPC protections
+- cross-chain event tracking
+- deterministic execution
+- Live Price Protection (LPP) behaviour
+
+The lending engine and DEX share the same settlement environment and security model.

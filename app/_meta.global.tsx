@@ -31,6 +31,7 @@ export default {
             index: '',
             'concepts': '',
             'supply': '',
+            'utilisation': '',
             'borrow': '',
             'liquidations' : '',
             'financials' : '',

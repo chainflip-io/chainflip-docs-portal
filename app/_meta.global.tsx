@@ -26,7 +26,7 @@ export default {
     },
     lending: {
         type: 'page',
-        title: 'Lending',
+        title: <span className="badge-success after:content-['New']">Lending</span>,
         items: {
             index: '',
             'supply': '',

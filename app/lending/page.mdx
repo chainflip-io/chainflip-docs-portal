@@ -43,49 +43,6 @@ Partners utilising the Chainflip SDK and related tools can offer these in-app le
 
 ---
 
-## What does over-collateralisation mean?
-
-Over-collateralisation ensures that every loan remains safely backed by more collateral value than the amount borrowed.
-This protects lenders, stabilises markets, and provides borrowers with predictable liquidation behaviour.
-
-Chainflip uses external oracle prices (e.g. Chainlink) to determine the value of collateral across chains.
-All collateral in a borrower’s State Chain account contributes to a single combined LTV used to judge loan health.
-
----
-
-## LTV and LTV ratio
-
-The **Loan-to-Value ratio (LTV)** expresses how healthy a loan is:
-
-- **Low LTV** → loan is safe and well-collateralised
-- **High LTV** → loan approaches liquidation thresholds
-- **Too high LTV** → liquidation begins, automatically or gradually
-
-Because Chainflip uses a multi-collateral model, all supported collateral assets inside the account contribute to a single combined LTV.
-
-Borrowers can add collateral, withdraw excess, partially repay, or close positions at any time.
-
----
-
-## Lending Pools
-
-A lending pool is a Chainflip market instance that enables users to participate as suppliers or borrowers.
-Supply and borrowing occur through overcollateralised positions secured by Chainflip’s vaults and State Chain logic.
-
-Suppliers deposit assets (commonly USDC or USDT) into the pool. Borrowers draw liquidity from the pool using their deposited collateral.
-
-Key properties:
-
-- Pools are isolated per asset (e.g., USDC, USDT, ETH)
-- Interest rates follow a utilisation curve
-- Liquidations are executed directly through the Chainflip native DEX
-- Yield auto-compounds — no claiming needed
-- Risk does not spill into other markets
-
-Parameter decisions balance liquidity demands, borrower incentives, and system safety.
-
----
-
 ## Quick Start
 
 To begin supplying or borrowing in Chainflip Lending, choose the flow that matches your profile:

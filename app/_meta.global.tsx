@@ -36,6 +36,8 @@ export default {
             'fees': '',
             'markets': '',
             'oracles': '',
+            'pricing': '',
+            'economic': '',
             'borrow': '',
             'liquidations' : '',
             'financials' : '',

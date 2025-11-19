@@ -1,58 +1,27 @@
 ---
-title: Concepts & Roles
+title: Concepts and Roles
 description: Core concepts behind Chainflip Lending
 ---
 
-## Core Concepts
+## Concepts and Roles
 
-### Native Cross-Chain Custody
-Chainflip Lending is built into the existing Chainflip cross-chain infrastructure.
-When users deposit assets from their native chains into the Chainflip system, their funds are held in Vaults on the native chain, controlled by the decentralised validator network through a 100-of-150 threshold signature scheme.
+### Core Concepts
 
-See the
-**[Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview)** and
-**[Vault System](https://docs.chainflip.io/protocol/vaults/bitcoin-vault-design)**
-for more details.
+#### Native Cross-Chain Custody
+Chainflip Lending is built into the existing Chainflip cross-chain infrastructure. When users deposit assets from their native chains into the Chainflip system, their funds are held in Vaults on the native chain controlled by the decentralised network through a 100 of 150 threshold signature scheme.
+See Protocol Overview for more details.
 
----
+#### Permissionless Lending Architecture
+Using this basic building block, Chainflip Lending adds a range of features to allow for the permissionless creation of loan positions for both lenders and borrowers.
 
-### Permissionless Lending Architecture
-Using this core vault and State Chain infrastructure, Chainflip enables the permissionless creation of loan positions for both suppliers and borrowers.
-All positions, state transitions, health checks and liquidations are executed on the Chainflip State Chain.
+#### Isolated Markets & Loan Positions
+Each lending market is isolated per asset. Activity in the BTC pool does not affect the USDC or ETH pools.
+However, liquidations are account-wide, not per-loan.
+All collateral and debt in a borrower’s State Chain account contribute to one combined LTV. If this LTV breaches a threshold, the system liquidates all loan positions in the account until it becomes healthy again.
+Per-loan liquidations are not supported in this version.
 
----
+#### Deposit & Withdrawal Behaviour
+Deposits and withdrawals are permissionless, with temporary pauses only during oracle failures or system safety checks. These pauses automatically resolve when safe conditions return.
 
-### Isolated Markets & Account-Wide Liquidations
-Each lending market is isolated per asset.
-Activity in the BTC pool does not affect the USDC or ETH pools.
-
-However, **liquidations are account-wide**:
-
-- All collateral and debt in a borrower’s State Chain account contribute to one combined LTV.
-- If this LTV breaches a threshold, the system liquidates **all loan positions in the account**, not just one.
-
-Per-loan liquidations are **not supported** in this version.
-
----
-
-### Deposit & Withdrawal Behaviour
-Deposits and withdrawals are permissionless and instant, except in rare cases where the system activates protective pauses such as:
-
-- oracle feed staleness
-- extreme volatility
-- system safety checks
-
-These pauses lift automatically when conditions return to normal.
-
----
-
-### Shared Infrastructure With the Chainflip DEX
-Lending is part of Chainflip’s core State Chain logic and inherits:
-
-- consensus safety guarantees
-- vault-level TSS/MPC protections
-- cross-chain event tracking
-- deterministic execution
-- Live Price Protection (LPP) behaviour
-
-The lending engine and DEX share the same settlement environment and security model.
+#### Shared Infrastructure With the Chainflip Swapping DEX
+Lending is part of Chainflip’s core State Chain logic and inherits the same consensus rules, safety guarantees, and TSS/MPC vault protections as the DEX itself.

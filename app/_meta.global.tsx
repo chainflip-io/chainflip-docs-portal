@@ -39,9 +39,6 @@ export default {
             'pricing': '',
             'economic': '',
             'FAQ': '',
-            'borrow': '',
-            'liquidations' : '',
-            'financials' : '',
             __: {
                 type: 'separator',
                 title: 'Guides'

@@ -17,7 +17,7 @@ Using this basic building block, Chainflip Lending adds a range of features to a
 #### Isolated Markets & Loan Positions
 Each lending market is isolated per asset. Activity in the BTC pool does not affect the USDC or ETH pools.
 However, liquidations are account-wide, not per-loan.
-All collateral and debt in a borrower’s State Chain account contribute to one combined LTV. If this LTV breaches a threshold, the system liquidates all loan positions in the account until it becomes healthy again.
+All collateral and debt in a borrower’s State Chain account contribute to one combined LTV. If this LTV breaches a threshold, the system starts liquidating all loan positions in the account until it becomes healthy again.
 Per-loan liquidations are not supported in this version.
 
 #### Deposit & Withdrawal Behaviour

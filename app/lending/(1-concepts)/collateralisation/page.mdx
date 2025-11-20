@@ -50,7 +50,7 @@ Chainflip performs liquidations directly through its own cross-chain DEX. This p
 
 Any LP on the Chainflip DEX can fill liquidation orders. There are no specialist liquidators.
 
-Liquidations begin when LTV crosses soft or hard thresholds.
+Liquidations begin when LTV crosses soft or hard liquidation thresholds.
 
 ---
 
@@ -63,7 +63,7 @@ The protocol submits small DCA-style liquidation orders with a minimum price sli
 Liquidation continues until:
 
 - the loan becomes healthy
-- the loan is repaid
+- the loan is fully repaid
 - collateral is exhausted
 
 Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.

@@ -5,7 +5,7 @@ description: Fee structure for borrowing, liquidations, and network charges in C
 
 ## Fees
 
-Chainflip Lending applies a small, transparent set of fees to borrowers. These fees fund lenders, support the protocol, and maintain the economic security of the system. All fees are denominated in the borrowed asset and are processed through the Chainflip State Chain.
+Chainflip Lending applies a small, transparent set of fees to borrowers. These fees fund lenders, support the protocol, and maintain the economic security of the system. All fees are denominated in the borrowed assets and are processed through the Chainflip State Chain.
 
 ---
 
@@ -19,7 +19,7 @@ An origination fee is applied when opening a new loan position.
 - 80% → paid to lenders of that asset
 - 20% → paid to the protocol (via FLIP buy-and-burn)
 
-This fee is applied once per loan creation. Updating collateral or repaying does not incur additional origination fees.
+This fee is applied once per loan creation, and also when a loan is updated (for example, when a user borrows more on top of an existing loan). Updating collateral or repaying does not incur additional origination fees.
 
 ---
 

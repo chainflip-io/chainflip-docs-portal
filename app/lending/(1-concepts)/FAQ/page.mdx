@@ -14,7 +14,7 @@ These questions supplement the core lending documentation and cover additional o
 ### Are loan positions isolated?
 No. Loan positions are not isolated.
 All collateral and all debt inside a borrower’s State Chain account contribute to a single combined LTV.
-If that LTV breaches a liquidation threshold, the **entire account** is liquidated — not individual loans.
+If that LTV breaches a liquidation threshold, the **entire account** is liquidated, not individual loans.
 Per-loan liquidations are not supported in this version.
 
 ### Are lending markets isolated per asset?
@@ -125,7 +125,7 @@ Protocol governance.
 Changes follow the same upgrade path as other Chainflip modules (runtime upgrade + validator consensus).
 
 ### Who defines new modules such as insurance funds or backstops?
-Governance — responsible for design, capitalisation, safety constraints, and fee routing.
+Governance: responsible for design, capitalisation, safety constraints, and fee routing.
 
 ### Can governance pause lending during an emergency?
 Yes. Via Safe Mode, governance can temporarily pause:

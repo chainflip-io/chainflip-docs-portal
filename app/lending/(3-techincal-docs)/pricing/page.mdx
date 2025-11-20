@@ -1,5 +1,5 @@
 ---
-title: Pricing, Matching & Stress Behaviour
+title: Pricing & Execution
 description: How liquidation pricing, matching, and stress behaviour work in Chainflip Lending
 ---
 
@@ -27,7 +27,7 @@ The matching engine treats liquidation orders similarly to internal DCA-style sw
 - If not filled, a new order is submitted at updated oracle prices and LPP bounds
 - LPs may fill partial or full amounts based on their quoting strategy
 
-Liquidation orders are flagged internally but remain permissionless — any LP can fill them.
+Liquidation orders are flagged internally but remain permissionless, any LP can fill them.
 
 The system prioritises:
 
@@ -88,7 +88,7 @@ LPs may adjust spreads or participation during heavy liquidation flow. Important
 - Liquidation opportunities appear as normal LP fill opportunities
 - LPs quote based on available liquidity on-chain and externally
 - Inventory-sensitive bots (hedged/asymmetric) can adapt dynamically
-- No LP has priority — system remains fully permissionless
+- No LP has priority, the system remains fully permissionless
 
 Pricing remains competitive because:
 

@@ -41,6 +41,9 @@ export default {
             },
             'how-to-supply': '',
             'how-to-borrow': '',
+            'understanding-liquidations': '',
+            'soft-vs-hard-liquidations': '',
+            'liquidation-examples': '',
             ___: {
                 type: 'separator',
                 title: 'Technical Reference'

@@ -1,9 +1,64 @@
 ---
-
 title: How to Supply
+description: How to deposit assets and supply liquidity into Chainflip Lending pools.
+---
 
-description: How to Supply guide
+# How to Supply
+
+## 1. Connect Your Wallet
+
+To begin supplying assets, first connect either:
+
+- an **EVM wallet** (e.g., MetaMask, Rabby), or
+- a **Polkadot.js wallet**
+
+Connecting a wallet creates and controls your **Chainflip State Chain account**.
+
+> This does **not** pull assets from your wallet — it only authenticates your account.
 
 ---
 
-## How to Supply
+## 2. Deposit Assets Into Your Account
+
+Before you can supply to a lending pool, you must first **fund your State Chain account** (same flow used by Boost / LPs today).
+
+1. Navigate to the **Deposit** section in the app.
+2. Choose the asset you want to use for lending (e.g., USDC, USDT, BTC, SOL).
+3. Chainflip will generate a **native deposit channel** for that asset:
+
+   - **USDC / USDT →** deposit channel on **Ethereum**
+   - **BTC →** deposit channel on **Bitcoin**
+   - **SOL →** deposit channel on **Solana**
+
+4. Send funds to the deposit address from **any wallet or exchange**.
+   - You do **not** need to connect the wallet that holds the funds.
+   - Once the deposit confirms, the balance appears inside your **State Chain account**.
+
+After the deposit arrives, your **account balance** is ready to be supplied into the lending pool.
+
+---
+
+## 3. Supply to a Lending Pool
+
+Once your balance is visible:
+
+1. Navigate to **Lending → Supply**
+2. Choose the asset you deposited
+3. Enter the amount you want to supply from your **State Chain account balance**
+4. Confirm the transaction
+
+The supplied amount moves from **your account balance → the lending pool**.
+
+---
+
+## 4. Begin Earning Yield
+
+Once you have supplied assets:
+
+- Your deposit becomes part of the **lending pool**
+- **Yield accrues only when borrowers create loans**
+- Interest distribution updates **every 10 blocks**
+- Incentives (if active) may still accrue even when utilisation is zero
+- You can withdraw at any time (outside rare safety pauses)
+
+Supplying is permissionless and requires no additional setup.

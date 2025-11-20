@@ -34,10 +34,6 @@ export default {
             'utilisation': '',
             'collateralisation': '',
             'fees': '',
-            'markets': '',
-            'oracles': '',
-            'pricing': '',
-            'economic': '',
             'FAQ': '',
             __: {
                 type: 'separator',
@@ -49,7 +45,9 @@ export default {
                 type: 'separator',
                 title: 'Technical Reference'
             },
-            'supported-chains-assets': ''
+            'oracles': '',
+            'pricing': '',
+            'economic': '',
         },
     },
     protocol: {

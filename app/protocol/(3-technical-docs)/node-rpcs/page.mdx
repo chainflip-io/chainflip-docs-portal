@@ -1,0 +1,26 @@
+---
+
+title: Node RPCs and Subscriptions
+
+description: All the node's exposed RPCs and subscriptions useful for tracing funds
+
+---
+
+import { Cards, Callout } from 'nextra/components'
+
+
+## Node RPCs useful for tracing funds through Chainflip
+
+Here are the RPCs and subscriptions that are useful for anyone interested in tracing funds in the network.
+
+<Callout type="info">
+    The following RPCs are only available on `chainflip-node`
+</Callout>
+
+
+## Requests
+
+<Cards num={2}>
+    <Cards.Card title={<span className="badge-success after:content-['New']">cf_controlled_deposit_channels</span>} href="/protocol/node-rpcs/requests#cf_controlled_deposit_channels" />
+    <Cards.Card title={<span className="badge-success after:content-['New']">cf_controlled_vault_addresses</span>} href="/protocol/node-rpcs/requests#cf_controlled_vault_addresses" />
+</Cards>

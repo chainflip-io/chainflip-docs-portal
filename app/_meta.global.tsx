@@ -94,6 +94,13 @@ export default {
                     'genesis-token-economics-pre-2023': '',
                 }
             },
+            'node-rpcs': {
+                title: 'Node RPCs',
+                items: {
+                    index: 'Index',
+                    requests: 'Requests',
+                }
+            },
         }
     },
     lp: {

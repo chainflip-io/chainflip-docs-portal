@@ -1,0 +1,190 @@
+---
+
+title: Node RPC Requests
+
+description: The state chain node RPCs.
+
+---
+
+## RPC requests
+
+### `cf_controlled_deposit_channels`
+
+Returns all currently open deposit channels for the provided chain.
+If no chain is provided, returns all open deposit channels across all chains.
+
+Parameters:
+
+- `chain`: [Chain](/lp/lp-api/types#chain) (Optional)
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
+
+Return:
+- an object containing an array of addresses for each chain:
+```json 
+{
+    "Bitcoin": [..],
+    "Ethereum": [..],
+    "Arbitrum": [..],
+    "Solana": [..]
+}
+``` 
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "jsonrpc":"2.0",
+   "id":"1",
+   "method":"cf_controlled_deposit_addresses",
+   "params":{}
+}' http://localhost:9944
+```
+
+Response:
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "Bitcoin": [
+      "bcrt1p59avvgtdzxhhgfj6sxrhn9xlll66v92se9p87pmeu04e6pa2xdysr35c9y",
+      "bcrt1p2z0mqelqp4y0twg4lzr9znpn4jxa453gn5n7xr3attkevhr7rc3scstjp3",
+    ],
+    "Ethereum": [
+      "0xed971cf49c6b4d7432d50dd7afe9e8bc1b1842c6",
+    ],
+    "Arbitrum": [
+      "0x9d20a1d977c15cd0993a1979e9ac684bcc699c54"
+    ],
+    "Solana": [
+      "9K1rSSRr222DLhjBHukvHws9unAah1ad5gYjWpaEN39T",
+    ]
+  },
+  "id": "1"
+}
+```
+
+### `cf_controlled_vault_addresses`
+
+Returns all vault addresses currently controlled by the network.
+This includes both static addresses, as well as those that are rotated each [epoch](/validators/validator-auctions-bonds-and-rewards#what-is-the-validator-auction).
+
+By default a short explanation is provided for every address, describing how it's used by the network.
+
+Parameters:
+
+- `chain`: [Chain](/lp/lp-api/types#chain) (Optional). If provided, only vault addresses for that chain are returned, otherwise for all chains.
+- `compact`: bool (Optional). If true, all explanatory fields are skipped. Useful if rpc is called as part of an automatic setup.
+- `at`: Block Hash as string (Optional), defaults to the last block if not provided
+
+Return:
+- an object containing an array of objects for each chain:
+```json 
+{
+    "Bitcoin": [..],
+    "Ethereum": [..],
+    "Arbitrum": [..],
+    "Solana": [..]
+}
+```
+A single entry looks like follows:
+```json
+{
+    "name": "String",
+    "address": "String (address)",
+    "explanation": "String",
+    "rotation_policy": "String",
+    "next_predicted_rotation": "String (date and time)"
+}
+```
+
+
+#### Example
+
+Request:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '
+{
+   "jsonrpc":"2.0",
+   "id":"1",
+   "method":"cf_controlled_vault_addresses",
+   "params":{}
+}' http://localhost:9944
+```
+
+Response:
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "Bitcoin": [
+      {
+        "name": "bitcoin_vault",
+        "address": "bcrt1pm63jgevgm57ykqhx0nsgtfet9ruydyde2mqjcllt6ey3gc8wek6qextvls",
+        "explanation": "Holds BTC on Bitcoin.",
+        "rotation_policy": "Every 3 days",
+        "next_predicted_rotation": "2025-11-21 19:28:48.635239 UTC"
+      },
+      {
+        "name": "bitcoin_vault_swap_address_for_broker_cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy",
+        "address": "bcrt1pluvxe9glt7hm5muhfn65ukjek8pgdf9ecr0fl2xtx3cn0fweawjqm4utj3",
+        "explanation": "Special per-broker address for vault swap support on Bitcoin. Receives user funds for BTC vault swaps before they are fetched into the vault.",
+        "rotation_policy": "Every 3 days",
+        "next_predicted_rotation": "2025-11-21 19:28:48.635239 UTC"
+      },
+      {
+        "name": "bitcoin_vault_swap_address_for_broker_cFNAqZvSfrepyHco1gqGb48p1rYrPF2kSWrJfieqMoemdrjZR",
+        "address": "bcrt1pmnwfs6ty4ua3penhwc27p48kmntgjcjgh8tu2prgq5gdjjrax68s8fkhlv",
+        "explanation": "Special per-broker address for vault swap support on Bitcoin. Receives user funds for BTC vault swaps before they are fetched into the vault.",
+        "rotation_policy": "Every 3 days",
+        "next_predicted_rotation": "2025-11-21 19:28:48.635239 UTC"
+      }
+    ],
+    "Solana": [
+      {
+        "name": "solana_sol_vault",
+        "address": "HmUhtpUdzGNnq5yRWzaKdWkzAZDco4G8M8bw3wHzZHpB",
+        "explanation": "Holds SOL on Solana.",
+        "rotation_policy": "Every 3 days",
+        "next_predicted_rotation": "2025-11-21 19:28:48.635239 UTC"
+      },
+      {
+        "name": "solana_usdc_vault",
+        "address": "9CGLwcPknpYs3atgwtjMX7RhgvBgaqK8wwCvXnmjEoL9",
+        "explanation": "Holds USDC on Solana. Directly receives user funds for USDC vault swaps.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      },
+      {
+        "name": "solana_sol_vault_swap_account",
+        "address": "EWaGcrFXhf9Zq8yxSdpAa75kZmDXkRxaP17sYiL6UpZN",
+        "explanation": "Special account for vault swap support for SOL on Solana. Receives user funds for SOL vault swaps before they are fetched into the vault.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      }
+    ],
+    "Arbitrum": [
+      {
+        "name": "arbitrum_vault_contract",
+        "address": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+        "explanation": "Holds ETH and all tokens on Arbitrum. Directly receives user funds in case of smart contract-based vault swaps.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      }
+    ],
+    "Ethereum": [
+      {
+        "name": "ethereum_vault_contract",
+        "address": "0xb7a5bd0345ef1cc5e66bf61bdec17d2461fbd968",
+        "explanation": "Holds ETH and all tokens on Ethereum. Directly receives user funds for smart contract-based vault swaps.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      }
+    ]
+  },
+  "id": "1"
+}
+```

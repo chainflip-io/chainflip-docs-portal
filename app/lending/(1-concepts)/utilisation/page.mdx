@@ -1,0 +1,101 @@
+---
+title: Utilisation & Rates
+description: How utilisation and interest rates work in Chainflip Lending
+---
+
+## Utilisation & Interest Rates
+
+### What Is Utilisation?
+
+Chainflip Lending uses a utilisation curve model to determine real-time borrowing and lending rates. Utilisation represents how much of a pool’s liquidity is currently borrowed:
+
+<div style={{ textAlign: "left" }}>
+$$
+\text{Utilisation} = \frac{\text{Borrowed Amount}}{\text{Total Supplied}}
+$$
+</div>
+
+As utilisation rises, available liquidity decreases, which increases borrowing rates and boosts yield for suppliers.
+
+A utilisation curve keeps the lending market balanced by automatically:
+- increasing borrowing costs when liquidity becomes scarce
+- rewarding suppliers when demand rises
+- encouraging repayment at high utilisation
+- attracting additional lenders to supply more liquidity
+
+This dynamic ensures the pool remains healthy without manual intervention.
+
+---
+
+### How the Utilisation Curve Works
+
+The Chainflip utilisation curve has two segments:
+
+#### Low to Optimal Utilisation
+Interest rates rise gradually as utilisation increases. Borrowing remains inexpensive, and lender yields stay moderate. This encourages loan creation and normal market activity.
+
+#### Above Optimal Utilisation
+Once utilisation passes the optimal point, the curve becomes steep. Borrowing costs rise sharply to prevent liquidity exhaustion and to attract more supply.
+
+Higher yields naturally attract additional liquidity into the pool, increasing the amount available for borrowing. This provides a secondary mechanism, beyond borrower repayments, that helps bring utilisation and rates back down to normal levels.
+
+This behaviour gives borrowers confidence that rates can normalise through increased supply, not solely through their own repayments.
+
+---
+
+### Interest Accrual
+
+Interest is always accrued in the borrowed asset.
+
+Examples:
+- Borrowing USDC → interest accrues in USDC
+- Borrowing USDT → interest accrues in USDT
+
+Lenders always receive yield in the same asset they supplied, regardless of what other users borrow.
+Interest is calculated every 10 blocks and distributed proportionally to all suppliers, however it needs to exceed a certain threshold (0.1 USD) before it is collected and distributed in the pool.
+
+---
+
+### Network Fee Rate
+
+A flat additional 1% APR network fee is added on top of the supply rate to derive the final borrow rate.
+
+Example at 90% utilisation:
+- Supply rate = 8% APR
+- Borrow rate = 9% APR
+(The extra 1% goes to the protocol)
+
+Network fees are periodically swapped into FLIP via the buy-and-burn mechanism.
+
+---
+
+### Collateral Does Not Auto-Supply
+
+In this version of Chainflip Lending, a borrower’s collateral is **not** automatically deployed into the lending pools.
+
+While some lending protocols allow collateral to generate yield by supplying it into the pool, Chainflip keeps collateral strictly separate. This:
+- improves safety
+- simplifies accounting
+- prevents unintended exposure
+- keeps collateral purely focused on loan health and liquidation protection
+
+Collateral is only used for:
+- determining LTV
+- maintaining loan health
+- liquidation if required
+
+---
+
+### Why Utilisation Matters for Borrowers and Lenders
+
+#### For Borrowers
+- Low utilisation → cheaper borrowing
+- High utilisation → more expensive borrowing
+- Very high utilisation → strong incentive to repay or add collateral
+- Additional supply entering the pool helps bring rates down
+
+#### For Suppliers
+- Low utilisation → lower yields
+- High utilisation → higher yields
+- Very high utilisation → strong returns but indicates heavy borrowing demand
+- New lenders are incentivised to join when yields spike

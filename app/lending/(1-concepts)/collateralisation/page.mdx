@@ -17,7 +17,7 @@ $$
 $$
 </div>
 
-A minimum collateralisation level (maximum LTV) is required when creating a loan. Borrowers can freely add more collateral at any time. If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing Low LTV Penalty is applied. This discourages locking up unnecessary collateral that reduces system-wide economic security.
+A minimum collateralisation level is required (enforcing maximum LTV) when creating a loan. Borrowers can freely add more collateral at any time. If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing Low LTV Penalty is applied. This discourages locking up unnecessary collateral that reduces system-wide economic security.
 
 Chainflip supports multi-collateral accounts. The oracle value of all supported collateral assets is combined to determine total collateral value for LTV calculation.
 
@@ -31,13 +31,13 @@ To protect borrowers and the system:
 - New loan creation halts while oracles are stale
 - Borrowers may still repay, add collateral, or close positions during these pauses
 
-Future versions will support additional safety mechanisms like taking internal prices into account.
+Future versions will support additional safety mechanisms like taking Chainflip's own DEX  prices into account.
 
 ---
 
 ### Auto-Collateralisation
 
-Borrowers may enable auto-top-up, which uses free balance in the State Chain account in their asset of choice to automatically increase collateral when LTV approaches the soft liquidation threshold. Auto-top-up prevents liquidation as long as the borrower has sufficient available balance.
+Borrowers may enable auto-top-up, which uses free balance in the State Chain account in their asset of choice to automatically increase collateral when LTV approaches the soft liquidation threshold. Auto-top-up prevents liquidation as long as the borrower has sufficient available balance. Note that for the Beta launch, Auto Top up will be disabled.
 
 ---
 
@@ -45,7 +45,7 @@ Borrowers may enable auto-top-up, which uses free balance in the State Chain acc
 
 Chainflip performs liquidations directly through its own cross-chain DEX. This provides two major advantages over traditional lending platforms:
 
-- Liquidations are non-binary: they occur gradually rather than all at once
+- Support for Patrial Liquidations: The protocol liquidates only what's necessary to bring LTV back to a safe range
 - Execution is native: LPs fill liquidation orders directly, removing the need for external liquidators demanding steep discounts
 
 Any LP on the Chainflip DEX can fill liquidation orders. There are no specialist liquidators.

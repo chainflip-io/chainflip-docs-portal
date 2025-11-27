@@ -11,7 +11,7 @@ Chainflip Lending applies a small, transparent set of fees to borrowers. These f
 
 ## Origination Fee
 
-An origination fee is applied when opening a new loan position.
+An origination fee is applied when opening or updating a loan position.
 
 **Origination Fee:** 1 bps (0.01%) of the borrowed amount
 
@@ -48,8 +48,8 @@ Interest is accrued in the borrowed asset and paid to lenders in that same asset
 - Network Fee → protocol (1% APR added on top of the supply rate)
 
 **Example:**
-- Supply rate: 8% APR
-- Borrow rate: 9% APR (includes +1% network fee)
+- Supply rate: 8% APY
+- Borrow rate: 9% APY (includes +1% network fee)
 
 ---
 
@@ -76,8 +76,8 @@ Borrowers who maintain overly low LTVs (i.e., extremely overcollateralised posit
 Applies only when **LTV < 50%**.
 
 **Penalty scales linearly from:**
-- 0% APR at 50% LTV
-- 1% APR at 0% LTV
+- 0% APY at 50% LTV
+- 1% APY at 0% LTV
 
 This penalty is added to the borrower’s effective interest rate and flows entirely to the protocol.
 

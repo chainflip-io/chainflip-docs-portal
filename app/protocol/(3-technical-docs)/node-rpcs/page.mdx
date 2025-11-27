@@ -1,0 +1,26 @@
+---
+
+title: Node RPCs
+
+description: The node's exposed RPCs and subscriptions.
+
+---
+
+import { Cards, Callout } from 'nextra/components'
+
+
+## Node RPCs
+
+Here are the RPCs and subscriptions that are available on the node. Not all RPCs have been added to the documentation yet. See also [LP-specific node rpcs](/lp/lp-node-rpcs).
+
+<Callout type="info">
+    The following RPCs are only available on `chainflip-node`
+</Callout>
+
+
+## Requests
+
+<Cards num={2}>
+    <Cards.Card title={<span className="badge-success after:content-['New']">cf_controlled_deposit_channels</span>} href="/protocol/node-rpcs/requests#cf_controlled_deposit_channels" />
+    <Cards.Card title={<span className="badge-success after:content-['New']">cf_controlled_vault_addresses</span>} href="/protocol/node-rpcs/requests#cf_controlled_vault_addresses" />
+</Cards>

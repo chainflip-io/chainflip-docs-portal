@@ -20,6 +20,8 @@ This `light-rpc` mode prunes older blocks and permits querying only recent block
 
 ## Running the LP light-rpc node using Docker
 
+Reference setup and compose profiles: [chainflip-mainnet-apis](https://github.com/chainflip-io/chainflip-mainnet-apis)
+
 ### Setup
 
 * Clone the `chainflip-mainnet-apis` repo
@@ -41,6 +43,19 @@ mkdir -p ./chainflip/keys/lp
 docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-1.12.0 generate-keys --json > chainflip/lp-keys.json
 cat chainflip/lp-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/lp/signing_key_file
 ```
+
+### Funding the Account
+> The minimum funding amount for registering as a Broker or LP role is technically 1 FLIP. However, we recommend funding your accounts with at least 5 FLIP to account for transaction fees.
+
+Get the public key of the Broker account:
+```bash
+cat chainflip/lp-keys.json | jq -r '.signing_account_id'
+```
+
+* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+
+* Click "Register Node" and follow the instructions to fund the account
+
 
 ### Running the node
 * Start an LP RPC node and wait for it to sync:
@@ -108,12 +123,20 @@ You should a response showing that `isSyncing` is false, similar to:
 
 * To stop the node:
 ```bash
-docker compose --profile broker down
+docker compose --profile lp down
 ```
 
 ### Interacting with the APIs
 
 Now you can interact with the APIs using any HTTP or WS client. Here we use the `curl` and `wscat` commands.
+
+#### Register the LP account via RPC
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1, "jsonrpc":"2.0", "method": "lp_register_account", "params": [0]}' \
+  http://localhost:9944
+```
 
 * For example, to request a liquidity deposit address for `ETH` :
 
@@ -157,5 +180,43 @@ To give you a better idea of the new architecture, here is a visual comparison o
 
 <img src="/light-rpc/new-lp-light-rpc.png" alt="LP Light-RPC node" />
 
+## Running the LP light-rpc node using `chainflip-node` binary
+
+This section is for users who do not want to use Docker compose, and want to directly use `chainflip-node` binary compiled from source code or obtained using `apt`.
+
+The main goal of LP light-rpc mode is to enable LPs to track only latest chain blocks data and in particular be able to make rpc calls that require signed extrinsics such as [`set_limit_order`](/lp/lp-api/requests#lp_set_limit_order), [`lp_update_limit_order`](/lp/lp-api/requests#lp_update_limit_order) etc ...
+
+* The first step is to inject the **LP Signing Key** inside the chainflip node. This can be achieved using this command
+```bash
+/usr/local/bin/chainflip-node key insert \
+        --chain=/etc/chainflip/berghain.chainspec.json \
+        --base-path=/etc/chainflip/chaindata \
+        --suri=0x$$(cat /etc/chainflip-keys/lp/signing_key_file) \
+        --key-type=lqpr \
+        --scheme=sr25519
+```
+NB: please change `/etc/chainflip-keys/lp/signing_key_file` with location of your LP signing key file
+
+* Then run the node in **light-rpc mode**, by simply calling the `chainflip-node` binary with some special command line arguments that makes the node prune blocks minimising disk space.
+This will require about 20GB of disk space.
+
+```bash
+/usr/local/bin/chainflip-node \
+        --base-path=/etc/chainflip/chaindata \
+        --chain=/etc/chainflip/berghain.chainspec.json \
+        --max-runtime-instances=32 \
+        --rpc-cors=all \
+        --rpc-methods=safe \
+        --rpc-external \
+        --sync=light-rpc \
+        --blocks-pruning=128 \
+        --state-pruning=128 \
+        --disable-log-color \
+        --log info,grandpa=error,runtime::grandpa=off,aura=error,babe=error,txpool::api=error
+```
+If you inspect the above command we achieve disk space-saving by a combination of methods:
+* Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
+* Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
+* Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`
 
 

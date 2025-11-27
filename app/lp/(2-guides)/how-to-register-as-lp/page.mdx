@@ -10,7 +10,23 @@ description: guide on How to register as Liquidity Provider
 
 Also known as **LPs**, the Liquidity Provider role is usually fulfilled by professional market makers, but Chainflip also supports passive liquidity provisioning strategies. A good liquidity provider will have expertise in risk management and market making, and knowledge of how our [AMM](/protocol/just-in-time-amm-protocol) works.
 
-If you want to market-make on Chainflip, **register** as an LP. You can do this using 2 method:
+If you want to market-make on Chainflip with Active Liquidity, **register** as an LP.
+
+### Prerequisites
+
+Before registering, you need to:
+1. **Create a State-Chain account** and generate keys
+2. **Fund the account** with FLIP
+3. **Set up a Light-RPC node** (recommended) to interact with the LP API
+
+For complete setup instructions, see the [LP-light-rpc-node](/lp/lp-light-rpc-node) page, which includes:
+- Key generation steps
+- Account funding via the Auctions Web App
+- Docker-based Light-RPC node setup with LP profile
+
+> **Note:** This guide is for **Active Liquidity** providers. Passive LPs onboard via the front-end and do not need to register via CLI or RPC.
+
+You can register using the CLI or via RPC:
 
 ### Register using [`chainflip-cli`](/protocol/chainflip-cli)
 
@@ -20,6 +36,13 @@ chainflip-cli lp register
 
 Once registered, the account will have full access to LP-related actions through the [LP API](/lp/lp-api).
 
+### Register via Light-RPC (RPC alternative)
+
+```bash copy
+curl -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"lp_register_account","params":[0]}' \
+  http://localhost:9944
+```
 
 ### Deregister using [`chainflip-cli`](/protocol/chainflip-cli)
 

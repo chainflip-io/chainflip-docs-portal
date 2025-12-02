@@ -7,8 +7,6 @@ description: Fee structure for borrowing, liquidations, and network charges in C
 
 Chainflip Lending applies a small, transparent set of fees to borrowers. These fees fund lenders, support the protocol, and maintain the economic security of the system. All fees are denominated in the borrowed assets and are processed through the Chainflip State Chain.
 
----
-
 ## Origination Fee
 
 An origination fee is applied when opening or updating a loan position.
@@ -19,9 +17,7 @@ An origination fee is applied when opening or updating a loan position.
 - 80% → paid to lenders of that asset
 - 20% → paid to the protocol (via FLIP buy-and-burn)
 
-This fee is applied once per loan creation, and also when a loan is updated (for example, when a user borrows more on top of an existing loan). Updating collateral or repaying does not incur additional origination fees.
-
----
+This fee is applied once per loan creation, and also when a loan is updated (that is, when a user borrows more on top of an existing loan, in which case the fee is only applied on the extra amount to be borrowed). Updating collateral or repaying does not incur additional fees.
 
 ## Liquidation Fee
 
@@ -33,41 +29,30 @@ If a loan enters soft or hard liquidation, a fee is applied to the portion of co
 - 80% → paid to lenders
 - 20% → paid to the protocol (via FLIP buy-and-burn)
 
-This fee is separate from any discount or incentive used to attract LPs to fill liquidation orders.
+For more details, see
+[FLIP Buy-and-Burn - Long-Term Supply Impact](https://docs.chainflip.io/protocol/token-economics/current-token-economics-2025-and-beyond#flip-buy-and-burn-long-term-supply-impact).
 
----
+This fee is separate from any discount or incentive used to attract LPs to fill liquidation orders.
 
 ## Interest Rate Mechanics
 
-Interest accrues continuously (every 10 blocks) on outstanding debt. It follows the utilisation-based rate model described above.
+Interest accrues continuously (**every 10 blocks**) on outstanding debt. Borrowers see their outstanding debt increase based on the **borrow rate**, which follows the utilisation-based interest model described above.
 
-Interest is accrued in the borrowed asset and paid to lenders in that same asset. Borrowers see their outstanding debt increase over time based on the borrow rate.
+Interest is always accrued and paid in the **borrowed asset**.
 
-**Interest flow:**
+### **Interest flow**
 - Borrowed asset → pool suppliers
-- Network Fee → protocol (1% APR added on top of the supply rate)
+- A flat **+1% APR network fee** is added on top of the supply rate
+- The network fee is collected by the protocol and swapped into FLIP via the buy-and-burn system
 
-**Example:**
-- Supply rate: 8% APY
-- Borrow rate: 9% APY (includes +1% network fee)
+### **Example**
+If the supply APY is **8%**, then borrowers pay:
 
----
-
-## Network Fee Rate
-
-The network charges a flat **1% APR** fee on borrowed positions.
-
-This does not affect supplier returns directly, it is simply added on top of the supply-side interest rate to determine the final borrow rate.
-
-All network fees are periodically swapped into FLIP via the buy-and-burn system.
-
-**Example:**
-- Supply APY: 8%
-- Borrow APY: 8% + 1% = 9%
+- **8% APY** → paid to suppliers
+- **+1% APY network fee** → paid to the protocol
+- **= 9% total borrow APY**
 
 Network fees are swapped into FLIP once they accumulate to at least **$20 equivalent**, and no more frequently than every **10 blocks**.
-
----
 
 ## Low LTV Penalty
 
@@ -80,8 +65,6 @@ Applies only when **LTV < 50%**.
 - 1% APY at 0% LTV
 
 This penalty is added to the borrower’s effective interest rate and flows entirely to the protocol.
-
----
 
 ## Fee Processing and Settlement
 

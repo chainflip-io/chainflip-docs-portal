@@ -15,6 +15,8 @@ Suppliers use their Chainflip State Chain account to deposit assets directly fro
 
 Supply-side risk is isolated per asset. Supplying USDC exposes the user only to USDC borrower risk and cannot be impacted by the behaviour of other markets.
 
+---
+
 ### Borrowing Assets
 Borrowers deposit collateral, typically BTC or ETH, but any supported collateral asset may be used, into their Chainflip State Chain account. This collateral can then be used to open one or more loan positions.
 
@@ -34,6 +36,8 @@ Borrowers can also specify a **top-up asset**, which determines which asset the 
 - This allows users to control exactly which asset should be consumed during auto-top-up events.
 - Setting a primary collateral asset is optional and can be done at any time.
 
+---
+
 ### Collateral Management
 Borrowers can:
 - Add collateral at any time
@@ -43,6 +47,8 @@ Borrowers can:
 
 Minimum collateralisation rules apply at loan creation. Additional collateral can always be added later to improve loan health.
 For multi-collateral setups, Chainflip combines the oracle value of all collateral asset balances to determine the account’s overall LTV.
+
+---
 
 ### Borrowing Lifecycle
 A typical borrowing flow:
@@ -54,6 +60,8 @@ A typical borrowing flow:
 6. Withdraw remaining collateral once the loan is closed
 
 Loan interest accrues in the borrowed asset and updates every 10 blocks. Lenders always receive interest in the asset they have supplied.
+
+---
 
 ### Repayments
 Borrowers may repay debt at any time using:

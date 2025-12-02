@@ -7,8 +7,6 @@ description: Common questions about Chainflip Lending
 
 These questions supplement the core lending documentation and cover additional operational, integration, and risk-model topics.
 
----
-
 ## Account & Market Structure
 
 ### Are loan positions isolated?
@@ -35,7 +33,6 @@ Pauses lift automatically when conditions normalise.
 Yes. The Chainflip State Chain account can hold balances, collateral, debt, and free funds.
 Loan positions are isolated; the **account** itself is unified.
 
----
 
 ## Event Streams, Bots & Integrations
 
@@ -54,7 +51,6 @@ No, they are not flagged.
 ### Can integrators surface liquidation data in their own UIs?
 Yes. All liquidation activity is exposed through standard RPC events.
 
----
 
 ## Backstops, Insurance & Stability
 
@@ -77,7 +73,6 @@ Requires separate evaluation.
 No. All liquidations are permissionless.
 Introducing an official liquidator would be a governance decision.
 
----
 
 ## Capital Efficiency & Scaling
 
@@ -103,7 +98,6 @@ No wrapped or synthetic stablecoin is required.
 Yes. Protocols can integrate via an EVM proxy that deposits into Chainflip pools.
 Risk boundaries remain isolated at the loan-position level.
 
----
 
 ## Governance & Parameter Changes
 
@@ -123,7 +117,6 @@ Yes. Via Safe Mode, governance can temporarily pause:
 
 Repayments or top-ups may remain enabled depending on Safe Mode level.
 
----
 
 ## Liquidity & Execution Behaviour
 
@@ -151,7 +144,6 @@ No. The JIT AMM ensures:
 Not under normal conditions.
 Liquidation and non-liquidation flow coexist without queueing or blocking.
 
----
 
 ## Collateral & Position Management
 
@@ -166,7 +158,6 @@ If free balance is insufficient, liquidation proceeds normally.
 ### Can I borrow against multiple collateral assets?
 Yes. LTV is calculated per-account using the aggregated oracle value of all collateral assets.
 
----
 
 ## Partial Repayments, Partial Liquidations & Edge Cases
 
@@ -183,7 +174,6 @@ Excess collateral is returned to the borrower automatically.
 ### What happens if collateral is insufficient?
 The shortfall is socialised to lenders of **that asset only**.
 
----
 
 ## Integrators & Frontend Behaviour
 

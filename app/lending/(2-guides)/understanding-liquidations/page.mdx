@@ -8,10 +8,11 @@ description: The difference between soft and hard liquidation in Chainflip
 Soft liquidation is the first response when your LTV crosses the liquidation threshold.
 
 - Triggered automatically
-- Only a portion of collateral is sold
+- Executed in small chunks through DCA-style swaps
 - Uses tight live price protection (0.5%)
 - Executed through DCA-style swaps
-- Abortable if LTV improves during the process
+- Automatically aborts if LTV improves during the process
+- May be escalated to hard liquidation if LTV gets worse
 
 Soft liquidation protects your position while minimising loss.
 
@@ -25,8 +26,8 @@ In a hard liquidation:
 
 - Trigger threshold is higher
 - Live price protection widens to 5%
-- Larger chunks of collateral may be sold
+- Executed in larger chunks through DCA-style swaps
 - Execution prioritises speed
-- Still abortable if LTV improves
+- Automatically deescalates to soft liquidation (or compeletely aborts) if LTV improves
 
 Hard liquidation is designed for extreme market conditions.

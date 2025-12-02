@@ -2,6 +2,7 @@
 title: Collateral & Liquidations
 description: How LTV, collateralisation, and liquidations work in Chainflip Lending
 ---
+import { Callout } from "nextra/components";
 
 ## Collateralisation & Liquidations (LTV & Liquidation Thresholds)
 
@@ -17,7 +18,10 @@ $$
 $$
 </div>
 
-A minimum collateralisation level is required (enforcing maximum LTV) when creating a loan. Borrowers can freely add more collateral at any time. If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing Low LTV Penalty is applied. This discourages locking up unnecessary collateral that reduces system-wide economic security.
+A minimum collateralisation level is required (enforcing maximum LTV) when creating a loan. Borrowers can freely add more collateral at any time.
+
+If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing **Low LTV Penalty** is applied. This penalty is **0% at 50% LTV** and increases **linearly up to 1% APR as LTV approaches 0%**.  
+This discourages locking up unnecessary collateral that reduces system-wide economic security.
 
 Chainflip supports multi-collateral accounts. The oracle value of all supported collateral assets is combined to determine total collateral value for LTV calculation.
 
@@ -48,15 +52,18 @@ Chainflip performs liquidations directly through its own cross-chain DEX. This p
 - Support for Patrial Liquidations: The protocol liquidates only what's necessary to bring LTV back to a safe range
 - Execution is native: LPs fill liquidation orders directly, removing the need for external liquidators demanding steep discounts
 
-Any LP on the Chainflip DEX can fill liquidation orders. There are no specialist liquidators.
+<Callout type="info">
+Chainflip does not use external liquidators.
+All liquidation orders are filled natively by LPs on the DEX, using the same quoting logic they use for regular swaps.
+This removes the need for specialist liquidators or discounted auctions found in other lending protocols.
+</Callout>
 
 Liquidations begin when LTV crosses soft or hard liquidation thresholds.
 
 ---
-
 ### Soft Liquidation
 
-Soft liquidation is triggered when collateralisation drops below the soft threshold.
+Soft liquidation is triggered when **collateralisation** drops below the soft threshold.
 
 The protocol submits small DCA-style liquidation orders with a minimum price slightly below the oracle value using Live Price Protection (LPP). LPs compete to fill these orders at near-market rates.
 
@@ -68,6 +75,9 @@ Liquidation continues until:
 
 Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.
 
+> **Important:**
+> - When soft liquidation is triggered automatically, the system only swaps small chunks until LTV returns to healthy levels.
+> - When a borrower triggers manual liquidation, the entire collateral balance is swapped. Any excess remains in the collateral balance.
 ---
 
 ### Hard Liquidation
@@ -82,7 +92,7 @@ In this mode:
 
 Despite wider limits, LPs still compete on price, so execution generally remains close to market rates.
 
-The maximum expected liquidation loss for borrowers is approximately **5% of the loaned asset**, similar to Aave.
+The maximum liquidation loss for borrowers is **5% of the loaned asset**, similar to Aave
 
 ---
 

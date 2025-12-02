@@ -2,6 +2,7 @@
 title: Supplying & Borrowing
 description: Supplying and borrowing in Chainflip Lending
 ---
+import { Callout } from "nextra/components";
 
 ## Supplying and Borrowing
 
@@ -19,26 +20,26 @@ Borrowers deposit collateral, typically BTC or ETH, but any supported collateral
 
 Chainflip supports multi-collateral accounts, with loan health and liquidation behaviour determined using a per-account loan-to-value [LTV](/lending/collateralisation) ratio based on oracle prices.
 
-All collateral and debt in a borrower’s State Chain account share a single account-level LTV. If that LTV crosses a liquidation threshold, the protocol begins liquidating all open loan positions in the account, not just one of them.
+The protocol supports an optional **auto–top-up** feature.
+If a borrower specifies a **top-up asset**, the system can automatically add that asset to their collateral whenever their LTV approaches unsafe levels.
 
-Auto-top-up is now an optional feature at the account level.
+Auto–top-up is controlled at the **account level**, users may enable or disable it at any time.
 
-Although the protocol supports it, auto-top-up will be disabled by default during the closed beta phase. This ensures testers do not unintentionally use their account balance to top up collateral during aggressive LTV conditions.
+<Callout type="info">
+Although the protocol supports automatic top-ups, **auto-top-up will be disabled by default during the closed beta phase**.
+This ensures testers do not unintentionally use their account balance to top up collateral during aggressive LTV conditions.
+</Callout>
 
-If a borrower’s LTV approaches the soft liquidation threshold, the system automatically uses any free balance in their State Chain account to increase collateral and restore loan health.
-This reduces liquidation risk as long as sufficient free balance is available.
-
-Borrowers can also specify a **primary collateral asset**, which determines *which asset* will be used for top-up operations.
+Borrowers can also specify a **top-up asset**, which determines which asset the protocol will use for automatic top-ups.
 - This allows users to control exactly which asset should be consumed during auto-top-up events.
-- The primary collateral asset must be set when depositing collateral for the first time.
-- In the UI, this selection is handled automatically by default based on the asset the user chooses to deposit.
+- Setting a primary collateral asset is optional and can be done at any time.
 
 ### Collateral Management
 Borrowers can:
 - Add collateral at any time
 - Withdraw excess collateral when safe
 - Partially repay loans
-- Convert or swap collateral balances via the DEX to repay loans (manual soft liquidation)
+- Collateral balances cannot be swapped directly; assets must be transferred back to your account (free) balance before swapping.
 
 Minimum collateralisation rules apply at loan creation. Additional collateral can always be added later to improve loan health.
 For multi-collateral setups, Chainflip combines the oracle value of all collateral asset balances to determine the account’s overall LTV.

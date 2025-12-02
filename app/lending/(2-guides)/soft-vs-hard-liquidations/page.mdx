@@ -44,6 +44,7 @@ If LTV exceeds the protocol’s liquidation threshold, your position may be part
 Liquidation occurs automatically when LTV exceeds the threshold, which can happen due to:
 
 - A drop in collateral price (BTC, ETH, SOL, etc.)
+- An increase in the borrowed asset's price
 - Accrued interest increasing debt
 
 Before liquidation, Chainflip attempts **auto top-up** using your primary collateral asset.
@@ -68,7 +69,7 @@ Liquidation only occurs if no corrective action is taken.
 After liquidation:
 
 - Liquidated value repays part (or all) of your loan
-- A small liquidation fee (e.g., 5 bps) is deducted
+- A small liquidation fee (e.g., 5 bps) on the liquidated amount is deducted
 - Remaining collateral is returned
 - You retain control of the loan if it wasn’t fully repaid
 

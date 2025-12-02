@@ -2,6 +2,7 @@
 title: How to Borrow
 description: How to deposit collateral, move assets into your collateral balance, and open a loan on Chainflip.
 ---
+import { Callout } from "nextra/components";
 
 # How to Borrow
 
@@ -20,8 +21,6 @@ Borrowing therefore works in three stages:
 
 Below is the full step-by-step process.
 
----
-
 ## 1. Connect Your Wallet
 
 Start by connecting either:
@@ -38,9 +37,9 @@ Connecting authenticates your **State Chain account**, where:
 
 all live.
 
-> Your connected wallet is **not** the wallet holding your collateral — it only authenticates your account.
-
----
+<Callout type="info">
+  Your connected wallet is **not** the wallet holding your collateral - it only authenticates your account.
+</Callout>
 
 ## 2. Deposit an Asset (Required Before You Can Borrow)
 
@@ -64,13 +63,11 @@ This balance is **not yet collateral** — you must transfer it in the next step
 
 > No bridging, no wrapping — all assets remain fully native.
 
----
-
 ## 3. Move Assets Into Collateral
 
 Collateral is separate from your normal account balance.
 
-Currently, you can only move assets into collateral **via the Borrow modal**.
+You can move assets into your collateral balance from the **Borrow** tab using the **Manage Collateral** CTA.
 
 ### Steps:
 
@@ -88,18 +85,18 @@ Once moved, the asset becomes **collateral** and can be used to secure a loan.
 - Your **first time borrowing** requires adding collateral before opening a loan
 - Collateral remains fully native and secured in Chainflip’s **TSS vaults**
 
----
-
 ## 4. Your Primary Collateral Asset (PCA)
 
-Your **Primary Collateral Asset (PCA)** is the preferred asset the protocol uses when:
+Your **Primary Collateral Asset (PCA)** is selected automatically based on the first asset you move into your collateral account.
+You can change your PCA at any time from the **Borrow** tab.
+
+The PCA is the preferred asset the protocol uses when:
 
 - auto-top-ups trigger near liquidation thresholds (85%+ LTV)
 
-Make sure your **account balance** has enough of your selected PCA to support top-ups.
-You can change the PCA at any time.
+Make sure your **account balance** has enough of your selected PCA to support automatic top-ups.
 
----
+You can change your PCA at any time if you prefer a different asset to be used for top-ups.
 
 ## 5. Open a Loan
 
@@ -112,11 +109,10 @@ Once you have collateral:
 
 ### After confirming:
 
-- Borrowed funds appear in your **State Chain account balance**
+- After confirming, you’ll be taken to **Borrow → My Position**, where you can see your loan details, collateral levels, and repayment options.
+- Borrowed funds appear in your **State Chain account balance**.
 - They can be withdrawn at any time
 - Interest accrues **every 10 blocks**, denominated in the borrowed asset
-
----
 
 ## 6. Withdraw Borrowed Funds to Any Chain
 
@@ -128,8 +124,6 @@ Borrowed funds can be withdrawn natively:
 
 Withdrawals are executed through Chainflip vaults.
 
----
-
 ## 7. Manage Your Position
 
 At any time, you can:
@@ -140,8 +134,7 @@ At any time, you can:
 - Withdraw excess collateral (as long as LTV remains healthy)
 
 Your LTV updates **every block** based on oracle prices.
-
----
+Learn more in the [Oracle documentation](/lending/oracles).
 
 ## 8. Repay Loans
 

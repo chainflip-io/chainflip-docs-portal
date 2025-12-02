@@ -20,21 +20,6 @@ Because Chainflip only supports highly liquid assets (BTC, ETH, SOL, USDC, USDT)
 
 ---
 
-### Oracle Safety Controls
-
-To protect borrowers and lenders:
-
-- Loan creation halts if oracle prices become stale  
-- Liquidations halt if oracle feeds stop updating  
-- Borrowers may still repay or add collateral during these pauses
-
-Normal operation automatically resumes once the oracle becomes healthy again.
-
-At present, Chainflip enforces **oracle staleness checks only**.  
-(Price deviation checks between internal pool prices and the oracle feed are not currently implemented.)
-
----
-
 ### Native Cross-Chain Custody (Vaults)
 
 All assets deposited into Chainflip Lending are held in native-chain vaults secured by the Chainflip validator network using a **100-of-150 threshold signature scheme (TSS/MPC)**.

@@ -40,19 +40,17 @@ Interest accrues continuously (**every 10 blocks**) on outstanding debt. Borrowe
 
 Interest is always accrued and paid in the **borrowed asset**.
 
-### **Interest flow**
-- Borrowed asset → pool suppliers
-- A flat **+1% APR network fee** is added on top of the supply rate
-- The network fee is collected by the protocol and swapped into FLIP via the buy-and-burn system
+### **Interest Flow**
+
+Borrowers pay interest in the borrowed asset. The supply rate goes to lenders, and a flat **+1% APR network fee** is added on top and collected by the protocol (then swapped into FLIP via the buy-and-burn system).
 
 ### **Example**
+
 If the supply APY is **8%**, then borrowers pay:
 
 - **8% APY** → paid to suppliers
-- **+1% APY network fee** → paid to the protocol
+- **+1% APY network fee** → paid to the protocol and swapped into FLIP
 - **= 9% total borrow APY**
-
-Network fees are swapped into FLIP once they accumulate to at least **$20 equivalent**, and no more frequently than every **10 blocks**.
 
 ## Low LTV Penalty
 
@@ -60,9 +58,9 @@ Borrowers who maintain overly low LTVs (i.e., extremely overcollateralised posit
 
 Applies only when **LTV < 50%**.
 
-**Penalty scales linearly from:**
-- 0% APY at 50% LTV
+**Penalty scales linearly:**
 - 1% APY at 0% LTV
+- 0% APY at 50% LTV
 
 This penalty is added to the borrower’s effective interest rate and flows entirely to the protocol.
 

@@ -41,8 +41,7 @@ export default {
             },
             'how-to-supply': '',
             'how-to-borrow': '',
-            'understanding-liquidations': '',
-            'soft-vs-hard-liquidations': '',
+            'understanding_liquidations': '',
             'liquidation-examples': '',
             ___: {
                 type: 'separator',

@@ -14,8 +14,6 @@ When your loan becomes undercollateralised:
 
 Chainflip supports both **partial** and **full** liquidations depending on LTV and market volatility.
 
----
-
 ## What does over-collateralised mean?
 
 Chainflip Lending is an over-collateralised lending system, you must deposit more in collateral than the value of your loan.
@@ -26,8 +24,6 @@ This ensures:
 - The protocol can recover funds through liquidation
 - Users and lending pools are protected from insolvency
 
----
-
 ## What is Loan-to-Value (LTV)?
 
 LTV measures how much you've borrowed relative to your collateral's USD value.
@@ -37,7 +33,6 @@ Borrow 20,000 USDT with $100,000 BTC collateral → **LTV = 20%**
 
 If LTV exceeds the protocol’s liquidation threshold, your position may be partially liquidated.
 
----
 
 ## When does liquidation happen?
 
@@ -49,7 +44,6 @@ Liquidation occurs automatically when LTV exceeds the threshold, which can happe
 
 Before liquidation, Chainflip attempts **auto top-up** using your primary collateral asset.
 
----
 
 ## Can I avoid liquidation?
 
@@ -62,7 +56,6 @@ Yes. You can:
 
 Liquidation only occurs if no corrective action is taken.
 
----
 
 ## What happens after liquidation?
 
@@ -74,3 +67,44 @@ After liquidation:
 - You retain control of the loan if it wasn’t fully repaid
 
 Chainflip’s liquidation system is automated, incremental, and designed to minimise losses.
+
+## What happens after liquidation?
+
+After liquidation:
+
+- Liquidated value repays part (or all) of your loan
+- A small liquidation fee (e.g., 5 bps) on the liquidated amount is deducted
+- Remaining collateral is returned
+- You retain control of the loan if it wasn’t fully repaid
+
+Chainflip’s liquidation system is automated, incremental, and designed to minimise losses.
+
+
+## What is a soft liquidation?
+
+Soft liquidation is triggered when collateralisation drops below the soft threshold.
+
+The protocol submits small DCA-style liquidation orders with a minimum price slightly below the oracle value using Live Price Protection (LPP). LPs compete to fill these orders at near-market rates.
+
+Liquidation continues until:
+
+- the loan becomes healthy
+- the loan is fully repaid
+- collateral is exhausted
+
+Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.
+
+
+## What is a hard liquidation?
+
+Hard liquidation occurs when LTV becomes dangerously high, meaning soft liquidation was not enough.
+
+In a hard liquidation:
+
+- Trigger threshold is higher
+- Live price protection widens to 5%
+- Larger chunks of collateral may be sold
+- Execution prioritises speed
+- Still abortable if LTV improves
+
+Hard liquidation is designed for extreme market conditions.

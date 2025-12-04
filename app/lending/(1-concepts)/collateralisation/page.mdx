@@ -74,15 +74,22 @@ Liquidation continues until:
 - collateral is exhausted
 
 Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.
+Liquidation fee does not apply if it was triggered manually.
+However, if at any point during manual liquidation LTV crossess soft/hard liquidation threshold, it will lose its "manual" status, and liquidation fee will still apply (though only on the protion of collateral swapped during the non-manual period).
 
-> **Important:**
-> - When soft liquidation is triggered automatically, the system only swaps small chunks until LTV returns to healthy levels.
-> - When a borrower triggers manual liquidation, the entire collateral balance is swapped. Any excess remains in the collateral balance.
+<Callout type="info">
+**Key Behaviour to Understand**
+- When soft liquidation is triggered automatically, the system only swaps small chunks until LTV returns to healthy levels.
+- When a borrower triggers manual liquidation, the entire collateral balance is swapped. Any excess remains in the collateral balance.
+
+This distinction is important because manual liquidation will unwind the *entire* position immediately, while soft liquidation only corrects the LTV.
+</Callout>
+
 ---
 
 ### Hard Liquidation
 
-Hard liquidation activates if LTV falls below the hard threshold.
+Hard liquidation activates if LTV falls below the hard liquidation threshold.
 
 In this mode:
 

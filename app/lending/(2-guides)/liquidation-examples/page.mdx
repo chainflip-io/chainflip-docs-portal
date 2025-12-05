@@ -1,0 +1,70 @@
+---
+title: Liquidation Examples
+description: Realistic soft and hard liquidation walkthroughs
+---
+
+## Example 1: Partial (Soft) Liquidation
+
+A user borrows 100,000 USDC using 1 BTC as collateral.
+Initial LTV: 80%.
+Soft and hard liquidation thresholds: 90% and 95%.
+
+BTC drops to $110,000 → LTV rises to 91% → soft liquidation triggers.
+
+### Soft Liquidation Process
+
+- Liquidation splits into 10 × 0.1 BTC chunks
+- Each chunk swapped with 0.5% live price protection
+- LP competition typically executes swaps near market rate
+
+First chunk:
+
+- 0.1 BTC swapped for 10,980 USDC
+- 5 bps liquidation fee applied (~5.5 USDC)
+- Remaining 10,974.5 USDC repays loan
+
+Debt after first chunk: 89,025.5 USDC
+Collateral: 0.9 BTC
+LTV: 89.9%
+
+Soft liquidation continues until LTV falls below the “stability margin.”
+
+Second chunk executes → debt 78,051 USDC → collateral 0.8 BTC → LTV 88.7% → liquidation stops.
+
+Soft liquidation protected the position with minimal impact.
+
+
+## Example 2: Hard Liquidation
+
+Continuing from the earlier example (after the first chunk's execution):
+
+- Debt: 89,025.5 USDC
+- Collateral: 0.9 BTC
+
+BTC drops to $104,000 → LTV = 95.1% → hard liquidation triggers.
+
+### Hard Liquidation Process
+
+- Live price protection widens to 5%
+- Larger chunks sold
+- Priority shifts to execution speed
+
+0.8 BTC swapped over several executions:
+
+- ~79,200 USDC recovered
+- 5 bps fee applied (~39.6 USDC)
+
+Debt: 9,865.1 USDC
+Collateral: 0.1 BTC
+LTV: 94.9%
+
+Final chunk sold, loan fully repaid, and remaining USDC returned to the user.
+
+---
+
+## TL;DR
+
+- Chainflip liquidations are **incremental**, **automated**, and **fair**
+- Soft liquidation = gentle unwind
+- Hard liquidation = emergency mode
+- System gives many chances to top up or repay before selling collateral

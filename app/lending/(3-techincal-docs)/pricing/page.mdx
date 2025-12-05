@@ -1,0 +1,131 @@
+---
+title: Pricing & Execution
+description: How liquidation pricing, matching, and stress behaviour work in Chainflip Lending
+---
+
+## Pricing, Matching & Stress Behaviour
+
+### Pricing and Execution Fundamentals
+
+All liquidation activity and internal loan-related swaps are executed directly on the Chainflip DEX using the JIT AMM. This provides several consistent pricing characteristics:
+
+- LPs compete on price for every order
+- Execution generally occurs at or near market prices
+- Both soft and hard liquidations use oracle-indexed minimum prices via Live Price Protection (LPP)
+- No dependency on external liquidators or third-party settlement networks
+
+Because the DEX already processes large volumes of cross-chain swaps, liquidation flow is handled naturally as part of normal market-making activity.
+
+---
+
+### Matching Engine Behaviour
+
+The matching engine treats liquidation orders similarly to internal DCA-style swaps:
+
+- Orders are submitted in fixed-size chunks (per parameters)
+- Each chunk has a fill-or-kill behaviour per block
+- If not filled, a new order is submitted at updated oracle prices and LPP bounds
+- LPs may fill partial or full amounts based on their quoting strategy
+
+Liquidation orders remain fully permissionless, any LP can fill them.
+
+The system prioritises:
+
+- **Safety** (LPP limits)
+- **Fairness** (LP competition)
+- **Determinism** (consistent scheduling and update cadence)
+
+Liquidations do **not** override or block non-liquidation swaps; both types of flow coexist seamlessly.
+
+---
+
+### Behaviour During Soft Liquidation
+
+Soft liquidations behave like a controlled unwind:
+
+- Frequent, small liquidation chunks
+- Tight LPP bounds (e.g., ~0.5% below oracle)
+- LP competition ensures execution close to the live market
+- Liquidation halts automatically when LTV improves
+
+This approach reduces borrower losses and prevents unnecessary hard-liquidation escalation.
+
+---
+
+### Behaviour During Hard Liquidation
+
+When LTV breaches the hard threshold:
+
+- Liquidation chunks increase in size
+- LPP minimums widen (e.g., up to ~5% below oracle)
+- Submission cadence remains block-by-block
+- LPs still compete on price, keeping execution near fair value
+
+LP competition continues to anchor fills to market rates.
+
+---
+
+### Handling Many Liquidations Simultaneously
+
+Chainflip is designed to handle large-scale liquidation events **without degrading normal swap UX**.
+
+During high-stress periods:
+
+- Quotes remain available
+- Refund logic in the DEX behaves normally
+- LP bots continue operating
+- Liquidation and non-liquidation flow are matched simultaneously
+- Competing LPs naturally rebalance inventories via external venues
+
+The DEX’s architecture avoids the “clear the books first” behaviour seen in more primitive AMMs.
+
+---
+
+### LP Behaviour and Strategy Under Stress
+
+LPs may adjust spreads or participation during heavy liquidation flow. Important properties:
+
+- Liquidation opportunities appear as normal LP fill opportunities
+- LPs quote based on available liquidity on-chain and externally
+- Inventory-sensitive bots (hedged/asymmetric) can adapt dynamically
+- No LP has priority, the system remains fully permissionless
+
+Pricing remains competitive because:
+
+- many LPs operate concurrently
+- liquidation orders update every block
+- oracle pricing stabilises minimum bounds
+
+Chainflip’s DEX has proven the ability to rebalance across severe global volatility.
+
+---
+
+### Swapper UX During Liquidations
+
+Normal user swaps continue unaffected:
+
+- Quotes remain real-time
+- LPP continues to protect users
+- Refunds follow standard logic
+- Execution latency remains stable
+
+Liquidations do **not** block or override normal swaps; they run on the same schedule and fill conditions.
+
+This is a major advantage versus systems where liquidations compete for gas or block space (e.g., Ethereum).
+
+---
+
+### Summary of Stress Behaviour Guarantees
+
+Chainflip’s pricing and matching engine ensures:
+
+- Deterministic execution
+- Oracle-anchored pricing
+- Block-by-block liquidation progression
+- Fair LP competition
+- No privileged liquidators
+- Swapper UX remains intact
+- DEX behaviour remains stable under load
+- Gradual unwinding instead of catastrophic liquidation
+
+These properties significantly reduce the risk of cascading failures common in external-liquidator models.

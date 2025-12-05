@@ -78,11 +78,8 @@ Liquidation fee does not apply if it was triggered manually.
 However, if at any point during manual liquidation LTV crossess soft/hard liquidation threshold, it will lose its "manual" status, and liquidation fee will still apply (though only on the protion of collateral swapped during the non-manual period).
 
 <Callout type="info">
-**Key Behaviour to Understand**
-- When soft liquidation is triggered automatically, the system only swaps small chunks until LTV returns to healthy levels.
-- When a borrower triggers manual liquidation, the entire collateral balance is swapped. Any excess remains in the collateral balance.
-
-This distinction is important because manual liquidation will unwind the *entire* position immediately, while soft liquidation only corrects the LTV.
+Note that since liquidation swaps are processed in discrete chunks, the final chunk may result in some excess of the loan asset after fully repaying the loan.
+Any excess amount obtained this way will be added to the user's collateral.
 </Callout>
 
 ---

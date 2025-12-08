@@ -1,0 +1,146 @@
+---
+title: How to Borrow
+description: How to deposit collateral, move assets into your collateral balance, and open a loan on Chainflip.
+---
+import { Callout } from "nextra/components";
+
+# How to Borrow
+
+Borrowing on Chainflip requires **collateral**.
+
+Before you can open a loan, the assets you want to use as collateral must be:
+
+1. **Deposited** into your State Chain account
+2. **Moved** into your **collateral balance** (a dedicated sub-account for securing loans)
+
+Borrowing therefore works in three stages:
+
+1. Deposit funds into your State Chain account
+2. Transfer funds into your collateral balance
+3. Open a loan against that collateral
+
+Below is the full step-by-step process.
+
+## 1. Connect Your Wallet
+
+Start by connecting either:
+
+- an **EVM wallet** (MetaMask, Rabby, etc.), or
+- a **Polkadot.js wallet**
+
+Connecting authenticates your **State Chain account**, where:
+
+- balances
+- collateral
+- loans
+- repayment logic
+
+all live.
+
+<Callout type="info">
+  Your connected wallet is **not** the wallet holding your collateral - it only authenticates your account.
+</Callout>
+
+## 2. Deposit an Asset (Required Before You Can Borrow)
+
+To borrow, your collateral must first exist inside the Chainflip system.
+
+### How to deposit:
+
+1. Go to the **Deposit** section
+2. Select the asset you want to use as collateral
+3. Chainflip generates a **native deposit channel**
+4. Send funds to the deposit address from any wallet or exchange
+5. Once confirmed, your balance appears under **Balances**
+
+This balance is **not yet collateral** — you must transfer it in the next step.
+
+### Supported native deposit channels
+
+- **BTC → Bitcoin**
+- **ETH / USDC / USDT → Ethereum**
+- **SOL → Solana**
+
+> No bridging, no wrapping — all assets remain fully native.
+
+## 3. Move Assets Into Collateral
+
+Collateral is separate from your normal account balance.
+
+You can move assets into your collateral balance from the **Borrow** tab using the **Manage Collateral** CTA.
+
+### Steps:
+
+1. Open the **Borrow** modal
+2. Click **Add Collateral**
+   - This opens the *Transfer Funds* modal
+3. Select the asset from your account balance
+4. Enter the amount to move
+5. Confirm
+
+Once moved, the asset becomes **collateral** and can be used to secure a loan.
+
+### Important:
+
+- Your **first time borrowing** requires adding collateral before opening a loan
+- Collateral remains fully native and secured in Chainflip’s **TSS vaults**
+
+## 4. Your Primary Collateral Asset (PCA)
+
+Your **Primary Collateral Asset (PCA)** is selected automatically based on the first asset you move into your collateral account.
+You can change your PCA at any time from the **Borrow** tab.
+
+The PCA is the preferred asset the protocol uses when:
+
+- auto-top-ups trigger near liquidation thresholds (85%+ LTV)
+
+Make sure your **account balance** has enough of your selected PCA to support automatic top-ups.
+
+You can change your PCA at any time if you prefer a different asset to be used for top-ups.
+
+## 5. Open a Loan
+
+Once you have collateral:
+
+1. Go to the **Borrow** section
+2. Choose the asset to borrow (e.g., USDC, USDT)
+3. Choose the loan amount or select the appropriate LTV
+4. Confirm the loan
+
+### After confirming:
+
+- After confirming, you’ll be taken to **Borrow → My Position**, where you can see your loan details, collateral levels, and repayment options.
+- Borrowed funds appear in your **State Chain account balance**.
+- They can be withdrawn at any time
+- Interest accrues **every 10 blocks**, denominated in the borrowed asset
+
+## 6. Withdraw Borrowed Funds to Any Chain
+
+Borrowed funds can be withdrawn natively:
+
+- **USDC / USDT → Ethereum**
+- **BTC → Bitcoin**
+- **SOL → Solana**
+
+Withdrawals are executed through Chainflip vaults.
+
+## 7. Manage Your Position
+
+At any time, you can:
+
+- Add more collateral
+- Repay loans partially or fully
+- Swap assets inside the State Chain account before repaying
+- Withdraw excess collateral (as long as LTV remains healthy)
+
+Your LTV updates **every block** based on oracle prices.
+Learn more in the [Oracle documentation](/lending/oracles).
+
+## 8. Repay Loans
+
+You can repay using assets in your **State Chain account balance**.
+
+Once your debt reaches zero:
+
+- The loan closes automatically
+- All remaining collateral becomes withdrawable

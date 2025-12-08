@@ -24,6 +24,34 @@ export default {
         type: 'page',
         display: 'hidden'
     },
+    lending: {
+        type: 'page',
+        title: <span className="badge-success after:content-['New']">Lending</span>,
+        items: {
+            index: '',
+            'concepts': '',
+            'supply': '',
+            'utilisation': '',
+            'collateralisation': '',
+            'fees': '',
+            'FAQ': '',
+            __: {
+                type: 'separator',
+                title: 'Guides'
+            },
+            'how-to-supply': '',
+            'how-to-borrow': '',
+            'understanding_liquidations': '',
+            'liquidation-examples': '',
+            ___: {
+                type: 'separator',
+                title: 'Technical Reference'
+            },
+            'oracles': '',
+            'pricing': '',
+            'economic': '',
+        },
+    },
     protocol: {
         type: 'page',
         title: 'The Protocol',

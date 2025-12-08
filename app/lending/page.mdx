@@ -1,0 +1,44 @@
+---
+title: Chainflip Lending
+description: Chainflip Lending introduction
+---
+
+import ThemedImage from "../_components/themed-image";
+import { Cards } from "nextra/components";
+
+## Introduction
+
+### What is Chainflip Lending?
+
+Chainflip Lending extends the existing Chainflip cross-chain infrastructure with permissionless, overcollateralised lending and borrowing. Users can supply and borrow assets natively using BTC, ETH, SOL, or other supported assets as collateral, all without wrapping, bridging, or leaving their native wallet environment.
+
+Deposited assets are held in Chainflip Vaults using a 100-of-150 threshold signature scheme. Borrowers can then create loan positions to borrow USDC, USDT, or other supported assets, and withdraw them directly to any wallet.
+
+See the [Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview) and the [Vault System](https://docs.chainflip.io/protocol/vaults/bitcoin-vault-design) for more details on native custody.
+
+The lending market uses a utilisation-curve interest model similar to established DeFi lending protocols such as
+[Aave](https://aave.com/docs) and [Morpho](https://docs.morpho.org/get-started/), and leverages Chainflip’s existing cross-chain swapping infrastructure to manage and process liquidations in the event of a default.
+
+For more background on the underlying system architecture, see
+[System Overview](https://docs.chainflip.io/protocol/protocol-overview#system-overview).
+
+---
+
+## Who is this for?
+
+### Borrowers
+Users who want to unlock the underlying value of their crypto assets while maintaining full exposure to the upside of their holdings, without triggering a sale.
+
+**Example:**
+A user has 1 BTC and takes out a 50,000 USDC loan to invest or cover real-world expenses, while keeping BTC upside exposure throughout the loan.
+
+### Yield Seekers
+Users supplying stablecoins or other supported assets to earn yield driven by borrower demand, protected by overcollateralisation and liquidations executed directly via Chainflip’s native cross-chain DEX.
+
+### Liquidity Providers
+All Liquidity Providers in the Chainflip trading system can benefit from profitable liquidation trades in their usual course of business in the cross-chain [JIT AMM](https://docs.chainflip.io/protocol/just-in-time-amm-protocol#just-in-time-amm-protocol) market.
+
+### Integrators
+Partners utilising the Chainflip SDK and related tools can offer these in-app lending and borrowing opportunities to their users and collect a share of the fees, enabling a seamless multichain DeFi experience.
+
+---

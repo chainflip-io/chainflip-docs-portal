@@ -1,0 +1,118 @@
+---
+title: Markets & Risk Parameters
+description: Market isolation, parameter configuration, and risk considerations in Chainflip Lending
+---
+
+## Markets, Parameters & Risk
+
+### Isolated Lending Markets
+
+Each asset in Chainflip Lending has its own isolated lending market.
+
+This means:
+
+- Supplying USDC exposes the user only to USDC borrower behaviour
+- Borrowing against BTC collateral does not affect the ETH market
+- Losses or liquidations in one market cannot spill over into another
+
+This isolation ensures predictable risk for suppliers and straightforward market growth as new assets are added.
+
+---
+
+### Per-Asset Parameters
+
+Every lending market defines a set of core parameters that determine:
+
+- minimum collateralisation requirements
+- soft and hard liquidation thresholds
+- interest rate behaviour
+
+These parameters are calibrated per asset, according to liquidity depth, volatility, and suitability as collateral.
+
+Current parameters used in closed beta testing are intentionally aggressive and will be made more conservative at public launch.
+
+---
+
+### LTV Thresholds
+
+The following thresholds govern loan creation and liquidation behaviour:
+
+- **Minimum Creation LTV: 80%**
+  Maximum LTV allowed when opening a new loan
+- **Auto Top-Up Trigger: 85%**
+  Auto-collateralisation begins adding collateral here
+- **Soft Liquidation Threshold: 90%**
+  Triggers soft liquidation
+- **Soft Liquidation Abort: 88%**
+  LTV required to stop soft liquidation
+- **Hard Liquidation Threshold: 95%**
+  Triggers hard liquidation
+- **Hard Liquidation Abort: 93%**
+  Drops from hard → soft liquidation once reached
+
+These thresholds may change as the system matures and liquidity grows.
+
+---
+
+### Minimum Operational Amounts
+
+To keep the system efficient and avoid excessive “micro-transactions”, a few minimum amounts apply:
+
+- **Minimum Supply Amount:** $100
+- **Minimum Loan Creation Amount:** $100
+- **Minimum Loan Update Amount:** $10
+- **Minimum Collateral Add/Remove:** $10
+
+These minimums ensure consistent UX and reduce unnecessary State Chain load.
+
+---
+
+### Liquidation Execution Parameters
+
+Liquidation orders follow defined size and slippage limits to ensure predictable behaviour for LPs and borrowers.
+
+#### Soft Liquidation
+
+- **Swap Chunk size:** $10,000
+- **Slippage limit:** 0.5% below oracle price
+- **Submitted:** once per block
+
+#### Hard Liquidation
+
+- **Swap Chunk size:** $50,000
+- **Slippage limit:** 5% below oracle price
+- **Submitted:** once per block
+
+LPs compete on price, so execution usually remains very close to market rates, even during hard liquidation.
+
+---
+
+### Supported Assets
+
+At launch, Chainflip Lending supports:
+
+- **BTC**
+- **USDC, USDT, ETH on Ethereum**
+- **SOL on Solana**
+
+Additional assets may be added progressively as liquidity improves and risk parameters are evaluated.
+
+---
+
+### Risk Considerations
+
+Chainflip Lending is designed to minimise systemic risk through:
+
+- Isolated markets
+- Oracle-driven collateral valuations
+- Early, gradual liquidations (rather than all or nothing)
+- Integrated DEX execution, reducing dependency on external liquidators
+- Auto-top-up, preventing accidental liquidations
+
+However, lenders may be exposed to:
+
+- socialised losses in rare scenarios where collateral is insufficient in an attempt to fully liquidate a loan
+- periods of high utilisation, causing higher borrow rates
+- oracle outages, temporarily pausing liquidations and new loan creation
+
+Overall, risk is tightly scoped to each asset pool and side, making the system predictable and transparent.

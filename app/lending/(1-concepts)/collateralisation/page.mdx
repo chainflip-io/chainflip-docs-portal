@@ -1,0 +1,107 @@
+---
+title: Collateral & Liquidations
+description: How LTV, collateralisation, and liquidations work in Chainflip Lending
+---
+import { Callout } from "nextra/components";
+
+## Collateralisation & Liquidations (LTV & Liquidation Thresholds)
+
+### Collateralisation and LTV
+
+Chainflip Lending uses external oracle prices to determine loan collateralisation and liquidation thresholds. This prevents internal pool price movements from affecting loan safety. Because Chainflip supports only highly liquid assets, concerns often associated with oracle dependency are significantly reduced.
+
+Collateral values are sourced from Chainlink feeds witnessed by the validator network across Ethereum and Arbitrum for redundancy. These oracle prices determine loan health through the Loan-to-Value ratio (LTV):
+
+<div style={{ textAlign: "left" }}>
+$$
+\text{LTV} = \frac{\text{Loan Value}}{\text{Collateral Value}}
+$$
+</div>
+
+A minimum collateralisation level is required (enforcing maximum LTV) when creating a loan. Borrowers can freely add more collateral at any time.
+
+If a user maintains an excessively low LTV (high overcollateralisation), a gradually increasing **Low LTV Penalty** is applied. This penalty is **0% at 50% LTV** and increases **linearly up to 1% APR as LTV approaches 0%**.  
+This discourages locking up unnecessary collateral that reduces system-wide economic security.
+
+Chainflip supports multi-collateral accounts. The oracle value of all supported collateral assets is combined to determine total collateral value for LTV calculation.
+
+---
+
+### Oracle Safety Controls
+
+To protect borrowers and the system:
+
+- Liquidations halt if oracle prices become stale
+- New loan creation halts while oracles are stale
+- Borrowers may still repay, add collateral, or close positions during these pauses
+
+Future versions will support additional safety mechanisms like taking Chainflip's own DEX  prices into account.
+
+---
+
+### Auto-Collateralisation
+
+Borrowers may enable auto-top-up, which uses free balance in the State Chain account in their asset of choice to automatically increase collateral when LTV approaches the soft liquidation threshold. Auto-top-up prevents liquidation as long as the borrower has sufficient available balance. Note that for the Beta launch, Auto Top up will be disabled.
+
+---
+
+### Liquidation Overview
+
+Chainflip performs liquidations directly through its own cross-chain DEX. This provides two major advantages over traditional lending platforms:
+
+- Support for Patrial Liquidations: The protocol liquidates only what's necessary to bring LTV back to a safe range
+- Execution is native: LPs fill liquidation orders directly, removing the need for external liquidators demanding steep discounts
+
+<Callout type="info">
+Chainflip does not use external liquidators.
+All liquidation orders are filled natively by LPs on the DEX, using the same quoting logic they use for regular swaps.
+This removes the need for specialist liquidators or discounted auctions found in other lending protocols.
+</Callout>
+
+Liquidations begin when LTV crosses soft or hard liquidation thresholds.
+
+---
+### Soft Liquidation
+
+Soft liquidation is triggered when **collateralisation** drops below the soft threshold.
+
+The protocol submits small DCA-style liquidation orders with a minimum price slightly below the oracle value using Live Price Protection (LPP). LPs compete to fill these orders at near-market rates.
+
+Liquidation continues until:
+
+- the loan becomes healthy
+- the loan is fully repaid
+- collateral is exhausted
+
+Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.
+Liquidation fee does not apply if it was triggered manually.
+However, if at any point during manual liquidation LTV crossess soft/hard liquidation threshold, it will lose its "manual" status, and liquidation fee will still apply (though only on the protion of collateral swapped during the non-manual period).
+
+<Callout type="info">
+Note that since liquidation swaps are processed in discrete chunks, the final chunk may result in some excess of the loan asset after fully repaying the loan.
+Any excess amount obtained this way will be added to the user's collateral.
+</Callout>
+
+---
+
+### Hard Liquidation
+
+Hard liquidation activates if LTV falls below the hard liquidation threshold.
+
+In this mode:
+
+- liquidation chunks are larger
+- oracle-indexed discount limits widen (up to 5%)
+- orders are submitted more aggressively
+
+Despite wider limits, LPs still compete on price, so execution generally remains close to market rates.
+
+The maximum liquidation loss for borrowers is **5% of the loaned asset**, similar to Aave
+
+---
+
+### Insufficient Collateral and Socialised Losses
+
+If collateral cannot fully cover the loan after liquidation, an extremely rare scenario, losses are socialised among lenders of **that specific asset only**. Other assets and markets remain unaffected.
+
+Historical behaviour across major liquidation events (e.g., Oct 10th 2025) suggests the Chainflip DEX can process such scenarios with minimal systemic impact.

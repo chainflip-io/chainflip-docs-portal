@@ -109,7 +109,7 @@ export default $`
   }
 })
 
-export const useMDXComponents: UseMDXComponents<typeof docsComponents> = <T,>(
+export const useMDXComponents: any = <T,>(
   components?: T
 ) => ({
   ...docsComponents,

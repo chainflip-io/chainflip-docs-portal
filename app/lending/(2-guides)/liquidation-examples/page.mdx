@@ -5,8 +5,10 @@ description: Realistic soft and hard liquidation walkthroughs
 
 ## Example 1: Partial (Soft) Liquidation
 
-A user borrows 100,000 USDC using 1 BTC as collateral.
+A user borrows 100,000 USDC using 1 BTC (125,000$) as collateral.
+
 Initial LTV: 80%.
+
 Soft and hard liquidation thresholds: 90% and 95%.
 
 BTC drops to $110,000 → LTV rises to 91% → soft liquidation triggers.
@@ -23,9 +25,9 @@ First chunk:
 - 5 bps liquidation fee applied (~5.5 USDC)
 - Remaining 10,974.5 USDC repays loan
 
-Debt after first chunk: 89,025.5 USDC
-Collateral: 0.9 BTC
-LTV: 89.9%
+Debt after first chunk → 89,025.5 USDC 
+→ Collateral: 0.9 BTC 
+→ LTV: 89.9%
 
 Soft liquidation continues until LTV falls below the “stability margin.”
 

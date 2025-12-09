@@ -168,13 +168,13 @@ This raises some questions about whether a collusion attack is even possible in 
 
 In sophisticated collusion attempts, the attack could rapidly collapse and if sufficient evidence is gained, any complicit validator could be slashed through community action before the attack has even started. The threat of exposure alone is potentially enough of a deterrent to make Validator operators think twice before even considering this. Right away, we have hit a potentially fatal problem for actual supermajority attackers, but for the purposes of continuing this analysis, we’ll assume that collusion is possible if it’s profitable to do so.
 
-Assuming the vast majority of validators are financially motivated and aren’t interested in losing money on this attack, we can say that so long as the Explotable Value (EV) remains below the Cost to Majority Attack (CMA), the system is secure against financially motivated supermajority attacks, including both attacks through collusion and unilateral supermajority attacks.
+Assuming the vast majority of validators are financially motivated and aren’t interested in losing money on this attack, we can say that so long as the Exploitable Value (EV) remains below the Cost to Majority Attack (CMA), the system is secure against financially motivated supermajority attacks, including both attacks through collusion and unilateral supermajority attacks.
 
 ### Assessing Exploitable Value (EV)
 
 The first question to answer is: How much money can be taken during a supermajority attack? If the attacker really does have unilateral control over the supermajority needed, then they can take  all of the non-native FLIP funds immediately - even in the Vault smart contracts.
 
-All smart contract based Vaults can be frozen by the Governance Council. Wehn activated in the smart contract, the Validators will no longer be able to process egress transactions from that Contract Vault. It is assumed that Safe Mode may already be active at this time in most scenarios, so this could already be the case, but does add an additional layer of protection for the large pools of liquid funds held in these vaults. However, in a Supermajority scenario, these protections mean nothing. In a very short window of time, a colluding supermajority could move all funds to wallets or contracts in their direct control before any of the governance functions could be called to protect the funds held in these contract vaults.
+All smart contract based Vaults can be frozen by the Governance Council. When activated in the smart contract, the Validators will no longer be able to process egress transactions from that Contract Vault. It is assumed that Safe Mode may already be active at this time in most scenarios, so this could already be the case, but does add an additional layer of protection for the large pools of liquid funds held in these vaults. However, in a Supermajority scenario, these protections mean nothing. In a very short window of time, a colluding supermajority could move all funds to wallets or contracts in their direct control before any of the governance functions could be called to protect the funds held in these contract vaults.
 
 However, FLIP held on the State Chain Gateway cannot be traded and requires a 2-day withdrawal process to move on Ethereum where it could be sold. The StateChain Gateway is also protected by governance protections on Ethereum and effectively means that attackers can not expect to steal the locked stakes of other validators or recover any value from their own stakes by supermajority attack.
 
@@ -286,7 +286,9 @@ Despite an expected increase in the network’s value due to the increased netwo
 One could argue that the network becomes inherently more valuable if the TVL grows, as game theoretically, the FLIP used to secure the network becomes more valuable to a potential attacker as the value held in the protocol also grows. However, this is only true if users do not care about the potential of such an attack, which is unlikely to be indefinitely true if it becomes unclear that the network is being controlled by honest actors.
 
 As such, the protocol stakeholders should consider implementing a system which limits the potential upside of such an attack, and makes it economically unviable to do so.
-Guarded Vaults
+
+### Guarded Vaults
+
 Similar to how centralised exchanges have a ‘hot’ and ‘cold’ storage system, where system funds are held in a mix of wallets with differing security properties, Chainflip could also implement a system which secures a percentage of the network’s funds in a secondary vault with different security properties.
 
 A ‘Guarded’ vault is a secondary vault in which excess funds are stored by the protocol. Unlike the standard vaults, guarded vaults use one or more entities external to the network to perform the role of a known honest actor. Along with the standard 100 of 150 keygen and signing process, transactions from Guarded Vaults also require the signature of a Guardian (which could consist of one or more signers) in a secondary round to complete a signing ceremony successfully.

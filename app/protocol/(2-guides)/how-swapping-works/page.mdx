@@ -30,7 +30,7 @@ All of the above methods will register the swap and essential information, such 
 - Destination address
 - Any additional call data for a follow-on Cross-Chain Message (CCM), such as a Uniswap or external Bridge call
 
-Once a method is chosen, the user can send their funds on the external chain (BTC, Ethereum, to be swapped in accordance with their chosen method.
+Once a method is chosen, the user can send their funds on the external chain (ie. BTC, Ethereum) to be swapped in accordance with their chosen method.
 
 <Callout type="info">
   Deposit Channels remain open for 24 hours. After that time, the network may no
@@ -59,7 +59,7 @@ At the end of each block, Swaps are automatically bundled and processed. This is
 
 - For each asset in each pool, swaps that take place in the same block are bundled together and swapped in one step to eliminate frontrunning and MEV potential. This is done separately for each direction of trade.
 - For swap routes that require multiple swaps through pools, for example, BTC -> USDC -> ETH, each swap is conducted sequentially, usually in the same block.
-- Whenever the swap input is first denominated in USD, the Chainflip Network fee is deducted. This could be at the start, middle, or end of swap processing depending on the route. This always occurs at some stage in the swapping process as a function of having [USDC denominated pools](/protocol/usdusdc-denominated-pools "mention").
+- Whenever the swap input is first denominated in USDC, the Chainflip Network fee is deducted. This could be at the start, middle, or end of swap processing depending on the route. This always occurs at some stage in the swapping process as a function of having [USDC denominated pools](/protocol/usdusdc-denominated-pools "mention").
 - For each swap conducted, liquidity fees are collected and the output is forwarded to the next step.
 
 Once all required swaps have been completed, the swap output is ready for the final stage of processing.
@@ -82,5 +82,7 @@ The user now has their shiny new native assets sitting peacefully in their walle
 | :-------------------------------------------------------------- | :----------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Deposit Gas Fees (Normal User Transfer)                         | Varies per chain and deposit type, but usually 31k gas on Ethereum | Network gas fees will vary depending on the incoming chain. Coming from BTC will differ from those coming from ETH for example. These will be paid by the swapper when they deposit from their wallet.           |
 | Liquidity Fee Per Pool                                          | 0.10% - 0.15%                                                      | Fixed Liquidity Provider Fee (Pool Defined)                                                                                                                                                                      |
-| Network Fee for Buy/Burn Mechanism                              | 0.10% - 0.125%                                                     | Fixed Network Fee used by the protocol to buy FLIP tokens from the USDC-FLIP pool on the State Chain, which in turn are burnt. This includes 0.1% base network fee plus 0.025% from the Boost fee contributions. |
+| Network Fee for Buy/Burn Mechanism                              | 0.10% (0.01% for stablecoins) $0.5 USD minimum                     | Fixed Network Fee used by the protocol to buy FLIP tokens from the USDC-FLIP pool on the State Chain, which in turn are burnt.                                                                                   |
 | Destination Chain Transfer Broadcast Fee (Transfer by Protocol) | Varies per chain                                                   | Network gas fees will vary depending on the withdrawal chain. Batching, however, will lower the fee that would normally be paid.                                                                                 |
+| Refund Fee (If Applicable)                                      | Same as network fee minimum for the asset ($0.5 USD).              | If part or all of a swap request fails, the remaining funds are returned to the user minus the refund fee. Still subject to Broadcast fees.                                                                      |
+| Boost Fee (Optional)                                            | 0.05% - 0.3%                                                       | If a swap is [boosted](/protocol/boost), this fee is applied using the lowest available boost pool fee tier. Payed to the liquidity providers in the boost pool.                                                 |

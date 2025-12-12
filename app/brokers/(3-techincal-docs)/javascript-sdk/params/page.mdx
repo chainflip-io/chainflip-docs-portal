@@ -72,7 +72,8 @@ not be refunded.
   checked on the AMM level and do not include deposit or broadcast fees.
 </Callout>
 
-#### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 const fillOrKillParams = {
@@ -83,6 +84,7 @@ const fillOrKillParams = {
     quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
 };
 ```
+</details>
 
 ### `ccmParams`
 
@@ -95,7 +97,8 @@ to a receiver contract/program on the destination chain.
 | `gasBudget` (required)         | Gas budget for the call on the destination chain. This amount is the amount of gas or compute units required by the user logic on the destination chain. | `number`  |
 | `ccmAdditionalData` (optional) | Additional bytes required for the CCM call on the destination chain. This is required for Solana to pass the accounts that are required for the call.    | `string`  |
 
-#### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 const ccmParams = {
@@ -103,3 +106,4 @@ const ccmParams = {
   gasBudget: 250_000,
 };
 ```
+</details>

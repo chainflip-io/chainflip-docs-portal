@@ -26,7 +26,8 @@ An array of objects for all existing boost pools, each with the following fields
 - `tier`: (Number) [Fee Tier](#fee-tier) Fee in basis points charged by this pool 
 - `available_amount`: (String) [Amount](//lp/lp-api/types#amount) - Maximum amount of `asset` that the pool can boost at the moment
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Requesting available amounts in all boost pools at latest block.
 
@@ -58,8 +59,8 @@ Response:
     "available_amount": "0x0"
   }
 ]
-
 ```
+</details>
 
 ### `cf_boost_pool_details`
 
@@ -96,7 +97,8 @@ An array of objects for each of the queried pools, each containing the following
     - `account_id`: (String) [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
     - `pending_deposits`: (Array of Numbers) - An array of ids of pending deposits (each represented by `number`) that `account_id` contributed to.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Requesting detailed state of each Bitcoin boost pool as of the latest block.
 
@@ -188,6 +190,7 @@ Response:
   }
 ]
 ```
+</details>
 
 
 ### `cf_boost_pool_pending_fees`
@@ -216,7 +219,8 @@ A list of items each containing the following fields:
         - `amount`: [Amount](//lp/lp-api/types#amount) - amount in fees to be credited to `account_id` upon `deposit_id`'s finalisation
 
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Requesting fees of pending boosts from all pools as of the latest block.
 
@@ -266,3 +270,4 @@ Response:
   }
 ]
 ```
+</details>

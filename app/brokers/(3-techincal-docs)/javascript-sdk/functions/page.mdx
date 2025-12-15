@@ -29,10 +29,10 @@ type ChainData = {
 | ------------------------ | --------------------------------------------------------------------------------------------------------- | :-------: |
 | `sourceChain` (optional) | Chain ID that allows to filter the returned array to contain only destination chains for the given chain. |  `Chain`  |
 
+If a `sourceChain` is provided, it returns the supported swap destination chains for that specific source chain.
+
 <details>
 <summary>Example</summary>
-
-If a `sourceChain` is provided, it returns the supported swap destination chains for that specific source chain.
 
 ```typescript copy
 import { Chains } from "@chainflip/sdk/swap";
@@ -693,9 +693,7 @@ type VaultSwapResponse =
 ```
 
 <details>
-<summary>Example</summary>
-
-#### Ethereum vault swap
+<summary>Example: Ethereum vault swap</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -768,7 +766,8 @@ const status = await swapSDK.getStatusV2({ id: receipt.hash });
 ```
 </details>
 
-#### Bitcoin vault swap (Boosted)
+<details>
+<summary>Example: Bitcoin vault swap (Boosted)</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -882,8 +881,10 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
     Per the Bitcoin protocol, the change UTXO amount *cannot* be zero and must be larger than Bitcoin's dust threshold for the change address type. Therefore it is not possible to swap the entire amount of the input UTXOs, a dust amount needs to be sent to the change address.
 
 </Callout>
+</details>
 
-#### Solana vault swap
+<details>
+<summary>Example: Solana vault swap</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -968,6 +969,7 @@ const status = await swapSDK.getStatusV2({ id: signature });
   ]
 }
 ```
+</details>
 
 ## `encodeCfParameters`
 

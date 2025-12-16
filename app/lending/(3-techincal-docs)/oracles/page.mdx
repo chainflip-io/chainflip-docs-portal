@@ -44,18 +44,18 @@ For more background, see **Protocol Overview → Vaults & Security**.
 
 All lending operations: loan creation, collateral updates, repayments, interest accrual, and liquidation scheduling, are executed on the Chainflip State Chain, a custom Rust-based chain designed for:
 
-- deterministic execution  
-- fast block times  
-- validator-based consensus  
-- cross-chain event tracking  
-- batching and sequencing of swaps and liquidations  
+- Deterministic execution  
+- Fast block times  
+- Validator-based consensus  
+- Cross-chain event tracking  
+- Batching and sequencing of swaps and liquidations  
 
 Because the State Chain powers both the DEX and Lending:
 
-- risk parameters are enforced at the consensus level  
-- liquidations execute natively using on-chain logic  
+- Risk parameters are enforced at the consensus level  
+- Liquidations execute natively using on-chain logic  
 - DEX liquidity and Lending collateral are always in sync  
-- safety rules (oracle checks, paused states, etc.) apply uniformly  
+- Safety rules (oracle checks, paused states, etc.) apply uniformly  
 
 ---
 
@@ -63,10 +63,10 @@ Because the State Chain powers both the DEX and Lending:
 
 Chainflip’s cross-chain infrastructure has processed **$5.1B+ in cumulative swap volume** since late 2023 with:
 
-- multiple external audits  
-- zero major security incidents  
-- high operational uptime  
-- proven performance during periods of severe market volatility  
+- Multiple external audits  
+- Zero major security incidents  
+- High operational uptime  
+- Proven performance during periods of severe market volatility  
 
 Lending inherits the same security posture, operational track record, and validator-secured vault design that underpin the DEX.
 

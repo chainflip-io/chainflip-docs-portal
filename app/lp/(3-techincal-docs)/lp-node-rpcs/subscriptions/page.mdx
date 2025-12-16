@@ -45,7 +45,8 @@ where `ScheduledSwap` contains the following details of an upcoming swap as a js
 - `remaining_chunks`: number - The number of swap chunks of the same size that are remaining for this request.
 - `chunk_interval`: number - The number of blocks between each swap chunk (a new chunk will not be scheduled until the previous one succeeds). Each block is 6 seconds.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 ```json copy
 wscat -c ws://localhost:9944
@@ -168,6 +169,7 @@ The notification for the next block (85) would look like the following under thi
     ]
 }
 ```
+</details>
 
 Using `swap_id` to identify swaps, swap 1 has already been executed and is thus not present. However, swap 2 appears again as it is still scheduled for execution in the next block.
 In practice a swap can be expected to appear in at least two websocket notifications.
@@ -195,7 +197,8 @@ Returns:
 - `sqrt_price`: [Square Root Price](/lp/lp-api/types#square-root-price)
 - `tick`: [Tick](/lp/lp-api/types#tick)
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Subscribe:
 ```json copy
@@ -230,6 +233,7 @@ Notification:
     }
 }
 ```
+</details>
 
 ### `cf_subscribe_pool_price_v2`
 
@@ -250,7 +254,8 @@ Returns:
 - `buy`: Option\<[Square Root Price](/lp/lp-api/types#square-root-price)\>
 - `range_order`: [Square Root Price](/lp/lp-api/types#square-root-price)
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Subscribe:
 ```json
@@ -295,3 +300,4 @@ Notification:
    }
 }
 ```
+</details>

@@ -29,9 +29,10 @@ type ChainData = {
 | ------------------------ | --------------------------------------------------------------------------------------------------------- | :-------: |
 | `sourceChain` (optional) | Chain ID that allows to filter the returned array to contain only destination chains for the given chain. |  `Chain`  |
 
-### Example
-
 If a `sourceChain` is provided, it returns the supported swap destination chains for that specific source chain.
+
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 import { Chains } from "@chainflip/sdk/swap";
@@ -60,6 +61,7 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
   },
 ];
 ```
+</details>
 
 ## `getAssets`
 
@@ -87,7 +89,8 @@ type AssetData = {
 | :----------------- | :------------------ | :-------: |
 | `chain` (optional) | The ID of the chain |  `Chain`  |
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 import { Chains } from "@chainflip/sdk/swap";
@@ -127,6 +130,7 @@ console.log(await swapSDK.getAssets(Chains.Ethereum));
   },
 ]
 ```
+</details>
 
 ## `getQuoteV2`
 
@@ -248,7 +252,8 @@ interface BoostedQuoteDetails extends QuoteDetails {
   Pools](/protocol/usdusdc-denominated-pools).
 </Callout>
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
@@ -347,6 +352,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
   ],
 }
 ```
+</details>
 
 ## `requestDepositAddressV2`
 
@@ -460,7 +466,8 @@ const sdk = new SwapSDK({
 });
 ```
 
-### Example
+<details>
+<summary>Example</summary>
 
 #### Regular Deposit Address
 
@@ -526,6 +533,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
   channelOpeningFee: 0n
 }
 ```
+</details>
 
 #### Boostable Deposit Address
 
@@ -684,9 +692,8 @@ type VaultSwapResponse =
     };
 ```
 
-### Example
-
-#### Ethereum vault swap
+<details>
+<summary>Example: Ethereum vault swap</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -757,8 +764,10 @@ const status = await swapSDK.getStatusV2({ id: receipt.hash });
   sourceTokenAddress: '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238'
 }
 ```
+</details>
 
-#### Bitcoin vault swap (Boosted)
+<details>
+<summary>Example: Bitcoin vault swap (Boosted)</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -872,8 +881,10 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
     Per the Bitcoin protocol, the change UTXO amount *cannot* be zero and must be larger than Bitcoin's dust threshold for the change address type. Therefore it is not possible to swap the entire amount of the input UTXOs, a dust amount needs to be sent to the change address.
 
 </Callout>
+</details>
 
-#### Solana vault swap
+<details>
+<summary>Example: Solana vault swap</summary>
 
 ```typescript copy
 import { Chains, Assets } from "@chainflip/sdk/swap";
@@ -958,6 +969,7 @@ const status = await swapSDK.getStatusV2({ id: signature });
   ]
 }
 ```
+</details>
 
 ## `encodeCfParameters`
 
@@ -1016,7 +1028,8 @@ The `cfParameters` object describes the swap for which the CF parameters data is
 The method returns bytes as a hex-encoded string that can be passed to the State
 Chain.
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 import { Chains, Assets, SwapSDK } from "@chainflip/sdk/swap";
@@ -1052,6 +1065,7 @@ console.log(vaultSwapData);
 // console output:
 "0x006400000036ead71325604dc15d35fae584d7b50646d81753b8b06ebc3b32569bff571d39d21918010000000000000000000000000000000000009e8d88ae895c9b37b2dead9757a3452f7c2299704d91ddfa444d87723f94fe0c000000";
 ```
+</details>
 
 ## `getStatusV2`
 
@@ -1232,7 +1246,8 @@ export type SwapStatusResponseV2 =
     } & Sending);
 ```
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 const swapStatusRequest = {
@@ -1336,6 +1351,7 @@ console.log(await swapSDK.getStatusV2(swapStatusRequest));
   lastStatechainUpdateAt: 1740497470820,
 }
 ```
+</details>
 
 ### Lifecycle of a swap
 
@@ -1397,7 +1413,8 @@ for Ethereum, and Planck for Polkadot, etc.
   </p>
 </Callout>
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 console.log(await swapSDK.getSwapLimits());
@@ -1444,6 +1461,7 @@ console.log(await swapSDK.getSwapLimits());
   }
 }
 ```
+</details>
 
 ## `getBoostLiquidity`
 
@@ -1470,7 +1488,8 @@ type BoostPoolDepth = {
 | `feeTierBps` (optional)   | Allows filtering of the returned list of boost pools based on their fee tier (bps) |    `number`    |
 | `chain, asset` (optional) | Allows filtering of the returned list of boost pools based on their chain asset    | `Chain, Asset` |
 
-### Example - no filtering
+<details>
+<summary>Example: no filtering</summary>
 
 If no `chain, asset` **or** `feeTierBps` is provided, it returns the full list of available boost pools with their respective depths.
 
@@ -1527,8 +1546,10 @@ console.log(await swapSDK.getBoostLiquidity());
   // ...
 ];
 ```
+</details>
 
-### Example - filtering by chain asset
+<details>
+<summary>Example: filtering by chain asset</summary>
 
 If a valid combination of `chain, asset` is provided, it returns the available boost pools for that specific chain asset.
 
@@ -1564,8 +1585,10 @@ console.log(
   },
 ];
 ```
+</details>
 
-### Example - filtering by fee tier (bps)
+<details>
+<summary>Example: filtering by fee tier (bps)</summary>
 
 If a `feeTierBps` is provided, it returns the available boost pools for that specific fee tier.
 
@@ -1590,6 +1613,7 @@ console.log(
   // ...
 ];
 ```
+</details>
 
 ## `getChannelOpeningFees`
 
@@ -1612,7 +1636,8 @@ from the \$FLIP balance of the account on the State Chain. The fee is measured i
 Flipperino which is the smallest unit of \$FLIP (1 \$FLIP = 10^18 Flipperino).
 This fee is determined per chain.
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 console.log(await swapSDK.getChannelOpeningFees());
@@ -1628,6 +1653,7 @@ console.log(await swapSDK.getChannelOpeningFees());
   Solana: 0n
 }
 ```
+</details>
 
 ## `getRequiredBlockConfirmations`
 
@@ -1652,7 +1678,8 @@ like Polkadot, have deterministic finality and do not require any confirmations
 other than being included in a block. These chains will return `null` for the
 number of confirmations required, while others will return a `number`.
 
-### Example
+<details>
+<summary>Example</summary>
 
 ```typescript copy
 console.log(await swapSDK.getRequiredBlockConfirmations());
@@ -1668,3 +1695,4 @@ console.log(await swapSDK.getRequiredBlockConfirmations());
   Solana: null
 }
 ```
+</details>

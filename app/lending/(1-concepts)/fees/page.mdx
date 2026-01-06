@@ -21,7 +21,7 @@ This fee is applied once per loan creation, and also when a loan is updated (tha
 
 ## Liquidation Fee
 
-If a loan enters soft or hard liquidation, a fee is applied to the portion of collateral that is liquidated.
+If a loan enters soft (non-voluntary) or hard liquidation, a fee is applied to the portion of collateral that is liquidated.
 
 **Liquidation Fee:** 5 bps (0.05%) of the liquidated collateral
 
@@ -63,6 +63,14 @@ Applies only when **LTV < 50%**.
 - 0% APY at 50% LTV
 
 This penalty is added to the borrower’s effective interest rate and flows entirely to the protocol.
+
+```mermaid
+xychart-beta
+    title "Low LTV Penalty Rate"
+    x-axis "LTV %" 0 --> 100
+    y-axis "Penalty Rate (APR %)" 0 --> 1.5
+    line "Penalty Rate" [1,0,0]
+```
 
 ## Fee Processing and Settlement
 

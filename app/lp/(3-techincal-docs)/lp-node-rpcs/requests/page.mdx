@@ -33,7 +33,8 @@ Return:
 
 The ratio of these two amounts is the needed ratio for range orders over the same range given the current price, i.e. the asset composition of all range orders with the same range will match this ratio.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -71,6 +72,7 @@ Response:
    "id":1
 }
 ```
+</details>
 
 ### `cf_pool_info`
 
@@ -100,7 +102,8 @@ where `PoolPairsMap` is defined as follows:
 
 The fees are represented in hundredth's of a pip, i.e. 1 = 0.00001%.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 ```bash copy
@@ -121,6 +124,7 @@ curl -H "Content-Type: application/json" -d '
    }
 }' http://localhost:9944
 ```
+</details>
 
 Response:
 ```json
@@ -188,7 +192,8 @@ Where `UnidirectionalPoolDepth` is defined as follows:
 ```
 The [Amount](/lp/lp-api/types#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -236,6 +241,7 @@ Response:
   "id": 1
 }
 ```
+</details>
 
 ### `cf_pool_liquidity`
 
@@ -276,7 +282,8 @@ For limit orders two lists of prices (as [Tick](/lp/lp-api/types#tick)) and the 
 
 For range orders, an ordered list of pairs. The first element of the pair is a tick/price and the second is the liquidity between that tick and the next tick in the list. Forming a histogram of the liquidity in the range order pool.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -344,6 +351,7 @@ Response:
   "id": 1
 }
 ```
+</details>
 
 ### `cf_pool_orders`
 
@@ -389,7 +397,8 @@ Where `RangeOrder` is defined as follows:
     "fees_earned": "PoolPairsMap<Amount>",
 }
 ```
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -462,6 +471,7 @@ Response:
    "id":1
 }
 ```
+</details>
 
 ### `cf_pool_orderbook`
 
@@ -490,7 +500,8 @@ A list of asks and a list of bids. The number of asks and bids will be equal to 
 - The amount is quoted in the base asset's smallest unit, i.e. for ETH that is 10^-18 ETH.
 - The sqrt_price is the sqrt of the price in units of the quote asset, represented as a fixed point number with 96 fractional bits. Note prices are in each asset's smallest unit i.e. for ETH 10^-18, and for USDC 10^-6, so the price 10000 USDC/ETH represented as sqrt_price would be `round(sqrt(10000 * 10^18 / 10^6)*2^96) ≈ 7.9228162E36`. We use this representation as it ensures a high degree of precision across a large range of possible prices.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -596,6 +607,7 @@ Response:
     "id": 1
 }
 ```
+</details>
 
 ### `cf_pool_range_order_liquidity_value`
 
@@ -615,7 +627,8 @@ Return:
 
 The value of the hypothetical range order if it where burnt now, in amounts of the base and pair assets.
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -655,6 +668,7 @@ Response:
    "id":1
 }
 ```
+</details>
 
 ### `cf_free_balances`
 
@@ -672,7 +686,8 @@ Parameters:
 Return:
 - A JSON object containing the list of [Chains](/lp/lp-api/types#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](/lp/lp-api/types#amount)).
 
-#### Example
+<details>
+<summary>Example</summary>
 
 Request:
 
@@ -713,6 +728,7 @@ Response:
    "id":1
 }
 ```
+</details>
 
 ### `cf_scheduled_swaps`
 
@@ -740,7 +756,8 @@ Where `ScheduledSwap` is defined as follow:
 	"execute_at": "number",
 }
 ```
-#### Example:
+<details>
+<summary>Example</summary>:
 
 Request:
 ```bash copy
@@ -786,6 +803,7 @@ Response:
     "id":1
 }
 ```
+</details>
 
 ### `cf_get_trading_strategies`
 
@@ -875,6 +893,4 @@ Possible response:
   "id": 1
 }
 ```
-
-
 </details>

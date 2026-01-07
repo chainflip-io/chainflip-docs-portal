@@ -174,18 +174,18 @@ Where `Range` is defined as follow:
 ```
 
 Return:
-- `asks`: UnidirectionalPoolDepth\<UnidirectionalSubPoolDepth\>
-- `bids`: UnidirectionalPoolDepth\<UnidirectionalSubPoolDepth\>
+- `asks`: UnidirectionalPoolDepth
+- `bids`: UnidirectionalPoolDepth
 
 Where `UnidirectionalPoolDepth` is defined as follows:
 ```json
 {
     "limit_orders": {
-        "price": "Option<Amount>",
+        "price": "Option<SqrtPrice>",
         "depth": "Amount",
     },
     "range_orders": {
-        "price": "Option<Amount>",
+        "price": "Option<SqrtPrice>",
         "depth": "Amount"
     }
 }

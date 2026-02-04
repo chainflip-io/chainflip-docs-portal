@@ -84,14 +84,6 @@ const nextConfig = withNextra({
   experimental: {
     optimizePackageImports: ['@components/icons'],
   },
-  latex: {
-    renderer: 'katex',
-    options: {
-      macros: {
-        '\\RR': '\\mathbb{R}',
-      },
-    },
-  },
 });
 
 export default nextConfig;

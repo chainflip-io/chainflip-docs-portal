@@ -100,36 +100,36 @@ Now you can interact with the APIs using any HTTP or WS client. Here we use the 
 
 - For example, to get Chainflip's Ethereum vault
 
-    <Tabs items={['curl', 'wscat']}>
-    <Tabs.Tab>
-        ```bash
-        curl -H "Content-Type: application/json" \
-        -d '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}' \
-        http://localhost:9944
-        ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-        ```bash
-        wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}'
-        ```
-    </Tabs.Tab>
+<Tabs items={['curl', 'wscat']}>
+<Tabs.Tab>
+```bash
+curl -H "Content-Type: application/json" \
+-d '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}' \
+http://localhost:9944
+```
+</Tabs.Tab>
+<Tabs.Tab>
+```bash
+wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"cf_eth_vault"}'
+```
+</Tabs.Tab>
 </Tabs>
 
 - To get a list of all RPC endpoints available on the node
 
 <Tabs items={['curl', 'wscat']}>
-    <Tabs.Tab>
-        ```bash
-        curl -H "Content-Type: application/json" \
-        -d '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' \
-        http://localhost:9944 | tr ',' '\n'
-        ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-        ```bash
-        wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' | tr ',' '\n'
-        ```
-    </Tabs.Tab>
+<Tabs.Tab>
+```bash
+curl -H "Content-Type: application/json" \
+-d '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' \
+http://localhost:9944 | tr ',' '\n'
+```
+</Tabs.Tab>
+<Tabs.Tab>
+```bash
+wscat -c ws://localhost:9944 -x '{ "id":1, "jsonrpc":"2.0", "method":"rpc_methods"}' | tr ',' '\n'
+```
+</Tabs.Tab>
 </Tabs>
 
 - Subscribe to scheduled swaps. Note that subscriptions are only supported over WebSockets.

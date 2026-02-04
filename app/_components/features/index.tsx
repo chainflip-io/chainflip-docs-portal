@@ -1,3 +1,5 @@
+'use client';
+
 import { ArrowRightIcon } from '@components/icons';
 import classnames from 'classnames';
 import Link from 'next/link';

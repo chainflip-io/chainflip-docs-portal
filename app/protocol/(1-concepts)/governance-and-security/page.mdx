@@ -1,9 +1,7 @@
 ---
-
 title: Governance & Security
 
 description: A governance process must exist in order to upgrade the network to support new blockchains, new pools, and adjust rewards as needed.
-
 ---
 
 ## Governance Processes
@@ -24,7 +22,6 @@ Other protocols feature a nominated body to carry out upgrades on behalf of the 
 
 Chainflip features a combination of both, where internal mechanisms allow for changes in the runtime via internal governance mechanisms, but other parts of the validator software also require explicit action on part of the validator network to enact breaking changes to the system.
 
-
 ### The Governance Keys
 
 The Governance Keys are arbitrary keysets that are regulated by the Validator network. The keys themselves can be any multisignature scheme that is compatible with the governance pallet that Chainflip Validators run. What this means is that the Governance Keys could be managed by any Threshold Signature Scheme, standard n of m scheme, or even a single key (though this would likely never be voted for). Who is behind said keys is a social matter dictated by weighted voting - DAOs, councils, companies or even single individuals could be elected as a governance keyholder with enough backing, though we will refer to them generally as “Councils.” A supermajority of stakeholders can at any time propose to elect a new Council.
@@ -40,7 +37,6 @@ Further to this, Validators make up the heart of the protocol, but may not share
 
 The keys are automatically deployed to Smart Contract Vaults and the State Chain Gateway contract by the Validator network, though a cooldown period is enforced to mitigate against attacks involving software exploits.
 
-
 ### Voting in New Keys
 
 The Governance Council and the Community Council can be rotated only through a token-weighted vote on the state chain. Anyone with a token balance on the State chain can vote in proposals, even those currently staked into Validators. The minimum threshold for a successful proposal is a 2/3rd+1 super majority.
@@ -52,7 +48,6 @@ In order to provide the wider non-validator Chainflip ecosystem time to assess a
 Liquidity providers should therefore receive as much as 2 weeks warning that the protocol governance is being changed over to a new party as voted in by the Validators that may or may not be connected to the existing users and developers of the protocol. From there, they can decide if they wish to keep their assets in the system, or withdraw before any actions can be conducted by the new keyholders. Similarly, validators may wish to unstake during this cooldown window if they decide they do not support the holders of the new governance keys.
 
 Thus, any party can become a Governance keyholder, but it requires not only support from a supermajority of Validators and other token holders but also implicit backing from the liquidity providers in place.
-
 
 ## Runtime Upgrades & Hard Forks
 
@@ -172,7 +167,7 @@ Assuming the vast majority of validators are financially motivated and aren’t 
 
 ### Assessing Exploitable Value (EV)
 
-The first question to answer is: How much money can be taken during a supermajority attack? If the attacker really does have unilateral control over the supermajority needed, then they can take  all of the non-native FLIP funds immediately - even in the Vault smart contracts.
+The first question to answer is: How much money can be taken during a supermajority attack? If the attacker really does have unilateral control over the supermajority needed, then they can take all of the non-native FLIP funds immediately - even in the Vault smart contracts.
 
 All smart contract based Vaults can be frozen by the Governance Council. When activated in the smart contract, the Validators will no longer be able to process egress transactions from that Contract Vault. It is assumed that Safe Mode may already be active at this time in most scenarios, so this could already be the case, but does add an additional layer of protection for the large pools of liquid funds held in these vaults. However, in a Supermajority scenario, these protections mean nothing. In a very short window of time, a colluding supermajority could move all funds to wallets or contracts in their direct control before any of the governance functions could be called to protect the funds held in these contract vaults.
 
@@ -192,7 +187,7 @@ It’s worth pointing out that all stakes in Chainflip validators can be arbitra
 
 The real question is whether or not an attacker would be able to convince enough validators to pull the attack off. Assuming that most validators are purely financially motivated, the attacker would have to offer terms to the colluding parties that exceed the value of the stake that they’d be losing by participating in the attack. We can say definitively that if the value of FLIP collateral stored in 100 of 150 nodes is worth as much or more than the EV, then a financially motivated attack is nonsensical.
 
-In this basic assessment, we could simply define CMA as the value of the FLIP required to run 100 Validators, but this fails to consider other essential factors.  Agreeing to participate in a collusion attack is not without risk, and it is important to factor in the pricing of this risk to assess the security of the network against collusion attacks.
+In this basic assessment, we could simply define CMA as the value of the FLIP required to run 100 Validators, but this fails to consider other essential factors. Agreeing to participate in a collusion attack is not without risk, and it is important to factor in the pricing of this risk to assess the security of the network against collusion attacks.
 
 ### Pricing in the cost of Risk
 
@@ -214,7 +209,7 @@ However, we can also say that malicious actors will also have to factor in some 
 
 ### The Real Threat
 
-The real supermajority threat is something much simpler - someone with no skin in the game that finds an exploit in the validator software that allows them to hijack the network, which they can simply use to conduct a supermajority attack without any involvement or actions required by the validator operators. Hackers like this are the far more likely security threat, and no amount of protocol or crypto-economic design or analysis can overcome them.  Instead, extensive security analysis must be conducted on the validator software to ensure it remains secure from the first day of operation.
+The real supermajority threat is something much simpler - someone with no skin in the game that finds an exploit in the validator software that allows them to hijack the network, which they can simply use to conduct a supermajority attack without any involvement or actions required by the validator operators. Hackers like this are the far more likely security threat, and no amount of protocol or crypto-economic design or analysis can overcome them. Instead, extensive security analysis must be conducted on the validator software to ensure it remains secure from the first day of operation.
 
 Further, compromised keys will not be noticed by the operator until one day the attacker has quietly collected enough of them to launch an attack. Attackers like this could be anyone - they aren't going to be capital rich firms and investors, and genuinely could see their quality of life improve after conducting an attack.
 
@@ -320,5 +315,3 @@ It is likely that Guardians will need to be compensated for their services, eith
 This concept in principle solves the economic security issues which may deter further TVL growth, but further debate about exactly how Guardians are selected, rewarded, managed, and removed from the network is a matter that will require further deliberation between the protocol stakeholders.
 
 This feature is currently not under development.
-
-

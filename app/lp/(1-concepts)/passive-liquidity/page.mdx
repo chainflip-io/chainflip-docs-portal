@@ -1,12 +1,10 @@
 ---
-
 title: Passive Liquidity Provisioning
 
 description: Passive Liquidity Provisioning overview
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Passive Liquidity Provisioning
 
@@ -14,22 +12,19 @@ Many LPs want an easier way to provide liquidity. They wanted a lower-risk, low-
 
 Passive liquidity provisioning is for:
 
-* Passive investors seeking consistent returns
-* Stablecoin holders looking to put idle funds to work
-* Institutional or retail users interested in low-risk exposure
+- Passive investors seeking consistent returns
+- Stablecoin holders looking to put idle funds to work
+- Institutional or retail users interested in low-risk exposure
 
 ## Automated Trading Strategies
 
-<Callout type="info">
-This feature is available from version 1.9 onwards.
-</Callout>
+<Callout type="info">This feature is available from version 1.9 onwards.</Callout>
 
 LPs can deploy funds from their account into a trading strategy, which will automatically create and manage limit orders on their behalf.
 Each deployed strategy is assigned a unique id and in many ways is treated like a regular LP account by the protocol, e.g. it has its own account balance and starts with `cF...`.
 When a strategy's order is filled (fully or partially), the funds are automatically returned to the strategy's account balance.
 When the amount of free balance of some asset reaches a certain threshold, the strategy will automatically use it to create a new limit order (or update an existing one) according to the strategy's parameters.
 When a strategy is closed, all of its orders are cancelled and the funds are returned to its free balance.
-
 
 ## Supported Strategies
 
@@ -41,5 +36,5 @@ A simple strategy that trades in the `base_asset`/USDC pool, creating sell and b
 and `-spread_tick`, respectively.
 
 Parameters:
-    * spread_tick: [Tick](/lp/lp-api/types#tick),
-	* base_asset: [Asset](/lp/lp-api/types#asset),
+_ spread_tick: [Tick](/lp/lp-api/types#tick),
+_ base_asset: [Asset](/lp/lp-api/types#asset),

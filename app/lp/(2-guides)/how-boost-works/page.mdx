@@ -1,9 +1,7 @@
 ---
-
 title: How Boost Works
 
 description: When a boost pool is first created, the State Chain will emit a `BoostPoolCreated` event.
-
 ---
 
 # How Boost Works
@@ -28,8 +26,8 @@ The sum of all entries in `available_amounts` is the maximum amount the pool can
 
 ## Boosting a Deposit
 
-When the network sees a prewitnessed deposit on a *boostable* channel (one that specifies a non-zero boost
-fee limit), it checks if there are enough *available* funds in the given asset's pools that satisfy the fee limit.
+When the network sees a prewitnessed deposit on a _boostable_ channel (one that specifies a non-zero boost
+fee limit), it checks if there are enough _available_ funds in the given asset's pools that satisfy the fee limit.
 If the pools are sufficiently funded, the required amount will be gathered from them in the order of increasing
 boost fees, ensuring that the user who initiated the deposit pays the smallest fee.
 
@@ -88,7 +86,6 @@ Internally this is done by removing the corresponding record from `pending_boost
 It is up to each individual booster to determine their risk tolerance for each asset they wish to
 boost, and contribute to the pools according to fee levels to price in that risk tolerance.
 
-
 ## Boosting with Multiple Boost Pools
 
 If the first pool (one with the lowest fee) doesn't have enough available funds to boost a deposit
@@ -143,7 +140,7 @@ available_amounts = {
 A user opens a deposit channel for a swap with a boost fee limit of 10 bps.
 A deposit of 5 BTC is then prewitnessed on that channel by the protocol.
 
-The protocol attempts to gather funds from the 5 bps pool, but it can only provide 4 BTC in total. 
+The protocol attempts to gather funds from the 5 bps pool, but it can only provide 4 BTC in total.
 To calculate the amount in fees each booster will receive, we first compute the amount they are able
 to "boost" (the portion of the deposited amount considered covered by the pool).
 Note that due to how the boost fee is charged, the boosted amount can be greater than the total amount
@@ -222,14 +219,3 @@ available_amounts = {
 ```
 
 The boost fee is now part of the funds available to boost future deposits.
-
-
-
-
-
-
-
-
-
-
-

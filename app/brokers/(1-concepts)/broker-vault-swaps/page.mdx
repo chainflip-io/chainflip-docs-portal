@@ -1,20 +1,16 @@
 ---
-
 title: Vault Swaps
 
 description: How to use vault swaps for integration purposes.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Vault Swaps
 
 As described so far, initiating a swap involves requesting a deposit address and sending funds to that deposit address to trigger the swap. Here we introduce an alternative way to initiate swaps on Chainflip by making a direct deposit to the Chainflip Vault.
 
-<Callout type="info">
-Learn more in [How Swapping Works](/protocol/how-swapping-works).
-</Callout>
+<Callout type="info">Learn more in [How Swapping Works](/protocol/how-swapping-works).</Callout>
 
 ### Pros and Cons
 
@@ -23,6 +19,7 @@ With some minor exceptions noted below, Vault Swaps support the same features as
 The major benefit of a Vault Swap is that it can be presented to the end-user for submission almost immediately, whereas creation of a deposit channel requires first submitting a transaction to the Chainflip network, and waiting for finality, which can take up to 18 seconds.
 
 The downsides of Vault Swaps are:
+
 - A Vault Swap transaction is single-use, whereas deposit channels can be used multiple times once opened.
 - A Vault Swap transaction is more complex than a simple transfer to a deposit channel, making integration more challenging and possibly incurring higher fees for Swappers.
 - Cross-chain messaging from Bitcoin is not supported for Vault Swaps.
@@ -37,7 +34,9 @@ At a high level, submitting a Vault Swap is quite simple:
 3. Sign and submit the transaction to the source chain.
 
 <Callout type="info">
-Each of Chainflip's supported chains encodes data differently. Integrators should read the following sections carefully and familiarize themselves with the specifics of each chain they want to interact with.
+  Each of Chainflip's supported chains encodes data differently. Integrators should read the
+  following sections carefully and familiarize themselves with the specifics of each chain they want
+  to interact with.
 </Callout>
 
 ### Step 1: Request the Encoded Parameters
@@ -50,11 +49,12 @@ Note there are two variants of this RPC call:
 - `cf_request_swap_parameter_encoding` is exposed by the Chainflip Node.
 
 Both of the above behave identically, the only difference is that the `cf_` variant requires the `broker_id` field to be populated explicitly, whereas the `broker_` variant adds the ID configured in the Broker API.
+
 </Callout>
 
 ### Step 2: Build the Transaction
 
-The RPC call will return the swap parameters encoded in a format specific to the *source* chain, ie. the chain on which the swap *source* asset will be sent. For example, for a SOL->BTC swap, the encoding will be Solana-specific.
+The RPC call will return the swap parameters encoded in a format specific to the _source_ chain, ie. the chain on which the swap _source_ asset will be sent. For example, for a SOL->BTC swap, the encoding will be Solana-specific.
 
 For detailed instructions of how to interpret the value returned by this RPC call, please refer to individual sections for each chain:
 
@@ -76,7 +76,7 @@ sequenceDiagram
     participant B as Broker/RPC Node
     participant CH as Input Chain
     participant CF as Chainflip Network
-    
+
     U->>B: Request a Vault Swap Payload.
     B-->>B: Query Chainflip Node: request_swap_parameter_encoding(..).
     B-->>U: Encoded Vault Swap Payload.

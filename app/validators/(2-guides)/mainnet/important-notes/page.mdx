@@ -1,12 +1,10 @@
 ---
-
 title: Important Notes on Mainnet
 
 description: Important notes about the Chainflip network on Mainnet; how to properly secure the Chainflip Protocol and Validators.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Security & Redundancy
 
@@ -24,7 +22,6 @@ You can think of the `chainflip-node` as a node of any other proof-of-stake bloc
 The `chainflip-engine` is a bit different. It acts as a multi-signature crypto wallet and it performs its cryptographic operations using its share of the key generated in the current authority set. The `chainflip-engine` has also to be up at all times.
 
 You might want to update your engine config to use a different RPC endpoint or to update the public IP address of your validator node. Or you might want to start your node with additional flags or update any other node config. That is generally fine, but you should be aware of the following:
-
 
 <Callout type="warning">
 
@@ -66,7 +63,7 @@ Session keys are used by the `chainflip-node` for authoring blocks and are store
 
 It is critical to the Chainflip network that Validators back up their session keys and chaindata after each rotation. If you lose these irrecoverably, your node will miss out on up to two Epochs' worth of rewards; it won't be able to author blocks for the remainder of the current epoch; and it will be banned from the next keygen ceremony.
 
-If you *do* lose your session keys irrecoverably, run `sudo chainflip-cli --config-root /etc/chainflip rotate` to generate and register a fresh key (assuming you still have access to the VPS and the data is not corrupted). However note that key cannot author blocks until the following epoch.
+If you _do_ lose your session keys irrecoverably, run `sudo chainflip-cli --config-root /etc/chainflip rotate` to generate and register a fresh key (assuming you still have access to the VPS and the data is not corrupted). However note that key cannot author blocks until the following epoch.
 
 </Callout>
 
@@ -80,11 +77,11 @@ By default, these keys are stored under `/etc/chainflip/keys`. These are the key
 
 These keys are extremely important and should be treated with the utmost care. Losing them can result in a loss of funds and compromise the security of your validator. It is crucial to keep them safe and secure.
 
-If you *do* lose access to these keys, you can [recover your validator account](/validators/mainnet/validator-setup#recovering-your-keys) and restore it to a state where it can participate in the network again.
+If you _do_ lose access to these keys, you can [recover your validator account](/validators/mainnet/validator-setup#recovering-your-keys) and restore it to a state where it can participate in the network again.
 
 However, there are important considerations to keep in mind:
 
-- These keys are separate from the session keys and engine key shares. The latter are *not* recoverable from a seed.
+- These keys are separate from the session keys and engine key shares. The latter are _not_ recoverable from a seed.
 - If you only backed up your validator keys without backing up your session keys or engine key shares, your validator will be penalized for missing authorship slots even if you rejoin the network and submit heartbeats. This is because session keys are rotated at the beginning of every epoch, so your rejoining will not be effective until after the next rotation.
 - The same applies to engine key shares. Losing these keys will prevent you from participating in keygen ceremonies or performing any multi-signature operations. Failing a keygen will result in penalties and a potential ban, which could lead to your validator node being removed from the authority set. In such cases, you would have to wait for the next auction to rejoin.
 - If you think the keys might be compromised, we recommend that you immediately secure your `$FLIP` funds by [binding a redeem address](/validators/mainnet/funding#redemption-execution-address-binding), [stopping your bid](/validators/mainnet/funding#stop-bidding) and then, when your funds are unbonded, redeeming them to your wallet before funding a new node with new keys.
@@ -93,12 +90,13 @@ However, there are important considerations to keep in mind:
 
 The keyshares are used by the `chainflip-engine` are stored in a database. By default this is located at `/etc/chainflip/data.db`.
 
-Note it is *not* possible to recover these key shares from a seed if they are lost, so it it crucial to back up this database, ideally at the beginning of each epoch.
+Note it is _not_ possible to recover these key shares from a seed if they are lost, so it it crucial to back up this database, ideally at the beginning of each epoch.
 
 <Callout type="warning">
 In order to secure the Chainflip Protocol, it is imperative for Validator operators to continuously back up their engine keyshare database as the network generates fresh keys for every epoch.
 
 The key shares collectively secure all the funds on the Chainflip network so should be treated with the utmost attention to their safety and security.
+
 </Callout>
 
 ### Best Practices

@@ -4,5 +4,5 @@ export default {
   changefreq: 'weekly',
   priority: '0.5',
   generateIndexSitemap: false,
-  exclude: ['/icon.svg']
-}
+  exclude: ['/icon.svg'],
+};

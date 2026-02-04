@@ -1,13 +1,10 @@
 ---
-
 title: Swapping Basics
 
 description: Chainflip swaps are fire-and-forget, meaning once a deposit is made, users don't need to do anything else for the swap to take place.
-
 ---
 
-import {Callout, Steps} from "nextra/components";
-
+import { Callout, Steps } from 'nextra/components';
 
 ## Swapping Basics
 
@@ -89,7 +86,6 @@ Aka Live price protection. In units of **basis points**.
 If provided, the Chainflip protocol will only swap the deposited assets if the output will be within the specified deviation from the oracle price.
 This form of protection is not available to all assets, opening a deposit channel or encoding vault params with a maximum oracle slippage for an asset that is not supported will return an error.
 
-
 ## Dollar Cost Average (DCA): Improving price
 
 Any swap can be broken down into smaller "chunks" which are executed over time.
@@ -106,38 +102,38 @@ In that case, any amount successfully swapped in prior chunks is still sent to t
 ### Example 1: Successful DCA swap
 
 1. A user initiates a swap by depositing **5 BTC** to get **USDC** with a minimum accepted price of **50,000 USDC/BTC**.
-The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
+   The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
 2. The deposit is witnessed at state chain block **100**.
-The first chunk of **1 BTC** is scheduled for execution at block **102** (small initial delay allows LPs update their orders for the first chunk).
+   The first chunk of **1 BTC** is scheduled for execution at block **102** (small initial delay allows LPs update their orders for the first chunk).
 3. At block **102** the chunk is executed with the output of **50,100 USDC**, which is within the price limit.
-According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
+   According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
 4. At block **104** the second chunk is executed at a price of **49,900 USDC**, which is below the limit, and the swap is reverted.
-According to [slippage protection](#slippage-protection) parameters the chunk is to be retried a few times before the swap is refunded,
-with the first atttempt scheduled for block **109**.
+   According to [slippage protection](#slippage-protection) parameters the chunk is to be retried a few times before the swap is refunded,
+   with the first atttempt scheduled for block **109**.
 5. At block **109** the second chunk is retried, and this time gives the user the price of **50,070 USDC**, which is within the limit.
-5. The remaining chunks are also executed successfully at blocks **111**, **113**, and **115** resulting in **50020 USDC**, **50010 USDC**, and **50000 USDC** respectively.
-6. The total output of the swap is **250,200 USDC** which is sent to the user's USDC wallet address.
+6. The remaining chunks are also executed successfully at blocks **111**, **113**, and **115** resulting in **50020 USDC**, **50010 USDC**, and **50000 USDC** respectively.
+7. The total output of the swap is **250,200 USDC** which is sent to the user's USDC wallet address.
 
 ### Example 2: DCA with partial refund
 
 1. A user initiates a swap by depositing **5 BTC** to get **USDC** with a minimum accepted price of **50,000 USDC/BTC**.
-The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
+   The channel's DCA parameters have been set to split the swap into **5 chunks** with an interval of **2 blocks** between them.
 2. The deposit is witnessed at state chain block **100**.
-The first chunk of **1 BTC** is scheduled for execution at block **102**.
+   The first chunk of **1 BTC** is scheduled for execution at block **102**.
 3. At block **102** the chunk is executed with the output of **50,100 USDC**, which is within the price limit.
-According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
+   According to DCA parameters, the second chunk is scheduled for execution **2 blocks** later, at block **104**.
 4. As in the example above, the second chunk fails at block **104** and is retried at block **109**.
-This time, however, the retry also fails, and the swap is aborted (to keep the example simple we assume only one retry is allowed).
-As a result, the amount of **50100 USDC** from the successfully executed chunks is sent to the user's *destination* USDC wallet address.
-The remaining **4 BTC** is refunded to the user's *refund* BTC wallet address.
+   This time, however, the retry also fails, and the swap is aborted (to keep the example simple we assume only one retry is allowed).
+   As a result, the amount of **50100 USDC** from the successfully executed chunks is sent to the user's _destination_ USDC wallet address.
+   The remaining **4 BTC** is refunded to the user's _refund_ BTC wallet address.
 
 ### Minimum Chunk Size
 
 While the protocol allows for dca parameters (number of chunks) to be set by the broker, the protocol sets a limit on the minimum amount per chunk (below which the execution would not result in better pricing and would just delay the swap unnecessarily), and can reduce the number chunks accordingly.
 
-
 <Callout type="info">
-For example, assuming a minimum chunk size of 1,000USDC: If the broker opens a channel requesting 100 chunks, but the user deposits 10,000USDC, the protocol will reduce the number of chunks to 10.
+  For example, assuming a minimum chunk size of 1,000USDC: If the broker opens a channel requesting
+  100 chunks, but the user deposits 10,000USDC, the protocol will reduce the number of chunks to 10.
 </Callout>
 
 The minimum chunk sizes is set for each individual input asset and can be accessed via the RPC method `cf_environment`.

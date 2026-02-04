@@ -1,9 +1,7 @@
 ---
-
 title: Node RPC Requests
 
 description: The state chain node RPCs that are useful for liquidity providers.
-
 ---
 
 ## RPC requests
@@ -20,14 +18,16 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
-``` json
+
+```json
 {
-    "start": "Tick",
-    "end": "Tick"
+  "start": "Tick",
+  "end": "Tick"
 }
 ```
 
 Return:
+
 - `base`: [Amount](/lp/lp-api/types#amount)
 - `quote`: [Amount](/lp/lp-api/types#amount)
 
@@ -62,16 +62,18 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 Response:
+
 ```json
 {
-   "jsonrpc":"2.0",
-   "result":{
-      "base":"0x48fdda050e625251db12baf14c6258c",
-      "quote":"0x13979e2ae923a625b6119832"
-   },
-   "id":1
+  "jsonrpc": "2.0",
+  "result": {
+    "base": "0x48fdda050e625251db12baf14c6258c",
+    "quote": "0x13979e2ae923a625b6119832"
+  },
+  "id": 1
 }
 ```
+
 </details>
 
 ### `cf_pool_info`
@@ -85,6 +87,7 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - `limit_order_fee_hundredth_pips`: number
 - `range_order_fee_hundredth_pips`: number
 - `range_order_total_fees_earned`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
@@ -93,10 +96,11 @@ Return:
 - `limit_total_swap_inputs`: PoolPairsMap\<[Amount](/lp/lp-api/types#amount)\>
 
 where `PoolPairsMap` is defined as follows:
+
 ```json
 {
-    "base": "Amount",
-    "quote": "Amount"
+  "base": "Amount",
+  "quote": "Amount"
 }
 ```
 
@@ -106,6 +110,7 @@ The fees are represented in hundredth's of a pip, i.e. 1 = 0.00001%.
 <summary>Example</summary>
 
 Request:
+
 ```bash copy
 curl -H "Content-Type: application/json" -d '
 {
@@ -124,33 +129,35 @@ curl -H "Content-Type: application/json" -d '
    }
 }' http://localhost:9944
 ```
+
 </details>
 
 Response:
+
 ```json
 {
-   "jsonrpc":"2.0",
-   "result":{
-      "limit_order_fee_hundredth_pips":20,
-      "range_order_fee_hundredth_pips":20,
-      "range_order_total_fees_earned":{
-         "base":"0x92d398d746f9a",
-         "quote":"0x50925"
-      },
-      "limit_order_total_fees_earned":{
-         "base":"0x0",
-         "quote":"0x0"
-      },
-      "range_total_swap_inputs":{
-         "base":"0x70047cb8257ef2652",
-         "quote":"0x3d7844834"
-      },
-      "limit_total_swap_inputs":{
-         "base":"0x0",
-         "quote":"0x0"
-      }
-   },
-   "id":1
+  "jsonrpc": "2.0",
+  "result": {
+    "limit_order_fee_hundredth_pips": 20,
+    "range_order_fee_hundredth_pips": 20,
+    "range_order_total_fees_earned": {
+      "base": "0x92d398d746f9a",
+      "quote": "0x50925"
+    },
+    "limit_order_total_fees_earned": {
+      "base": "0x0",
+      "quote": "0x0"
+    },
+    "range_total_swap_inputs": {
+      "base": "0x70047cb8257ef2652",
+      "quote": "0x3d7844834"
+    },
+    "limit_total_swap_inputs": {
+      "base": "0x0",
+      "quote": "0x0"
+    }
+  },
+  "id": 1
 }
 ```
 
@@ -166,30 +173,34 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Where `Range` is defined as follow:
-``` json
+
+```json
 {
-    "start": "Tick",
-    "end": "Tick"
+  "start": "Tick",
+  "end": "Tick"
 }
 ```
 
 Return:
+
 - `asks`: UnidirectionalPoolDepth
 - `bids`: UnidirectionalPoolDepth
 
 Where `UnidirectionalPoolDepth` is defined as follows:
+
 ```json
 {
-    "limit_orders": {
-        "price": "Option<SqrtPrice>",
-        "depth": "Amount",
-    },
-    "range_orders": {
-        "price": "Option<SqrtPrice>",
-        "depth": "Amount"
-    }
+  "limit_orders": {
+    "price": "Option<SqrtPrice>",
+    "depth": "Amount"
+  },
+  "range_orders": {
+    "price": "Option<SqrtPrice>",
+    "depth": "Amount"
+  }
 }
 ```
+
 The [Amount](/lp/lp-api/types#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
 
 <details>
@@ -241,6 +252,7 @@ Response:
   "id": 1
 }
 ```
+
 </details>
 
 ### `cf_pool_liquidity`
@@ -254,27 +266,32 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - `limit_orders`: AskBidMap\<Array\<LimitOrderLiquidity\>\>
 - `range_orders`: AskBidMap\<Array\<RangeOrderLiquidity\>\>
 
 Where `AskBidMap` is defined as follows:
+
 ```json
 {
     "asks": [ .. ],
     "bids": [ .. ],
 }
 ```
+
 while `LimitOrderLiquidity` and `RangeOrderLiquidity` are respectively:
+
 ```json
 {
-	"tick": "Tick",
-	"amount": "Amount",
+  "tick": "Tick",
+  "amount": "Amount"
 }
 ```
+
 ```json
 {
-	"tick": "Tick",
-	"liquidity": "Amount",
+  "tick": "Tick",
+  "liquidity": "Amount"
 }
 ```
 
@@ -351,6 +368,7 @@ Response:
   "id": 1
 }
 ```
+
 </details>
 
 ### `cf_pool_orders`
@@ -370,33 +388,39 @@ Return:
 - `range_orders`: Array\<RangeOrder\>
 
 Where `AskBidMap` is defined as follows:
+
 ```json
 {
     "asks": [ .. ],
     "bids": [ .. ],
 }
 ```
+
 Where `LimitOrder` is defined as follows:
+
 ```json
 {
-    "lp": "Account",
-	"id": "Amount",
-	"tick": "Tick",
-	"sell_amount": "Amount",
-	"fees_earned": "Amount",
-	"original_sell_amount": "Amount",
+  "lp": "Account",
+  "id": "Amount",
+  "tick": "Tick",
+  "sell_amount": "Amount",
+  "fees_earned": "Amount",
+  "original_sell_amount": "Amount"
 }
 ```
+
 Where `RangeOrder` is defined as follows:
+
 ```json
 {
-    "lp": "Account",
-    "id": "Amount",
-    "range": "Range<Tick>",
-    "liquidity": "Liquidity",
-    "fees_earned": "PoolPairsMap<Amount>",
+  "lp": "Account",
+  "id": "Amount",
+  "range": "Range<Tick>",
+  "liquidity": "Liquidity",
+  "fees_earned": "PoolPairsMap<Amount>"
 }
 ```
+
 <details>
 <summary>Example</summary>
 
@@ -471,6 +495,7 @@ Response:
    "id":1
 }
 ```
+
 </details>
 
 ### `cf_pool_orderbook`
@@ -490,13 +515,16 @@ Return:
 - `asks`: PoolOrder
 
 Where `PoolOrder` is defined as follows:
+
 ```json
 {
-	"amount": "Amount",
-	"sqrt_price": "SqrtPrice",
+  "amount": "Amount",
+  "sqrt_price": "SqrtPrice"
 }
 ```
+
 A list of asks and a list of bids. The number of asks and bids will be equal to or less than the specified number of orders. There may be zero asks or bids if no liquidity exists to either ask or bid. Each ask and bid has two properties a sqrt_price and an amount.
+
 - The amount is quoted in the base asset's smallest unit, i.e. for ETH that is 10^-18 ETH.
 - The sqrt_price is the sqrt of the price in units of the quote asset, represented as a fixed point number with 96 fractional bits. Note prices are in each asset's smallest unit i.e. for ETH 10^-18, and for USDC 10^-6, so the price 10000 USDC/ETH represented as sqrt_price would be `round(sqrt(10000 * 10^18 / 10^6)*2^96) ≈ 7.9228162E36`. We use this representation as it ensures a high degree of precision across a large range of possible prices.
 
@@ -529,84 +557,85 @@ Response:
 
 ```json
 {
-    "jsonrpc": "2.0",
-    "result": {
-        "asks": [
-            {
-                "amount": "0x54b2cec31723f8b04",
-                "sqrt_price": "0x2091b342e50d7f26cdc582"
-            },
-            {
-                "amount": "0x5b475d13fc0374e",
-                "sqrt_price": "0x1e38a26ccc8cad8ff5ed7d0e"
-            },
-            {
-                "amount": "0x625ecb4a48690",
-                "sqrt_price": "0x1c0ae64c925b19f39a41ff17bd"
-            },
-            {
-                "amount": "0x6a03445844f",
-                "sqrt_price": "0x1a055f3578ef64659516605ff66d"
-            },
-            {
-                "amount": "0x723fbd69d",
-                "sqrt_price": "0x18252720d1c42e3ba5952fd2fe89fb"
-            },
-            {
-                "amount": "0x7b20059",
-                "sqrt_price": "0x16678d870594b3379bb55bece63777cb"
-            },
-            {
-                "amount": "0x84b0d",
-                "sqrt_price": "0x14ca1409cb331360845a79ebe43373e18e"
-            },
-            {
-                "amount": "0x8ef",
-                "sqrt_price": "0x134b7afbfbb5777da858f99704921055bfe0"
-            },
-            {
-                "amount": "0x9",
-                "sqrt_price": "0x12848533e1997da57a9773adec9795a3626203"
-            }
-        ],
-        "bids": [
-            {
-                "amount": "0x9a488cdb615edf25fd",
-                "sqrt_price": "0x62bac2a2b8f0b98b9ceb"
-            },
-            {
-                "amount": "0x1217d98319cd00bc28de",
-                "sqrt_price": "0x349e212a7a008282ff9"
-            },
-            {
-                "amount": "0x21f2ffe1f3cc8bebab567",
-                "sqrt_price": "0x1c0ae0758c0acee837"
-            },
-            {
-                "amount": "0x3fb3690cb0511666161b4d",
-                "sqrt_price": "0xef1f790088e3f323"
-            },
-            {
-                "amount": "0x77868270bada4c06b5c9e64",
-                "sqrt_price": "0x7f7094efc08a808"
-            },
-            {
-                "amount": "0xe045b383a1b21969cebb4976",
-                "sqrt_price": "0x43eaad48a59f17"
-            },
-            {
-                "amount": "0x1a4d08d014973bf8ba1c33904f",
-                "sqrt_price": "0x241d6cfa0a79c"
-            },
-            {
-                "amount": "0x3159920b20889ed50eabfa6edc8",
-                "sqrt_price": "0x123884db5748"
-            }
-        ]
-    },
-    "id": 1
+  "jsonrpc": "2.0",
+  "result": {
+    "asks": [
+      {
+        "amount": "0x54b2cec31723f8b04",
+        "sqrt_price": "0x2091b342e50d7f26cdc582"
+      },
+      {
+        "amount": "0x5b475d13fc0374e",
+        "sqrt_price": "0x1e38a26ccc8cad8ff5ed7d0e"
+      },
+      {
+        "amount": "0x625ecb4a48690",
+        "sqrt_price": "0x1c0ae64c925b19f39a41ff17bd"
+      },
+      {
+        "amount": "0x6a03445844f",
+        "sqrt_price": "0x1a055f3578ef64659516605ff66d"
+      },
+      {
+        "amount": "0x723fbd69d",
+        "sqrt_price": "0x18252720d1c42e3ba5952fd2fe89fb"
+      },
+      {
+        "amount": "0x7b20059",
+        "sqrt_price": "0x16678d870594b3379bb55bece63777cb"
+      },
+      {
+        "amount": "0x84b0d",
+        "sqrt_price": "0x14ca1409cb331360845a79ebe43373e18e"
+      },
+      {
+        "amount": "0x8ef",
+        "sqrt_price": "0x134b7afbfbb5777da858f99704921055bfe0"
+      },
+      {
+        "amount": "0x9",
+        "sqrt_price": "0x12848533e1997da57a9773adec9795a3626203"
+      }
+    ],
+    "bids": [
+      {
+        "amount": "0x9a488cdb615edf25fd",
+        "sqrt_price": "0x62bac2a2b8f0b98b9ceb"
+      },
+      {
+        "amount": "0x1217d98319cd00bc28de",
+        "sqrt_price": "0x349e212a7a008282ff9"
+      },
+      {
+        "amount": "0x21f2ffe1f3cc8bebab567",
+        "sqrt_price": "0x1c0ae0758c0acee837"
+      },
+      {
+        "amount": "0x3fb3690cb0511666161b4d",
+        "sqrt_price": "0xef1f790088e3f323"
+      },
+      {
+        "amount": "0x77868270bada4c06b5c9e64",
+        "sqrt_price": "0x7f7094efc08a808"
+      },
+      {
+        "amount": "0xe045b383a1b21969cebb4976",
+        "sqrt_price": "0x43eaad48a59f17"
+      },
+      {
+        "amount": "0x1a4d08d014973bf8ba1c33904f",
+        "sqrt_price": "0x241d6cfa0a79c"
+      },
+      {
+        "amount": "0x3159920b20889ed50eabfa6edc8",
+        "sqrt_price": "0x123884db5748"
+      }
+    ]
+  },
+  "id": 1
 }
 ```
+
 </details>
 
 ### `cf_pool_range_order_liquidity_value`
@@ -622,6 +651,7 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - `base`: [Amount](/lp/lp-api/types#amount)
 - `quote`: [Amount](/lp/lp-api/types#amount)
 
@@ -660,14 +690,15 @@ Response:
 
 ```json
 {
-   "jsonrpc":"2.0",
-   "result":{
-      "base":"0x1d116fb8",
-      "quote":"0x0"
-   },
-   "id":1
+  "jsonrpc": "2.0",
+  "result": {
+    "base": "0x1d116fb8",
+    "quote": "0x0"
+  },
+  "id": 1
 }
 ```
+
 </details>
 
 ### `cf_free_balances`
@@ -676,7 +707,7 @@ Response:
 >
 > This RPC method can also be called as `cf_asset_balances`.
 
-Returns the free balances of all assets for a specified account at the current best block. Note that 'Free Balances' does *not* include any assets currently active in LP orders or in boost pools.
+Returns the free balances of all assets for a specified account at the current best block. Note that 'Free Balances' does _not_ include any assets currently active in LP orders or in boost pools.
 
 Parameters:
 
@@ -684,6 +715,7 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - A JSON object containing the list of [Chains](/lp/lp-api/types#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](/lp/lp-api/types#amount)).
 
 <details>
@@ -704,30 +736,32 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 Response:
+
 ```json
 {
-   "jsonrpc":"2.0",
-   "result":{
-      "Ethereum":{
-         "ETH":"0x45939e6733a79d71",
-         "FLIP":"0x128d484779ed9a9b",
-         "USDC":"0x45dde576d3",
-         "USDT":"0x9d2687"
-      },
-      "Polkadot":{
-         "DOT":"0x25c7d0cb6"
-      },
-      "Bitcoin":{
-         "BTC":"0x18c12"
-      },
-      "Arbitrum":{
-         "ETH":"0x303467cadd3773",
-         "USDC":"0x9dc14c"
-      }
-   },
-   "id":1
+  "jsonrpc": "2.0",
+  "result": {
+    "Ethereum": {
+      "ETH": "0x45939e6733a79d71",
+      "FLIP": "0x128d484779ed9a9b",
+      "USDC": "0x45dde576d3",
+      "USDT": "0x9d2687"
+    },
+    "Polkadot": {
+      "DOT": "0x25c7d0cb6"
+    },
+    "Bitcoin": {
+      "BTC": "0x18c12"
+    },
+    "Arbitrum": {
+      "ETH": "0x303467cadd3773",
+      "USDC": "0x9dc14c"
+    }
+  },
+  "id": 1
 }
 ```
+
 </details>
 
 ### `cf_scheduled_swaps`
@@ -741,25 +775,29 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - Array\<ScheduledSwap\>
 
 Where `ScheduledSwap` is defined as follow:
+
 ```json
 {
-	"swap_id": "number",
-	"base_asset": "Asset",
-	"quote_asset": "Asset",
-	"side": "Side",
-	"amount": "Amount",
-	"source_asset": "Option<Asset>",
-	"source_amount": "Option<Amount>",
-	"execute_at": "number",
+  "swap_id": "number",
+  "base_asset": "Asset",
+  "quote_asset": "Asset",
+  "side": "Side",
+  "amount": "Amount",
+  "source_asset": "Option<Asset>",
+  "source_amount": "Option<Amount>",
+  "execute_at": "number"
 }
 ```
+
 <details>
 <summary>Example</summary>:
 
 Request:
+
 ```bash copy
 curl -H "Content-Type: application/json" -d '
 {
@@ -783,26 +821,27 @@ Response:
 
 ```json
 {
-    "jsonrpc":"2.0",
-    "result":[
-        {
-            "swap_id":1,
-            "base_asset":{
-                "chain":"Ethereum",
-                "asset":"FLIP"
-            },
-            "quote_asset":{
-                "chain":"Ethereum",
-                "asset":"USDC"
-            },
-            "side":"sell",
-            "amount":"0x1ad5814560a6c1005b",
-            "execute_at":170
-        }
-    ],
-    "id":1
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "swap_id": 1,
+      "base_asset": {
+        "chain": "Ethereum",
+        "asset": "FLIP"
+      },
+      "quote_asset": {
+        "chain": "Ethereum",
+        "asset": "USDC"
+      },
+      "side": "sell",
+      "amount": "0x1ad5814560a6c1005b",
+      "execute_at": 170
+    }
+  ],
+  "id": 1
 }
 ```
+
 </details>
 
 ### `cf_get_trading_strategies`
@@ -819,29 +858,28 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - `Array<TradingStrategyEntry>`, where `TradingStrategyEntry` is defined as follows:
 
 ```json
 {
-	"lp_id": "Account",
-	"strategy_id": "Account",
-	"strategy": "TradingStrategy",
-	"balance": "Array<(Asset, Amount)>",
+  "lp_id": "Account",
+  "strategy_id": "Account",
+  "strategy": "TradingStrategy",
+  "balance": "Array<(Asset, Amount)>"
 }
-
 ```
 
 and `TradingStrategy` is an enum where each variant is a different strategy type. Only one stategy is supported as of 1.9:
 
 ```json
 {
-	"TickZeroCentered": {
-		"spread_tick": "Tick",
-		"base_asset": "Asset"
-	}
+  "TickZeroCentered": {
+    "spread_tick": "Tick",
+    "base_asset": "Asset"
+  }
 }
 ```
-
 
 <details>
 <summary>Example</summary>
@@ -856,6 +894,7 @@ curl -H "Content-Type: application/json" -d '{
 ```
 
 Possible response:
+
 ```json
 {
   "jsonrpc": "2.0",
@@ -888,9 +927,10 @@ Possible response:
           "0x0"
         ]
       ]
-    },
+    }
   ],
   "id": 1
 }
 ```
+
 </details>

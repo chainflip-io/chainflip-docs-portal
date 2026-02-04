@@ -1,11 +1,9 @@
 ---
-
 title: Funding and Redemption on Mainnet
 description: How to fund and redeem your account on Mainnet.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Funding & Bidding
 
@@ -28,9 +26,8 @@ sudo systemctl restart chainflip-engine
 ```
 
 <Callout type="warning">
-  **You have not finished all the steps!** Please continue to the bottom of your
-  page otherwise your node will show as{" "}
-  <span style={{ color: "red" }}>**Offline**</span>
+  **You have not finished all the steps!** Please continue to the bottom of your page otherwise your
+  node will show as <span style={{ color: 'red' }}>**Offline**</span>
 </Callout>
 
 Even after you successfully added funds, your node could still be in the <span style={{ color: "red" }}>**Offline**</span> state. Just wait for your node
@@ -63,7 +60,8 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 ```
 
 <Callout type="warning">
-Make sure you rotate session keys and execute the command to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
+  Make sure you rotate session keys and execute the command to start bidding, otherwise you won't be
+  able to join auctions and eventually join the active validator set.
 </Callout>
 
 ### Set Vanity Name
@@ -86,17 +84,16 @@ This will ensure you don't participate in the next auction, and your funds will 
 
 > Note you may not stop bidding if the auction has already begun.
 
-
 ## Rebalancing
 
 If you administer multiple Validators, you may want to move funds between them to optimise your auction bids. This can be cumbersome using the normal funding and redeeming flow, so there is a way to short-circuit this and transfer funds directly between accounts.
 
-Moving funds between Validators is known as *rebalancing*.
+Moving funds between Validators is known as _rebalancing_.
 
 Similarly to redemptions, rebalancing is subject to certain restrictions:
 
 - The destination account must already exist: account creation through a rebalance operation is not possible.
-If the source account is currently bidding in an auction, the destination account must also be in a bidding state.
+  If the source account is currently bidding in an auction, the destination account must also be in a bidding state.
 - [Bound addresses](/validators/mainnet/funding#advanced-account-management) on the destination account must match the source account.
 - If the funds to be transferred are associated with a [restricted source address](/validators/mainnet/funding#restricted-balances), the transferred funds will have the same restrictions in the destination account.
 
@@ -132,7 +129,6 @@ Options:
   -h, --help                                     Print help
 ```
 
-
 ## Redeeming Funds & Retiring
 
 You can redeem your `$FLIP`, subject to certain conditions. In order to do so, the funds may neither be bonded, nor tied up in auction bidding.
@@ -146,11 +142,13 @@ First of all, you need to end your participation in auctions. To do so, use the 
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip validator stop-bidding
 ```
+
 > Note: This command will not execute and stop bidding if the auction has already begun (check the Auctions page and try again when appropriate).
 
 On successful completion of this command, your node will cease to participate in auctions. When your node has left the validator set, it will still be a `Keyholder` for another epoch. You then have to wait another epoch until your `$FLIP` can be redeemed, so that your node is no longer a `Keyholder`. Once your node is no longer a Keyholder you can redeem all your `$FLIP` by following the next steps.
 
 ### Deregistration
+
 Before making a **final** redemption, your account must be deregistered:
 
 ```bash copy
@@ -158,7 +156,6 @@ sudo chainflip-cli validator deregister-account
 ```
 
 Deregistration is not possible until your account has stopped bidding and is no longer a key holder for an active Epoch (usually this implies that at least one Epoch has passed since your account was last in the authority set).
-
 
 ### Redemption Process in Auctions App
 
@@ -177,6 +174,7 @@ You can redeem **200** `$FLIP` minus the tax, to the Ethereum account `0xcf..cf`
 ```bash copy
 sudo chainflip-cli redeem 0xcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf
 ```
+
 > Note: This is the command that redeems all available `$FLIP` so it is the one you run when decommissioning a Node and unbonding everything.
 
 Alternatively, you can specify an exact amount you wish to redeem, say **50** `$FLIP`:
@@ -190,12 +188,14 @@ This process will generate a **Redemption Certificate** that will be sent to the
 Once you have completed the request, continue in the Auctions App, where the redemption should display. If you cannot find your Node on the Auctions page anymore, Disconnect and Reconnect your Wallet.
 
 <Callout type="warning">
-Your redemption process has not finished, you have simply signalled to the Network that you want to redeem. You **must** continue the redemption process on the Auctions page (after a 48hr wait); you **must** redeem during the Execution window.
+  Your redemption process has not finished, you have simply signalled to the Network that you want
+  to redeem. You **must** continue the redemption process on the Auctions page (after a 48hr wait);
+  you **must** redeem during the Execution window.
 </Callout>
 
 ### Redemption Tax
 
-The network requires a **Redemption Tax of 5 `$FLIP`** per redemption. This is to reduce *redemption request spam*. These requests are expensive for the network to process, and the cost for this is now carried by the requester, via the tax.
+The network requires a **Redemption Tax of 5 `$FLIP`** per redemption. This is to reduce _redemption request spam_. These requests are expensive for the network to process, and the cost for this is now carried by the requester, via the tax.
 
 ### Waiting Period (48hrs)
 
@@ -216,31 +216,30 @@ Accounts are automatically deleted once all funds have been redeemed.
 Chainflip does not directly support full account delegation, however it provides some advanced account management features that can be used by delegation service providers to provide additional guarantees to their users.
 
 This process looks like this:
+
 1. User A (Operator) sets up a State Chain account and an associated validator node.
 2. User B (Delegator) has an Ethereum wallet with `$FLIP` they want to "delegate" to the Operator's node.
 3. The Operator can bind the Delegator's Ethereum address as their "Redeem Address", which is an **irreversible action**. See [Redeem Address Binding](#redeem-address-binding)
 4. Funds can only be redeemed to the Delegator's Ethereum address from now on - including future rewards but only the Operator can trigger any redemption claims. This means **a degree of trust is still required**.
 
 <Callout type="warning">
-    **Given the funds are still under the Operator's custody, a misbehaving or malfunctioning Operator can still lose Delegator's funds through slashing, losing the account key, etc.**
+  **Given the funds are still under the Operator's custody, a misbehaving or malfunctioning Operator
+  can still lose Delegator's funds through slashing, losing the account key, etc.**
 </Callout>
 
 ### Redeem Address Binding
 
-Any account may be explicitly *bound* to a single redemption address. Henceforth, any redemption request from that account can *only redeem to this exact address*.
+Any account may be explicitly _bound_ to a single redemption address. Henceforth, any redemption request from that account can _only redeem to this exact address_.
 
-<Callout type="warning">
-    Redeem Address Binding is a **one-off irreversible operation**.
-</Callout>
+<Callout type="warning">Redeem Address Binding is a **one-off irreversible operation**.</Callout>
 
 **Example #1:**
 
-> *The account `cFc00Ld00d` is bound to the redeem address `0xdeadbeef`. This was a bad idea since it's unlikely that `cFc00Ld00d` knows the private key for `0xdeadbeef`, so his or her funds are effectively permanently locked. Do not do this.*
->
+> _The account `cFc00Ld00d` is bound to the redeem address `0xdeadbeef`. This was a bad idea since it's unlikely that `cFc00Ld00d` knows the private key for `0xdeadbeef`, so his or her funds are effectively permanently locked. Do not do this._
 
 **Example #2:**
 
-> *A liquid staking provider wants to allow users to pool their `$FLIP` through a smart contract on Ethereum, to then fund a validator account. They bind their validator account to the smart contract address. This binding is permanent and irrevocable, so users can now rest assured that there is no way the pooled funds can be redeemed to any other address.*
+> _A liquid staking provider wants to allow users to pool their `$FLIP` through a smart contract on Ethereum, to then fund a validator account. They bind their validator account to the smart contract address. This binding is permanent and irrevocable, so users can now rest assured that there is no way the pooled funds can be redeemed to any other address._
 
 In order to bind a redemption address, use the `chainflip-cli`. Log on to the node that contains the keys to the account for which you want to bind a redemption address.
 
@@ -258,7 +257,7 @@ chainflip-cli bind-redeem-address <ETH_ADDRESS>
 
 ### Redemption Execution Address Binding
 
-Similar to the above, redemptions can be restricted such that only a single specific Ethereum address can be the *executor* of a redemption.
+Similar to the above, redemptions can be restricted such that only a single specific Ethereum address can be the _executor_ of a redemption.
 
 In order to bind an executor address, proceed as above using the `chainflip-cli`.
 
@@ -284,14 +283,14 @@ This can also be done via [Auctions App > My Nodes (legacy)](https://auctions.ch
 
 ### Restricted Balances
 
-Certain funding *sources* are considered restricted, such that funds originating from that source can only be redeemed back to whence they came. In order to enforce this, we track the amount of funds added from restricted addresses and ensure that the account always has enough funds to cover its obligations to these addresses.
+Certain funding _sources_ are considered restricted, such that funds originating from that source can only be redeemed back to whence they came. In order to enforce this, we track the amount of funds added from restricted addresses and ensure that the account always has enough funds to cover its obligations to these addresses.
 
 This is used primarily to enforce vesting restrictions. Some of the `$FLIP` tokens in existence may be locked in a vesting contract that controls when the tokens can be freely accessed. In the meantime, we still would like the tokens to be used productively in the protocol. However this is not possible without restricting the funds, since otherwise the vesting restrictions can be trivially circumvented by funding an account and immediately redeeming to any other address.
 
 **Example:**
 
-> *The address `0xabc` is marked as restricted because it is a smart contract holding `$FLIP` for early investors.*
+> _The address `0xabc` is marked as restricted because it is a smart contract holding `$FLIP` for early investors._
 >
-> *Imagine an account has 1,000 `$FLIP` funded from address `0xabc` and earns a return of 10 `$FLIP` after some period of time. Subject to other restrictions (bond etc.) those 10 `$FLIP` can be redeemed to any address. Any more than that can only be redeemed from the restricted balance of 1,000 `$FLIP`, and only to the originating address `0xabc`.*
+> _Imagine an account has 1,000 `$FLIP` funded from address `0xabc` and earns a return of 10 `$FLIP` after some period of time. Subject to other restrictions (bond etc.) those 10 `$FLIP` can be redeemed to any address. Any more than that can only be redeemed from the restricted balance of 1,000 `$FLIP`, and only to the originating address `0xabc`._
 
 In case of Restricted addresses the limitation of [Redeem Address Binding](/validators/mainnet/funding#redeem-address-binding) and [Redemption Execution Address Binding](/validators/mainnet/funding#redemption-execution-address-binding) are not applied. Withdrawals to restricted addresses ignore any address bindings.

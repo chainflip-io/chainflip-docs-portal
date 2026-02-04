@@ -1,14 +1,10 @@
 ---
-
 title: LP API
 
 description: The LP API bundle allows liquidity providers to put up orders programmatically through the JIT AMM.
-
 ---
 
-import { Cards } from 'nextra/components'
-
-
+import { Cards } from 'nextra/components';
 
 ## LP-API
 
@@ -51,11 +47,14 @@ Here are the RPCs useful for liquidity providers that are available on the LP-AP
     <Cards.Card title="lp_cancel_all_orders" href="/lp/lp-api/requests#lp_cancel_all_orders" />
     <Cards.Card title="lp_cancel_orders_batch" href="/lp/lp-api/requests#lp_cancel_orders_batch" />
     <Cards.Card title={<span className="badge-success after:content-['New']">lp_schedule_swap</span>} href="/lp/lp-api/requests#lp_schedule_swap" />
-</Cards>
 
+</Cards>
 
 ## Subscriptions
 
 <Cards>
-    <Cards.Card title="lp_subscribe_order_fills" href="/lp/lp-api/subscriptions#lp_subscribe_order_fills" />
+  <Cards.Card
+    title="lp_subscribe_order_fills"
+    href="/lp/lp-api/subscriptions#lp_subscribe_order_fills"
+  />
 </Cards>

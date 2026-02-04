@@ -1,12 +1,10 @@
 ---
-
 title: Running LP Light RPC node
 
 description: Running LP Light RPC node guide.
-
 ---
 
-import { Tabs } from 'nextra/components'
+import { Tabs } from 'nextra/components';
 
 ## LP Light RPC node
 
@@ -14,9 +12,10 @@ As of version `1.12.0`, to call the LP RPC endpoints, you must run your own LP L
 The LP light-rpc node is just a normal Chainflip node running in a specialized `--sync light-rpc` mode. Your LP account key must be injected in the node's keystore to be able to expose the LP RPC endpoints and submit extrinsics.
 
 This `light-rpc` mode prunes older blocks and permits querying only recent blocks, significantly reducing disk space requirements compared to running a full node. The recommended minimum requirements for running a light-rpc node include:
-* 2 vCPU
-* 4 GB RAM
-* 20 GB SSD
+
+- 2 vCPU
+- 4 GB RAM
+- 20 GB SSD
 
 ## Running the LP light-rpc node using Docker
 
@@ -24,7 +23,8 @@ Reference setup and compose profiles: [chainflip-mainnet-apis](https://github.co
 
 ### Setup
 
-* Clone the `chainflip-mainnet-apis` repo
+- Clone the `chainflip-mainnet-apis` repo
+
 ```bash
 git clone https://github.com/chainflip-io/chainflip-mainnet-apis.git
 cd chainflip-mainnet-apis
@@ -34,7 +34,7 @@ cd chainflip-mainnet-apis
 
 > ⛔️ Please make sure you backup your keys. If you lose your keys, you will lose access to your funds. ⛔️
 
-* If you have an existing LP account key, copy it to the `./chainflip/keys/lp/signing_key_file` file. Please make sure that the key is in the correct location, otherwise it won't be properly injected into the node's keystore.
+- If you have an existing LP account key, copy it to the `./chainflip/keys/lp/signing_key_file` file. Please make sure that the key is in the correct location, otherwise it won't be properly injected into the node's keystore.
 
 If you don't have an LP account key, you can generate one using the following steps.
 
@@ -45,25 +45,29 @@ cat chainflip/lp-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/lp
 ```
 
 ### Funding the Account
+
 > The minimum funding amount for registering as a Broker or LP role is technically 1 FLIP. However, we recommend funding your accounts with at least 5 FLIP to account for transaction fees.
 
 Get the public key of the Broker account:
+
 ```bash
 cat chainflip/lp-keys.json | jq -r '.signing_account_id'
 ```
 
-* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+- Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
 
-* Click "Register Node" and follow the instructions to fund the account
-
+- Click "Register Node" and follow the instructions to fund the account
 
 ### Running the node
-* Start an LP RPC node and wait for it to sync:
+
+- Start an LP RPC node and wait for it to sync:
+
 ```bash
 docker compose --profile lp up -d
 ```
 
-* View the logs to monitor sync progress
+- View the logs to monitor sync progress
+
 ```bash
 docker compose --profile lp logs -f
 ```
@@ -97,31 +101,36 @@ node-with-lp-1  | 2025-10-30 10:42:29 Running JSON-RPC server: addr=0.0.0.0:9944
 ```
 
 Make sure:
-* To see that light-rpc mode is enabled in the logs. Log line similar to: `⚡  Light-RPC mode enabled`
-* LP key is properly injected and LP RPC endpoints are enabled. Log line similar to: `🗝️ Lp key found in the keystore, enabling LP-related RPCs`
 
+- To see that light-rpc mode is enabled in the logs. Log line similar to: `⚡  Light-RPC mode enabled`
+- LP key is properly injected and LP RPC endpoints are enabled. Log line similar to: `🗝️ Lp key found in the keystore, enabling LP-related RPCs`
 
-* Wait until the node is synced before start making RPC calls. This should take around 2 minutes.
+- Wait until the node is synced before start making RPC calls. This should take around 2 minutes.
 
 > 💡 Note: Your node is considered synced when you see logs similar to:
+
 ```log
 node-with-lp-1  | 2025-10-30 10:53:49 🏆 Imported #10260208 (0xe26d…ad53 → 0xc279…f190)
 node-with-lp-1  | 2025-10-30 10:53:54 💤 Idle (8 peers), best: #10260208 (0xc279…f190), finalized #10260206 (0x0507…e82d), ⬇ 229.9kiB/s ⬆ 184.4kiB/s
 node-with-lp-1  | 2025-10-30 10:53:55 🏆 Imported #10260209 (0xc279…f190 → 0x7cb8…21f4)
 ```
 
-* You can check the node's health and verify it is synced by using this RPC call:
+- You can check the node's health and verify it is synced by using this RPC call:
+
 ```
 curl -H "Content-Type: application/json" \
     -d '{"id":1, "jsonrpc":"2.0", "method": "system_health"}' \
     http://localhost:9944
 ```
+
 You should a response showing that `isSyncing` is false, similar to:
+
 ```
 {"jsonrpc":"2.0","result":{"peers":8,"isSyncing":false,"shouldHavePeers":true},"id":1}
 ```
 
-* To stop the node:
+- To stop the node:
+
 ```bash
 docker compose --profile lp down
 ```
@@ -138,7 +147,7 @@ curl -H "Content-Type: application/json" \
   http://localhost:9944
 ```
 
-* For example, to request a liquidity deposit address for `ETH` :
+- For example, to request a liquidity deposit address for `ETH` :
 
 <Tabs items={['curl', 'wscat']}>
     <Tabs.Tab>
@@ -155,28 +164,27 @@ curl -H "Content-Type: application/json" \
     </Tabs.Tab>
 </Tabs>
 
-* Subscribe to order fills. Note that subscriptions are only supported over WebSockets.
+- Subscribe to order fills. Note that subscriptions are only supported over WebSockets.
+
 ```bash
 wscat -c ws://localhost:9944 -x '{ "id": 1, "jsonrpc": "2.0", "method": "lp_subscribe_order_fills"}'
 ```
-
 
 ## Migrating from LP-API Binary
 
 If you're upgrading from a previous version that used separate LP API binary service, the new LP light-rpc mode provides a simplified architecture where all APIs are exposed directly onto the rpc node.
 There are no additional steps that are required from your side because all the same endpoints are exposed on the rpc node. All you have to do is:
 
-* Make sure that your LP key is in the right location so that it can be properly injected into the node's keystore. Follow the steps in [LP account key](#lp-account-key)
-* Redirect all your bots or external services from the old binary port to the new light-rpc node port.
+- Make sure that your LP key is in the right location so that it can be properly injected into the node's keystore. Follow the steps in [LP account key](#lp-account-key)
+- Redirect all your bots or external services from the old binary port to the new light-rpc node port.
 
 To give you a better idea of the new architecture, here is a visual comparison of the old and new architecture:
 
-* Before version `1.12.0`, you needed to run 2 services: the LP API binary and an RPC node. The signing key is injected into the LP API binary's keystore.
+- Before version `1.12.0`, you needed to run 2 services: the LP API binary and an RPC node. The signing key is injected into the LP API binary's keystore.
 
 <img src="/light-rpc/old-lp-api-rpc.png" alt="LP API binary and RPC node" />
 
-
-* As of version `1.12.0`, the LP and general RPCs are consolidated as part of the node itself. the signing key is injected into the node's keystore on startup.
+- As of version `1.12.0`, the LP and general RPCs are consolidated as part of the node itself. the signing key is injected into the node's keystore on startup.
 
 <img src="/light-rpc/new-lp-light-rpc.png" alt="LP Light-RPC node" />
 
@@ -186,7 +194,8 @@ This section is for users who do not want to use Docker compose, and want to dir
 
 The main goal of LP light-rpc mode is to enable LPs to track only latest chain blocks data and in particular be able to make rpc calls that require signed extrinsics such as [`set_limit_order`](/lp/lp-api/requests#lp_set_limit_order), [`lp_update_limit_order`](/lp/lp-api/requests#lp_update_limit_order) etc ...
 
-* The first step is to inject the **LP Signing Key** inside the chainflip node. This can be achieved using this command
+- The first step is to inject the **LP Signing Key** inside the chainflip node. This can be achieved using this command
+
 ```bash
 /usr/local/bin/chainflip-node key insert \
         --chain=/etc/chainflip/berghain.chainspec.json \
@@ -195,10 +204,11 @@ The main goal of LP light-rpc mode is to enable LPs to track only latest chain b
         --key-type=lqpr \
         --scheme=sr25519
 ```
+
 NB: please change `/etc/chainflip-keys/lp/signing_key_file` with location of your LP signing key file
 
-* Then run the node in **light-rpc mode**, by simply calling the `chainflip-node` binary with some special command line arguments that makes the node prune blocks minimising disk space.
-This will require about 20GB of disk space.
+- Then run the node in **light-rpc mode**, by simply calling the `chainflip-node` binary with some special command line arguments that makes the node prune blocks minimising disk space.
+  This will require about 20GB of disk space.
 
 ```bash
 /usr/local/bin/chainflip-node \
@@ -214,9 +224,9 @@ This will require about 20GB of disk space.
         --disable-log-color \
         --log info,grandpa=error,runtime::grandpa=off,aura=error,babe=error,txpool::api=error
 ```
+
 If you inspect the above command we achieve disk space-saving by a combination of methods:
-* Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
-* Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
-* Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`
 
-
+- Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
+- Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
+- Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`

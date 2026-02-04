@@ -1,12 +1,10 @@
 ---
-
 title: Deposit Channels Swaps
 
 description: This particular ingress method provides incredible flexibility for the user and is a unique feature of the Chainflip protocol.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Deposit Channels Swaps
 
@@ -41,7 +39,6 @@ After a Deposit Channel has been closed, many Vault types will actually reuse th
 
 See the [Vault design](/protocol/vaults/bitcoin-vault-design) documentation for more information on how Deposit Channels are handled during Vault rotations on each chain type.
 
-
 ## Broker integration through deposit channels
 
 1. Any _State Chain_ account can register as a Broker, and start submitting **Deposit Channel Request** extrinsics on users' behalf.
@@ -49,7 +46,10 @@ See the [Vault design](/protocol/vaults/bitcoin-vault-design) documentation for 
 3. Brokers must pay a small transaction fee in \$FLIP for each extrinsic they submit and a "Channel Fee". This is to avoid spam and for network integrity reasons. **The suggested amount to fund the State Chain account is 10 \$FLIP**.
 
 <Callout type="info">
-    The cost Brokers pay to open _Deposit Channels_ is **very** cheap. See the \$FLIP balance from [Chainflip's Broker](https://scan.chainflip.io/brokers/cFLRQDfEdmnv6d2XfHJNRBQHi4fruPMReLSfvB8WWD2ENbqj7) — used to power our Swapping app.
+  The cost Brokers pay to open _Deposit Channels_ is **very** cheap. See the \$FLIP balance from
+  [Chainflip's
+  Broker](https://scan.chainflip.io/brokers/cFLRQDfEdmnv6d2XfHJNRBQHi4fruPMReLSfvB8WWD2ENbqj7) —
+  used to power our Swapping app.
 </Callout>
 
 ### Broker fees
@@ -57,5 +57,5 @@ See the [Vault design](/protocol/vaults/bitcoin-vault-design) documentation for 
 Broker operators can choose to charge a fee for the use of their endpoint. This fee is denominated in basis points, where a basis point is defined as 1/100th of a percentile and limited to 1000 basis points (equivalent to 10%). This fee is taken from the deposit asset amount and credited to the Broker's account.
 
 <Callout type="info">
-    Learn how to withdraw your collected fees [here](broker-api#broker_withdraw_fees).
+  Learn how to withdraw your collected fees [here](broker-api#broker_withdraw_fees).
 </Callout>

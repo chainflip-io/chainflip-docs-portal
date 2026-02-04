@@ -4,7 +4,7 @@ title: Functions
 description: The Chainflip SDK API functions
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Chainflip JavaScript SDK
 
@@ -35,7 +35,7 @@ If a `sourceChain` is provided, it returns the supported swap destination chains
 <summary>Example</summary>
 
 ```typescript copy
-import { Chains } from "@chainflip/sdk/swap";
+import { Chains } from '@chainflip/sdk/swap';
 
 console.log(await swapSDK.getChains(Chains.Polkadot));
 ```
@@ -44,16 +44,16 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
 // console output:
 [
   {
-    chain: "Ethereum",
-    name: "Ethereum",
+    chain: 'Ethereum',
+    name: 'Ethereum',
     evmChainId: 1,
     isMainnet: true,
     requiredBlockConfirmations: 5,
     maxRetryDurationBlocks: 0,
   },
   {
-    chain: "Bitcoin",
-    name: "Bitcoin",
+    chain: 'Bitcoin',
+    name: 'Bitcoin',
     evmChainId: undefined,
     isMainnet: true,
     requiredBlockConfirmations: 2,
@@ -61,6 +61,7 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
   },
 ];
 ```
+
 </details>
 
 ## `getAssets`
@@ -93,7 +94,7 @@ type AssetData = {
 <summary>Example</summary>
 
 ```typescript copy
-import { Chains } from "@chainflip/sdk/swap";
+import { Chains } from '@chainflip/sdk/swap';
 
 console.log(await swapSDK.getAssets(Chains.Ethereum));
 ```
@@ -130,6 +131,7 @@ console.log(await swapSDK.getAssets(Chains.Ethereum));
   },
 ]
 ```
+
 </details>
 
 ## `getQuoteV2`
@@ -138,10 +140,7 @@ Fetches the quotes for swapping tokens based on the provided `quoteRequest` and 
 Currently quotes can be either a regular quotes or a DCA quotes.
 
 ```typescript copy
-function getQuoteV2(
-  quoteRequest: QuoteRequest,
-  options?: RequestOptions
-): Promise<QuoteResponseV2>;
+function getQuoteV2(quoteRequest: QuoteRequest, options?: RequestOptions): Promise<QuoteResponseV2>;
 
 type QuoteRequest = {
   srcChain: Chain;
@@ -196,7 +195,7 @@ type QuoteResponseV2 = {
     {
       /** only present if there is a boost opportunity for the requested swap amount */
       boostQuote?: BoostedQuoteDetails;
-      type: "REGULAR" | "DCA";
+      type: 'REGULAR' | 'DCA';
     }[];
 };
 
@@ -239,10 +238,9 @@ interface BoostedQuoteDetails extends QuoteDetails {
 ```
 
 <Callout type="info">
-  `lowLiquidityWarning`: This value is true if the difference in the chainflip
-  swap rate (excluding fees) is lower than the global index rate of the swap by
-  more than a certain threshold (currently set to 5%). This suggets there is not
-  enough liquidity in the pool.
+  `lowLiquidityWarning`: This value is true if the difference in the chainflip swap rate (excluding
+  fees) is lower than the global index rate of the swap by more than a certain threshold (currently
+  set to 5%). This suggets there is not enough liquidity in the pool.
 </Callout>
 
 <Callout type="info">
@@ -256,7 +254,7 @@ interface BoostedQuoteDetails extends QuoteDetails {
 <summary>Example</summary>
 
 ```typescript copy
-import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
+import { SwapSDK, Chains, Assets } from '@chainflip/sdk/swap';
 
 const quoteRequest = {
   srcChain: Chains.Ethereum,
@@ -267,7 +265,7 @@ const quoteRequest = {
   brokerCommissionBps: 100, // 100 basis point = 1%
   affiliateBrokers: [
     {
-      account: "cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy",
+      account: 'cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy',
       commissionBps: 50,
     },
   ],
@@ -352,6 +350,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
   ],
 }
 ```
+
 </details>
 
 ## `requestDepositAddressV2`
@@ -374,7 +373,7 @@ to open a deposit channel.
 
 ```typescript copy
 function requestDepositAddressV2(
-  depositAddressRequest: DepositAddressRequestV2
+  depositAddressRequest: DepositAddressRequestV2,
 ): Promise<DepositAddressResponse>;
 
 type DepositAddressRequestV2 = {
@@ -458,11 +457,11 @@ you need to run your own [Broker API](/brokers/running-broker-api).
 You can configure the URL of your Broker API when initializing the SDK.
 
 ```typescript copy
-import { SwapSDK } from "@chainflip/sdk/swap";
+import { SwapSDK } from '@chainflip/sdk/swap';
 
 const sdk = new SwapSDK({
-  network: "perseverance",
-  broker: { url: "https://my.broker.io" },
+  network: 'perseverance',
+  broker: { url: 'https://my.broker.io' },
 });
 ```
 
@@ -472,7 +471,7 @@ const sdk = new SwapSDK({
 #### Regular Deposit Address
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
+import { Chains, Assets } from '@chainflip/sdk/swap';
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,
@@ -481,22 +480,21 @@ const { quotes } = await swapSDK.getQuoteV2({
   destAsset: Assets.BTC,
   amount: (1.5e18).toString(), // 1.5 ETH
 });
-const quote = quotes.find((quote) => quote.type === "REGULAR");
+const quote = quotes.find((quote) => quote.type === 'REGULAR');
 
 const swapDepositAddressRequest = {
   quote,
-  destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   fillOrKillParams: {
-    refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF", // address to which assets are refunded
+    refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF', // address to which assets are refunded
     retryDurationMinutes: quote.recommendedRetryDurationMinutes, // use recommended retry duration from quote
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
   brokerCommissionBps: 100, // 100 basis point = 1%
   affiliateBrokers: [
     {
-      account: "cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy",
+      account: 'cFM8kRvLBXagj6ZXvrt7wCM4jGmHvb5842jTtXXg3mRHjrvKy',
       commissionBps: 50,
     },
   ], // total commission 150 bps = 1.5%
@@ -533,6 +531,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
   channelOpeningFee: 0n
 }
 ```
+
 </details>
 
 #### Boostable Deposit Address
@@ -540,7 +539,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 Check the [Introduction to Boost](/protocol/boost) section for more information about the Boost feature.
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
+import { Chains, Assets } from '@chainflip/sdk/swap';
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Bitcoin,
@@ -549,18 +548,17 @@ const { quotes } = await swapSDK.getQuoteV2({
   destAsset: Assets.ETH,
   amount: (1.5e8).toString(), // 1.5 BTC
 });
-const quote = quotes.find((quote) => quote.type === "REGULAR");
+const quote = quotes.find((quote) => quote.type === 'REGULAR');
 
 const swapDepositAddressRequest = {
   // `boostQuote` may be undefined depending on asset and liquidity conditions
   quote: quote.boostQuote,
-  destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  destAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
   fillOrKillParams: {
-    refundAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    refundAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
     retryDurationBlocks: 100,
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
@@ -571,7 +569,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 Check the [Dollar Cost Average](/protocol/swapping-basics#dollar-cost-average-dca-improving-price) section for more information about the DCA feature.
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
+import { Chains, Assets } from '@chainflip/sdk/swap';
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,
@@ -582,18 +580,17 @@ const { quotes } = await swapSDK.getQuoteV2({
 });
 
 // ❗ the DCA feature must be enabled when the SDK is instantiated to receive DCA quotes ❗
-const quote = quotes.find((quote) => quote.type === "DCA");
+const quote = quotes.find((quote) => quote.type === 'DCA');
 
 const swapDepositAddressRequest = {
   quote,
-  destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   brokerCommissionBps: 100,
   fillOrKillParams: {
-    refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+    refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
     retryDurationBlocks: 100,
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
@@ -613,17 +610,14 @@ Compared to [deposit channel swaps](#request-deposit-address-v2), the vault swap
 of other decentralized exchanges and therefore might be easier to integrate into existing applications.
 
 <Callout type="info">
-  Learn more about vault swaps in the [Vault Swaps](/brokers/broker-vault-swaps)
-  documentation.
+  Learn more about vault swaps in the [Vault Swaps](/brokers/broker-vault-swaps) documentation.
 </Callout>
 
 Returns the unsigned transaction data for the given `VaultSwapRequest`.
 This method uses the `broker_request_swap_parameter_encoding` RPC method of the configured [Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding).
 
 ```typescript copy
-function encodeVaultSwapData(
-  vaultSwapRequest: VaultSwapRequest
-): Promise<VaultSwapResponse>;
+function encodeVaultSwapData(vaultSwapRequest: VaultSwapRequest): Promise<VaultSwapResponse>;
 
 type VaultSwapRequest = {
   quote: Quote;
@@ -669,19 +663,19 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
 ```typescript copy
 type VaultSwapResponse =
   | {
-      chain: "Bitcoin";
+      chain: 'Bitcoin';
       nulldataPayload: string;
       depositAddress: string;
     }
   | {
-      chain: "Ethereum" | "Arbitrum";
+      chain: 'Ethereum' | 'Arbitrum';
       calldata: string;
       value: bigint;
       to: string;
       sourceTokenAddress?: string | undefined;
     }
   | {
-      chain: "Solana";
+      chain: 'Solana';
       programId: string;
       accounts: {
         pubkey: string;
@@ -696,13 +690,10 @@ type VaultSwapResponse =
 <summary>Example: Ethereum vault swap</summary>
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
-import { getDefaultProvider, Wallet, Contract } from "ethers";
+import { Chains, Assets } from '@chainflip/sdk/swap';
+import { getDefaultProvider, Wallet, Contract } from 'ethers';
 
-const wallet = new Wallet(
-  process.env.SECRET_KEY,
-  getDefaultProvider("sepolia")
-);
+const wallet = new Wallet(process.env.SECRET_KEY, getDefaultProvider('sepolia'));
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,
@@ -712,18 +703,17 @@ const { quotes } = await swapSDK.getQuoteV2({
   isVaultSwap: true,
   amount: (500e6).toString(), // 500 USDC
 });
-const quote = quotes.find((quote) => quote.type === "DCA");
+const quote = quotes.find((quote) => quote.type === 'DCA');
 
 const vaultSwapRequest = {
   quote,
   srcAddress: wallet.address,
-  destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   fillOrKillParams: {
     refundAddress: wallet.address, // address to which assets are refunded
     retryDurationBlocks: 100, // 100 blocks * 6 seconds = 10 minutes before deposits are refunded
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
@@ -733,13 +723,10 @@ console.log(vaultSwapData);
 if (vaultSwapData.sourceTokenAddress) {
   const sourceTokenContract = new Contract(
     vaultSwapData.sourceTokenAddress,
-    ["function approve(address spender, uint256 value) returns (bool)"],
-    wallet
+    ['function approve(address spender, uint256 value) returns (bool)'],
+    wallet,
   );
-  const approvalTx = await sourceTokenContract.approve(
-    vaultSwapData.to,
-    quote.depositAmount
-  );
+  const approvalTx = await sourceTokenContract.approve(vaultSwapData.to, quote.depositAmount);
   await approvalTx.wait();
 }
 
@@ -764,17 +751,18 @@ const status = await swapSDK.getStatusV2({ id: receipt.hash });
   sourceTokenAddress: '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238'
 }
 ```
+
 </details>
 
 <details>
 <summary>Example: Bitcoin vault swap (Boosted)</summary>
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
-import Client from "bitcoin-core";
-import * as bitcoin from "bitcoinjs-lib";
-import ECPairFactory from "ecpair";
-import * as secp256k1 from "tiny-secp256k1";
+import { Chains, Assets } from '@chainflip/sdk/swap';
+import Client from 'bitcoin-core';
+import * as bitcoin from 'bitcoinjs-lib';
+import ECPairFactory from 'ecpair';
+import * as secp256k1 from 'tiny-secp256k1';
 
 const keypair = ECPairFactory(secp256k1).fromWIF(process.env.WALLET_WIF);
 const network = bitcoin.networks.testnet;
@@ -794,32 +782,31 @@ const { quotes } = await swapSDK.getQuoteV2({
 });
 
 // `boostQuote` may be undefined depending on asset and liquidity conditions
-const quote = quotes.find((quote) => quote.type === "REGULAR").boostQuote;
+const quote = quotes.find((quote) => quote.type === 'REGULAR').boostQuote;
 
 const vaultSwapRequest = {
   quote,
   srcAddress: walletAddress,
-  destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  destAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
   fillOrKillParams: {
     refundAddress: walletAddress,
     retryDurationBlocks: 100,
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
 console.log(vaultSwapData);
 
 export const rpcClient = new Client({
-  host: "https://bitcoin-testnet-rpc.publicnode.com",
+  host: 'https://bitcoin-testnet-rpc.publicnode.com',
 });
 const inputUxto = {
-  txId: "4403c8d3b752a3aa0757031239a82ce92d67fadc1bb4a35f80ace660499edd55",
+  txId: '4403c8d3b752a3aa0757031239a82ce92d67fadc1bb4a35f80ace660499edd55',
   outIndex: 2,
 };
 const inputTx = bitcoin.Transaction.fromHex(
-  await rpcClient.command("getrawtransaction", inputUxto.txId)
+  await rpcClient.command('getrawtransaction', inputUxto.txId),
 );
 const txFeeSats = 1000;
 
@@ -838,9 +825,7 @@ const tx = new bitcoin.Psbt({ network })
   .addOutput({
     // second output needs to return encoded vault details using the OP_RETURN opcode
     script: bitcoin.payments.embed({
-      data: [
-        Buffer.from(vaultSwapData.nulldataPayload.replace("0x", ""), "hex"),
-      ],
+      data: [Buffer.from(vaultSwapData.nulldataPayload.replace('0x', ''), 'hex')],
       network,
     }).output,
     value: 0,
@@ -848,10 +833,7 @@ const tx = new bitcoin.Psbt({ network })
   .addOutput({
     // third output defines the refund address for the swap
     address: walletAddress,
-    value:
-      inputTx.outs[inputUxto.outIndex].value -
-      Number(quote.depositAmount) -
-      txFeeSats,
+    value: inputTx.outs[inputUxto.outIndex].value - Number(quote.depositAmount) - txFeeSats,
   })
   .signInput(0, {
     publicKey: Buffer.from(keypair.publicKey),
@@ -859,7 +841,7 @@ const tx = new bitcoin.Psbt({ network })
   })
   .finalizeAllInputs()
   .extractTransaction();
-await rpcClient.command("sendrawtransaction", tx.toHex());
+await rpcClient.command('sendrawtransaction', tx.toHex());
 
 // status will be available once the transaction is in the mempool
 const status = await swapSDK.getStatusV2({ id: tx.getId() });
@@ -887,8 +869,8 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
 <summary>Example: Solana vault swap</summary>
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
-import { randomBytes } from "crypto";
+import { Chains, Assets } from '@chainflip/sdk/swap';
+import { randomBytes } from 'crypto';
 import {
   PublicKey,
   Keypair,
@@ -897,12 +879,10 @@ import {
   Transaction,
   Connection,
   clusterApiUrl,
-} from "@solana/web3.js";
-import bs58 from "bs58";
+} from '@solana/web3.js';
+import bs58 from 'bs58';
 
-const keypair = Keypair.fromSecretKey(
-  bs58.decode(process.env.SECRET_KEY_BASE58)
-);
+const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SECRET_KEY_BASE58));
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Solana,
@@ -912,21 +892,20 @@ const { quotes } = await swapSDK.getQuoteV2({
   isVaultSwap: true,
   amount: (1.5e9).toString(), // 1.5 SOL
 });
-const quote = quotes.find((quote) => quote.type === "REGULAR");
+const quote = quotes.find((quote) => quote.type === 'REGULAR');
 
 const vaultSwapRequest = {
   quote,
   srcAddress: keypair.publicKey.toBase58(),
-  destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  destAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
   fillOrKillParams: {
     refundAddress: keypair.publicKey.toBase58(),
     retryDurationBlocks: 100,
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent,
   },
   extraParams: {
-    seed: randomBytes(32).toString("hex"),
+    seed: randomBytes(32).toString('hex'),
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
@@ -940,13 +919,13 @@ const transaction = new Transaction().add(
       isWritable: account.isWritable,
     })),
     programId: new PublicKey(vaultSwapData.programId),
-    data: Buffer.from(vaultSwapData.data.slice(2), "hex"),
-  })
+    data: Buffer.from(vaultSwapData.data.slice(2), 'hex'),
+  }),
 );
 const signature = await sendAndConfirmTransaction(
-  new Connection(clusterApiUrl("devnet"), "confirmed"),
+  new Connection(clusterApiUrl('devnet'), 'confirmed'),
   transaction,
-  [keypair]
+  [keypair],
 );
 
 // status will be available after the transaction is included in a block
@@ -969,6 +948,7 @@ const status = await swapSDK.getStatusV2({ id: signature });
   ]
 }
 ```
+
 </details>
 
 ## `encodeCfParameters`
@@ -1004,9 +984,7 @@ interface EncodeCfParametersRequest {
 }
 
 class SwapSDK {
-  encodeCfParameters(
-    cfParameters: EncodeCfParametersRequest
-  ): Promise<`0x${string}`>;
+  encodeCfParameters(cfParameters: EncodeCfParametersRequest): Promise<`0x${string}`>;
 }
 ```
 
@@ -1032,9 +1010,9 @@ Chain.
 <summary>Example</summary>
 
 ```typescript copy
-import { Chains, Assets, SwapSDK } from "@chainflip/sdk/swap";
+import { Chains, Assets, SwapSDK } from '@chainflip/sdk/swap';
 
-const swapSDK = new SwapSDK({ network: "perseverance" });
+const swapSDK = new SwapSDK({ network: 'perseverance' });
 
 const {
   quotes: [quote],
@@ -1048,13 +1026,12 @@ const {
 
 const vaultSwapRequest = {
   quote,
-  destAddress: "tb1q65700ylwuua9669umxdep76a69jy3tfh55llf5",
+  destAddress: 'tb1q65700ylwuua9669umxdep76a69jy3tfh55llf5',
   fillOrKillParams: {
-    refundAddress: "0x36ead71325604dc15d35fae584d7b50646d81753", // address to which assets are refunded
+    refundAddress: '0x36ead71325604dc15d35fae584d7b50646d81753', // address to which assets are refunded
     retryDurationBlocks: 100, // 100 blocks * 6 seconds = 10 minutes before deposits are refunded
     slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
-    livePriceSlippageTolerancePercent:
-      quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
+    livePriceSlippageTolerancePercent: quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
 };
 const vaultSwapData = await swapSDK.encodeCfParameters(vaultSwapRequest);
@@ -1063,8 +1040,9 @@ console.log(vaultSwapData);
 
 ```typescript copy
 // console output:
-"0x006400000036ead71325604dc15d35fae584d7b50646d81753b8b06ebc3b32569bff571d39d21918010000000000000000000000000000000000009e8d88ae895c9b37b2dead9757a3452f7c2299704d91ddfa444d87723f94fe0c000000";
+'0x006400000036ead71325604dc15d35fae584d7b50646d81753b8b06ebc3b32569bff571d39d21918010000000000000000000000000000000000009e8d88ae895c9b37b2dead9757a3452f7c2299704d91ddfa444d87723f94fe0c000000';
 ```
+
 </details>
 
 ## `getStatusV2`
@@ -1074,7 +1052,7 @@ Fetches the status of an ongoing swap based on the provided `swapStatusRequest` 
 ```typescript copy
 function getStatusV2(
   swapStatusRequest: SwapStatusRequest,
-  options?: RequestOptions
+  options?: RequestOptions,
 ): Promise<SwapStatusResponseV2>;
 
 type SwapStatusRequest = {
@@ -1131,7 +1109,7 @@ interface DepositFields {
 }
 
 interface PaidFee {
-  type: "NETWORK" | "INGRESS" | "EGRESS" | "BROKER" | "BOOST" | "LIQUIDITY";
+  type: 'NETWORK' | 'INGRESS' | 'EGRESS' | 'BROKER' | 'BOOST' | 'LIQUIDITY';
   chain: Chain;
   asset: Asset;
   amount: string;
@@ -1224,25 +1202,25 @@ interface Sending extends Receiving {
 
 export type SwapStatusResponseV2 =
   | ({
-      state: "WAITING";
+      state: 'WAITING';
     } & Waiting)
   | ({
-      state: "RECEIVING";
+      state: 'RECEIVING';
     } & Receiving)
   | ({
-      state: "SWAPPING";
+      state: 'SWAPPING';
     } & Swapping)
   | ({
-      state: "SENDING";
+      state: 'SENDING';
     } & Sending)
   | ({
-      state: "SENT";
+      state: 'SENT';
     } & Sending)
   | ({
-      state: "COMPLETED";
+      state: 'COMPLETED';
     } & Sending)
   | ({
-      state: "FAILED";
+      state: 'FAILED';
     } & Sending);
 ```
 
@@ -1251,7 +1229,7 @@ export type SwapStatusResponseV2 =
 
 ```typescript copy
 const swapStatusRequest = {
-  id: "6726421-Bitcoin-34009", // depositChannelId / swapId / transactionId
+  id: '6726421-Bitcoin-34009', // depositChannelId / swapId / transactionId
 };
 
 console.log(await swapSDK.getStatusV2(swapStatusRequest));
@@ -1351,6 +1329,7 @@ console.log(await swapSDK.getStatusV2(swapStatusRequest));
   lastStatechainUpdateAt: 1740497470820,
 }
 ```
+
 </details>
 
 ### Lifecycle of a swap
@@ -1404,12 +1383,12 @@ for Ethereum, and Planck for Polkadot, etc.
 
 <Callout type="warning">
   <p>
-    Funds sent in excess of the maximum swap amount are absorbed by the protocol
-    and cannot be recovered.
+    Funds sent in excess of the maximum swap amount are absorbed by the protocol and cannot be
+    recovered.
   </p>
   <p>
-    Funds that fail to meet the minimum swap amount are also absorbed by the
-    protocol and cannot be recovered.
+    Funds that fail to meet the minimum swap amount are also absorbed by the protocol and cannot be
+    recovered.
   </p>
 </Callout>
 
@@ -1461,6 +1440,7 @@ console.log(await swapSDK.getSwapLimits());
   }
 }
 ```
+
 </details>
 
 ## `getBoostLiquidity`
@@ -1470,9 +1450,7 @@ The returned list can be filtered by `feeTierBps` **or** `asset, chain`.
 
 ```typescript copy
 function getBoostLiquidity(
-  params:
-    | { feeTierBps?: number }
-    | { feeTierBps?: number; asset: Asset; chain: Chain }
+  params: { feeTierBps?: number } | { feeTierBps?: number; asset: Asset; chain: Chain },
 ): Promise<BoostPoolDepth[]>;
 
 type BoostPoolDepth = {
@@ -1504,48 +1482,49 @@ console.log(await swapSDK.getBoostLiquidity());
   {
     availableAmount: 0n,
     feeTierBps: 5,
-    chain: "Ethereum",
-    asset: "FLIP",
+    chain: 'Ethereum',
+    asset: 'FLIP',
   },
   {
     availableAmount: 0n,
     feeTierBps: 10,
-    chain: "Ethereum",
-    asset: "USDT",
+    chain: 'Ethereum',
+    asset: 'USDT',
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
-    chain: "Ethereum",
-    asset: "USDC",
+    chain: 'Ethereum',
+    asset: 'USDC',
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
-    chain: "Polkadot",
-    asset: "DOT",
+    chain: 'Polkadot',
+    asset: 'DOT',
   },
   {
     availableAmount: 450695350n,
     feeTierBps: 5,
-    chain: "Bitcoin",
-    asset: "BTC",
+    chain: 'Bitcoin',
+    asset: 'BTC',
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
-    chain: "Arbitrum",
-    asset: "USDC",
+    chain: 'Arbitrum',
+    asset: 'USDC',
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
-    chain: "Arbitrum",
-    asset: "ETH",
+    chain: 'Arbitrum',
+    asset: 'ETH',
   },
   // ...
 ];
 ```
+
 </details>
 
 <details>
@@ -1556,9 +1535,9 @@ If a valid combination of `chain, asset` is provided, it returns the available b
 ```typescript copy
 console.log(
   await sdk.getBoostLiquidity({
-    asset: "BTC",
-    chain: "Bitcoin",
-  })
+    asset: 'BTC',
+    chain: 'Bitcoin',
+  }),
 );
 ```
 
@@ -1568,23 +1547,24 @@ console.log(
   {
     availableAmount: 300000000n,
     feeTierBps: 30,
-    chain: "Bitcoin",
-    asset: "BTC",
+    chain: 'Bitcoin',
+    asset: 'BTC',
   },
   {
     availableAmount: 450149304n,
     feeTierBps: 10,
-    chain: "Bitcoin",
-    asset: "BTC",
+    chain: 'Bitcoin',
+    asset: 'BTC',
   },
   {
     availableAmount: 450695350n,
     feeTierBps: 5,
-    chain: "Bitcoin",
-    asset: "BTC",
+    chain: 'Bitcoin',
+    asset: 'BTC',
   },
 ];
 ```
+
 </details>
 
 <details>
@@ -1596,7 +1576,7 @@ If a `feeTierBps` is provided, it returns the available boost pools for that spe
 console.log(
   await sdk.getBoostLiquidity({
     feeTierBps: 5,
-  })
+  }),
 );
 ```
 
@@ -1607,12 +1587,13 @@ console.log(
   {
     availableAmount: 450695350n,
     feeTierBps: 5,
-    chain: "Bitcoin",
-    asset: "BTC",
+    chain: 'Bitcoin',
+    asset: 'BTC',
   },
   // ...
 ];
 ```
+
 </details>
 
 ## `getChannelOpeningFees`
@@ -1653,6 +1634,7 @@ console.log(await swapSDK.getChannelOpeningFees());
   Solana: 0n
 }
 ```
+
 </details>
 
 ## `getRequiredBlockConfirmations`
@@ -1695,4 +1677,5 @@ console.log(await swapSDK.getRequiredBlockConfirmations());
   Solana: null
 }
 ```
+
 </details>

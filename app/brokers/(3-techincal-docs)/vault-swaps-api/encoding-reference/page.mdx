@@ -4,7 +4,7 @@ title: Encoding Reference
 description: How to Encode Vault Swap Parameters Yourself
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Vault Swap Encoding Reference
 
@@ -90,10 +90,10 @@ Chainflip uses its own notation for chain and token within our Vault smart contr
 #### Chainflip parameters (`cf_parameters`)
 
 <Callout type="info">
-  This section is only relevant if you want to encode EVM and Solana Vault swap
-  transactions manually instead of using the provided RPC helpers. If you use
-  the `broker_request_swap_parameter_encoding` RPC call to build the call, this
-  field is automatically encoded for you.
+  This section is only relevant if you want to encode EVM and Solana Vault swap transactions
+  manually instead of using the provided RPC helpers. If you use the
+  `broker_request_swap_parameter_encoding` RPC call to build the call, this field is automatically
+  encoded for you.
 </Callout>
 
 In both the [EVM smart contract interface](/brokers/vault-swaps-api/evm#vault-contract-interface-reference) and the [Solana program interface](/brokers/vault-swaps-api/solana#ault-contract-interface-references), the `cf_parameters` must be passed as part of the transaction data.
@@ -156,20 +156,10 @@ pub struct ChannelRefundParameters {
 Here is an encoding example of the `cf_parameters` in typescript using the `scale-ts` library and some other utility functions from some other libraries. Those dependencies will be needed in your `package.json` file.
 
 ```typescript
-import { bytesToHex, hexToBytes } from "@chainflip/utils/bytes";
-import * as ss58 from "@chainflip/utils/ss58";
-import { isHex } from "@chainflip/utils/string";
-import {
-  u32,
-  Struct,
-  Option,
-  u16,
-  u256,
-  Bytes as TsBytes,
-  Enum,
-  Vector,
-  u8,
-} from "scale-ts";
+import { bytesToHex, hexToBytes } from '@chainflip/utils/bytes';
+import * as ss58 from '@chainflip/utils/ss58';
+import { isHex } from '@chainflip/utils/string';
+import { u32, Struct, Option, u16, u256, Bytes as TsBytes, Enum, Vector, u8 } from 'scale-ts';
 
 const vaultSwapParametersCodec = Struct({
   refundParams: Struct({
@@ -216,14 +206,12 @@ function encodeCfParameters(
   affiliateFees?: {
     account: number;
     commissionBps: number;
-  }[]
+  }[],
 ): string {
   const vaultSwapParameters = {
     refundParams: {
       retryDurationBlocks: fillOrKillParams.retryDurationBlocks,
-      refundAddress: hexToBytes(
-        fillOrKillParams.refundAddress as `0x${string}`
-      ),
+      refundAddress: hexToBytes(fillOrKillParams.refundAddress as `0x${string}`),
       minPriceX128: BigInt(fillOrKillParams.minPriceX128),
     },
     dcaParams,
@@ -240,26 +228,25 @@ function encodeCfParameters(
   return bytesToHex(
     ccmAdditionalData !== undefined
       ? versionedCcmCfParametersCodec.enc({
-          tag: "V0",
+          tag: 'V0',
           value: {
             ccmAdditionalData: hexToBytes(ccmAdditionalData as `0x${string}`),
             vaultSwapParameters,
           },
         })
       : versionedCfParametersCodec.enc({
-          tag: "V0",
+          tag: 'V0',
           value: {
             vaultSwapParameters,
           },
-        })
+        }),
   );
 }
 ```
 
 <Callout type="info">
-  The `ccmAdditionalData` parameter should not be encoded for non-CCM swaps - it
-  should be undefined in the code above. For CCM swaps, when the destination
-  chain is different than Solana it should be an empty hex string. For Solana
-  CCM swaps, it should be encoded as described in the [Solana CCM message
-  section](/brokers/vault-swaps-api/solana#interface-references).
+  The `ccmAdditionalData` parameter should not be encoded for non-CCM swaps - it should be undefined
+  in the code above. For CCM swaps, when the destination chain is different than Solana it should be
+  an empty hex string. For Solana CCM swaps, it should be encoded as described in the [Solana CCM
+  message section](/brokers/vault-swaps-api/solana#interface-references).
 </Callout>

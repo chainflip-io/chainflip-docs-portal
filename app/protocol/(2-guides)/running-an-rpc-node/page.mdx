@@ -1,13 +1,10 @@
 ---
-
 title: Running Full or Archive node
 
 description: This guide describes how to download and run a Chainflip RPC node.
-
 ---
 
-
-import {Callout} from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Running a Full or an Archive RPC node
 
@@ -25,6 +22,7 @@ To run an RPC node, you need a server with the following minimum requirements:
 - **Operating System**: Ubuntu 22.04 LTS (Jammy Jellyfish) or Ubuntu 24.04 LTS (Noble Numbat)
 
 ### Prerequisites
+
 It's a good practice to use a fresh node and upgrade all system dependencies before installing the validator software.
 
 ```bash copy
@@ -61,12 +59,15 @@ gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | gpg --show-keys
     sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
     sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
     ```
+
 </Callout>
 
 3. Add Chainflip's Mainnet Repo to `apt` sources list:
 
 <Callout type="info">
-Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish) on an AMD processor. Running them on other versions of Ubuntu or other Debian-like distributions may require additional dependencies and configuration.
+  Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish) on an AMD processor. Running
+  them on other versions of Ubuntu or other Debian-like distributions may require additional
+  dependencies and configuration.
 </Callout>
 
 ```bash copy
@@ -129,15 +130,17 @@ sudo systemctl daemon-reload
 ```
 
 <Callout type="info">
-Snapshots are updated every 6 hours starting at 00:00 UTC. The snapshot holds the state and blocks of the most recent 300 blocks. The size of the snapshot is approximately 50GB.
-You can override the snapshot to use a different number of blocks by changing the `--blocks-pruning` and `--pruning` parameters in the systemd override file.
+  Snapshots are updated every 6 hours starting at 00:00 UTC. The snapshot holds the state and blocks
+  of the most recent 300 blocks. The size of the snapshot is approximately 50GB. You can override
+  the snapshot to use a different number of blocks by changing the `--blocks-pruning` and
+  `--pruning` parameters in the systemd override file.
 </Callout>
-
 
 ## Docker Installation
 
 <Callout type="warning">
-If you have done the **APT Installation** above, you don't need to follow the **Docker Installation** below.
+  If you have done the **APT Installation** above, you don't need to follow the **Docker
+  Installation** below.
 </Callout>
 
 If you are planning to run a validator using a container orchestration system like Kubernetes you can use our pre-built images on [Docker Hub](https://hub.docker.com/u/chainfliplabs).
@@ -164,7 +167,7 @@ services:
     restart: unless-stopped
     user: root
     ports:
-      - "127.0.0.1:9944:9944"
+      - '127.0.0.1:9944:9944'
     volumes:
       - ./chainflip/chaindata:/etc/chainflip/chaindata
     entrypoint:
@@ -253,6 +256,7 @@ Bear in mind that an archive node will take **significantly** longer to sync com
 ```bash copy
 sudo journalctl -u chainflip-archive-node -f
 ```
+
 You should see the following in the logs:
 
 ```text

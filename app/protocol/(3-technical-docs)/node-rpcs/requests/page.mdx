@@ -1,9 +1,7 @@
 ---
-
 title: Node RPC Requests
 
 description: The state chain node RPCs.
-
 ---
 
 ## RPC requests
@@ -19,15 +17,17 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - an object containing an array of addresses for each chain:
-```json 
+
+```json
 {
     "Bitcoin": [..],
     "Ethereum": [..],
     "Arbitrum": [..],
     "Solana": [..]
 }
-``` 
+```
 
 <details>
 <summary>Example</summary>
@@ -45,27 +45,23 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 Response:
+
 ```json
 {
   "jsonrpc": "2.0",
   "result": {
     "Bitcoin": [
       "bcrt1p59avvgtdzxhhgfj6sxrhn9xlll66v92se9p87pmeu04e6pa2xdysr35c9y",
-      "bcrt1p2z0mqelqp4y0twg4lzr9znpn4jxa453gn5n7xr3attkevhr7rc3scstjp3",
+      "bcrt1p2z0mqelqp4y0twg4lzr9znpn4jxa453gn5n7xr3attkevhr7rc3scstjp3"
     ],
-    "Ethereum": [
-      "0xed971cf49c6b4d7432d50dd7afe9e8bc1b1842c6",
-    ],
-    "Arbitrum": [
-      "0x9d20a1d977c15cd0993a1979e9ac684bcc699c54"
-    ],
-    "Solana": [
-      "9K1rSSRr222DLhjBHukvHws9unAah1ad5gYjWpaEN39T",
-    ]
+    "Ethereum": ["0xed971cf49c6b4d7432d50dd7afe9e8bc1b1842c6"],
+    "Arbitrum": ["0x9d20a1d977c15cd0993a1979e9ac684bcc699c54"],
+    "Solana": ["9K1rSSRr222DLhjBHukvHws9unAah1ad5gYjWpaEN39T"]
   },
   "id": "1"
 }
 ```
+
 </details>
 
 ### `cf_controlled_vault_addresses`
@@ -82,8 +78,10 @@ Parameters:
 - `at`: Block Hash as string (Optional), defaults to the last block if not provided
 
 Return:
+
 - an object containing an array of objects for each chain:
-```json 
+
+```json
 {
     "Bitcoin": [..],
     "Ethereum": [..],
@@ -91,17 +89,18 @@ Return:
     "Solana": [..]
 }
 ```
+
 A single entry looks like follows:
+
 ```json
 {
-    "name": "String",
-    "address": "String (address)",
-    "explanation": "String",
-    "rotation_policy": "String",
-    "next_predicted_rotation": "String (date and time)"
+  "name": "String",
+  "address": "String (address)",
+  "explanation": "String",
+  "rotation_policy": "String",
+  "next_predicted_rotation": "String (date and time)"
 }
 ```
-
 
 <details>
 <summary>Example</summary>
@@ -119,6 +118,7 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 Response:
+
 ```json
 {
   "jsonrpc": "2.0",
@@ -191,4 +191,5 @@ Response:
   "id": "1"
 }
 ```
+
 </details>

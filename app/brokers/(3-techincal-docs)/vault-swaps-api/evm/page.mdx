@@ -4,7 +4,7 @@ title: EVM Vault swaps
 description: Description of performing Vault Swaps for EVM networks
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## EVM Vault swaps
 
@@ -95,16 +95,16 @@ Note the return values from the above RPC call:
 The first three fields map closely to common EVM transaction building APIs and need to be included in the transaction. Other values such as `gas` or `gasPrice` can be estimated and set by the user or wallet.
 
 <Callout type="info">
-  Note that if `source_token_address` is present, the returned address is the
-  contract address of the ERC-20 token. This requires approval / whitelisting by
-  the sender, *before* submitting the vault swap.
+  Note that if `source_token_address` is present, the returned address is the contract address of
+  the ERC-20 token. This requires approval / whitelisting by the sender, *before* submitting the
+  vault swap.
 </Callout>
 
 ```typescript copy
 /*
 Assume `calldata`, `value` and `to`;
 */
-const web3 = new Web3("your-endpoint");
+const web3 = new Web3('your-endpoint');
 const tx = {
   to: to,
   data: calldata,
@@ -125,9 +125,7 @@ As a basic example, using `web3` and continuing from the previous code snippet:
 ```typescript copy
 // Assume a loaded `wallet`;
 const signedTx = await web3.eth.accounts.signTransaction(tx, wallet.privateKey);
-const receipt = await web3.eth.sendSignedTransaction(
-  signedTx.rawTransaction as string
-);
+const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
 ```
 
 ## Full Example

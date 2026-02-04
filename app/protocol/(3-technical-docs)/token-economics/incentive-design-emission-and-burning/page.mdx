@@ -1,12 +1,10 @@
 ---
-
 title: Incentive Design, Emissions & Burning
 
 description: Chainflip has an elastic supply. There is minting and burning which means that the protocol does not have a fixed or final token supply. The network genesis starts with 90m \$FLIP tokens but will change over time based on demand.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Incentive Design: Emissions & Burning
 
@@ -20,7 +18,7 @@ Firstly, let's explore protocol emissions. Emissions are newly minted tokens giv
 
 The rewards distributed to Validators are to ensure the economic security of the protocol. Chainflip requires Validators to stake tokens that can be slashed in order to ensure the safety of liquidity contained in the protocol.
 
-This economic security is discussed in more detail on the [Governance & Security](/protocol/governance-and-security "mention") page.
+This economic security is discussed in more detail on the [Governance & Security](/protocol/governance-and-security 'mention') page.
 
 In the future, additional budgets may be altered or granted through governance to fund liquidity provisioning incentives or trading rebate programs to extend overall market performance.
 
@@ -30,12 +28,12 @@ Chainflip has globally limited emissions caps based on an annual target rate. In
 
 The emission targets are distributed among the following recipients:
 
-|Recipient| Target Rate      | Distribution |
-|----------|--------------------|----------------|
-|Authority Validators   | 4.5% annual | Equal Shares |
-|Backup Validators | 0.5% annual | Pro-Rata |
+| Recipient            | Target Rate | Distribution |
+| -------------------- | ----------- | ------------ |
+| Authority Validators | 4.5% annual | Equal Shares |
+| Backup Validators    | 0.5% annual | Pro-Rata     |
 
-Note: Emission rates were at 7% and 1% respectively until 22nd May, 2024. 
+Note: Emission rates were at 7% and 1% respectively until 22nd May, 2024.
 
 ### Estimated Yields and Lockup Ratio for Validators
 
@@ -91,8 +89,9 @@ Chainflip shares a similar model, with a few forms of burning mechanisms in play
 The **most important** mechanism in play is the Network Fee. For every swap that passes through the Chainflip system, a fee is taken from the user (in USDC) and is used to buy \$FLIP tokens in the built-in USDC-FLIP pool. This purchased \$FLIP is automatically **burned**, removing it from the supply.
 
 This is done through two components:
-1. A base network fee of 0.1% taken in USDC on *every swap*, regardless of the number of pools (legs) involved
-2. A 0.025% contribution from the Boost pools (introduced in v1.8), taken on every *boosted* Bitcoin deposit
+
+1. A base network fee of 0.1% taken in USDC on _every swap_, regardless of the number of pools (legs) involved
+2. A 0.025% contribution from the Boost pools (introduced in v1.8), taken on every _boosted_ Bitcoin deposit
 
 This means there is a base burn rate of 0.1% and 0.125% burn rate for all boosted swaps.
 
@@ -132,7 +131,7 @@ For more information on these fees check how they apply to [Brokers](/brokers#br
 
 Finally, slashing and penalties for Validators are also burned. Hopefully, these penalties end up being insignificant, as a fully operational Authority set shouldn't ever incur these penalties if the operators are behaving correctly and maintaining their nodes.
 
-To read more about these penalties, you can check out [Reputation and Slashing](/validators/reputation-and-slashing "mention")
+To read more about these penalties, you can check out [Reputation and Slashing](/validators/reputation-and-slashing 'mention')
 
 ## Conclusion
 

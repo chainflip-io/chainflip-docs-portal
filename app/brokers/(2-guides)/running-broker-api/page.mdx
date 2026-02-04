@@ -1,19 +1,16 @@
 ---
-
 title: Running Broker-API binary
 
 description: Running an Broker-API guide.
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Running Broker API binary
 
 The Broker API is a standalone client that exposes _Broker_ functionality via a JSON API interface. It can be obtained from the same location as the chainflip-node, i.e. you can install it via `apt`, use the provided docker image or compile it yourself from the sources on Github.
 
 Brokers need to run the client for the API themselves, as the Broker holds keys used to sign extrinsics and collect any fees set for [Deposit Channels](/brokers/broker-deposit-channels-swaps#deposit-channels). The API client works by pointing it to an RPC node — also run by the same Broker, ideally.
-
 
 ### Command line arguments and defaults
 
@@ -25,6 +22,7 @@ Brokers need to run the client for the API themselves, as the Broker holds keys 
 ```bash copy
 chainflip-broker-api --help
 ```
+
 ```sh
 chainflip-broker-api
 
@@ -89,6 +87,7 @@ For a full list of command line arguments, see `chainflip-broker-api --help` and
 To use the default configuration, run:
 
 - Testnet
+
 ```bash copy
 chainflip-node --chain /etc/chainflip/perseverance.chainspec.json --rpc-methods=unsafe --sync=warp
 
@@ -96,10 +95,12 @@ chainflip-broker-api --state_chain.signing_key_file /etc/chainflip/keys/signing_
 ```
 
 <Callout type="warning">
-  Make sure the signing key file is not exposed. Access to this key gives full control over the Broker account.
+  Make sure the signing key file is not exposed. Access to this key gives full control over the
+  Broker account.
 </Callout>
 
 - Mainnet
+
 ```bash copy
 chainflip-node --chain /etc/chainflip/berghain.chainspec.json --rpc-methods=unsafe --sync=warp
 
@@ -107,7 +108,8 @@ chainflip-broker-api --state_chain.signing_key_file /etc/chainflip/keys/signing_
 ```
 
 <Callout type="warning">
-  Avoid exposing the broker-api publicly with these settings, as anyone could redeem your earned fees!
+  Avoid exposing the broker-api publicly with these settings, as anyone could redeem your earned
+  fees!
 </Callout>
 
 ### Option B: Running the Broker API with Docker Compose
@@ -131,7 +133,6 @@ This setup requires a running instance of the State Chain (`chainflip-node`). Yo
 
 After being funded, before you can fully interact with the Broker API, your account needs to be [registered](#broker_register_account) as a Broker account.
 
-
 ## Deployment Schema
 
 Brokers (and LPs) should ideally run their own local RPC nodes. These nodes connect to the network and expose the LP & Broker APIs locally to the backend they want to use.
@@ -140,15 +141,13 @@ Brokers (and LPs) should ideally run their own local RPC nodes. These nodes conn
 <img src="/integration/image.png" alt="Broker API deploying example" />
 <br />
 <Callout type="warning">
-    Avoid using the public RPC node since its particularly vulnerable to DDOS or
-    other various attacks
+  Avoid using the public RPC node since its particularly vulnerable to DDOS or other various attacks
 </Callout>
-
 
 ## Working Example
 
 <Callout type="info">
-    This example assumes the node that is exposing the Statechain RPC's is **funded**.
+  This example assumes the node that is exposing the Statechain RPC's is **funded**.
 </Callout>
 
 1. Open a terminal and run:
@@ -165,6 +164,7 @@ It will print `🎙 Server is listening on 0.0.0.0:62378.` and continue to run.
 2. Open another terminal and run:
 
 Register as a broker if you are not already.
+
 ```bash copy
 curl 'http://localhost:62378/' \
   -H 'accept: application/json' \
@@ -180,18 +180,19 @@ curl 'http://localhost:62378/' \
   -H 'content-type: application/json' \
   --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_request_swap_deposit_address", "params": ["ETH", "FLIP","0xabababababababababababababababababababab", 0]}'
 ```
+
 The result is the hex encoded deposit address, channel id, expiry block, and the issued block:
 
 ```json
 {
-    "jsonrpc":"2.0",
-    "result":{
-        "address":"0xe720e23f62efc931d465a9d16ca303d72ad6c0bc",
-        "issued_block":5418,
-        "channel_id":6,
-        "source_chain_expiry_block":2954
-    },
-    "id":1
+  "jsonrpc": "2.0",
+  "result": {
+    "address": "0xe720e23f62efc931d465a9d16ca303d72ad6c0bc",
+    "issued_block": 5418,
+    "channel_id": 6,
+    "source_chain_expiry_block": 2954
+  },
+  "id": 1
 }
 ```
 

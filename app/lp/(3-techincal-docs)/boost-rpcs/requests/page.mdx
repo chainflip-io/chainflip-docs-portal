@@ -1,21 +1,19 @@
 ---
-
 title: Boost RPC Requests
 
 description: All available Boost RPCs.
-
 ---
 
 ## Boost Methods
 
 ### `cf_boost_pools_depth`
 
-Returns a list of *available* (i.e. ready to be used) amounts for each boost pool.
+Returns a list of _available_ (i.e. ready to be used) amounts for each boost pool.
 
 Parameters:
 
 - `at`: Block Hash (String, optional) - rpc will be executed against the state of the Chainflip state chain
-at this block; defaults to the most recent block.
+  at this block; defaults to the most recent block.
 
 Returns:
 
@@ -23,7 +21,7 @@ An array of objects for all existing boost pools, each with the following fields
 
 - `chain`: (String) [Chain](//lp/lp-api/types#chain)
 - `asset`: (String) [Asset](//lp/lp-api/types#asset)
-- `tier`: (Number) [Fee Tier](#fee-tier) Fee in basis points charged by this pool 
+- `tier`: (Number) [Fee Tier](#fee-tier) Fee in basis points charged by this pool
 - `available_amount`: (String) [Amount](//lp/lp-api/types#amount) - Maximum amount of `asset` that the pool can boost at the moment
 
 <details>
@@ -60,6 +58,7 @@ Response:
   }
 ]
 ```
+
 </details>
 
 ### `cf_boost_pool_details`
@@ -76,7 +75,7 @@ Parameters:
 
 - `asset`: (String, optional) [Asset](//lp/lp-api/types#asset): Allows filtering the response by pool's asset; returns results for every asset if not provided.
 - `at`: (String, Optional) Block Hash: The call will be executed against the state of the Chainflip state chain
-at this block; defaults to the most recent block.
+  at this block; defaults to the most recent block.
 
 Returns:
 
@@ -86,16 +85,16 @@ An array of objects for each of the queried pools, each containing the following
 - `asset`: (String) [Asset](//lp/lp-api/types#asset)
 - `fee_tier`: (Number) [Fee Tier](#fee-tier)
 - `available_amounts`: (Array of Objects) funds contributed by each account that are available for boosting (i.e. not currently used in a pending boost), represented by an array of Objects containing the following fields:
-    - `account_id`: (String) [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
-    - `amount`: (String) [Amount](//lp/lp-api/types#amount) - `account_id`'s available funds in the pool
+  - `account_id`: (String) [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
+  - `amount`: (String) [Amount](//lp/lp-api/types#amount) - `account_id`'s available funds in the pool
 - `deposits_pending_finalization` (Array of Objects) - An Array of deposits currently awaiting finalisation that the pool contributed to, each containing:
-    - `deposit_id`: (Number) - identifies the boosted deposit
-    - `owed_amounts`: (Array of Objects) - funds that each account is expecting to receive upon the deposit's finalisation, represented by a list of items containing:
-        - `account_id`: (String) [account](//lp/lp-api/types#addresses) identifies boost pool's contributor
-        - `amount`: (String) [Amount](//lp/lp-api/types#amount) - amount to be received by `account_id`
+  - `deposit_id`: (Number) - identifies the boosted deposit
+  - `owed_amounts`: (Array of Objects) - funds that each account is expecting to receive upon the deposit's finalisation, represented by a list of items containing:
+    - `account_id`: (String) [account](//lp/lp-api/types#addresses) identifies boost pool's contributor
+    - `amount`: (String) [Amount](//lp/lp-api/types#amount) - amount to be received by `account_id`
 - `pending_withdrawals` (Array of Objects) - accounts that have requested to "stop boosting", along with the deposits awaiting finalisation they have contributed to, represented by an array of objects containing:
-    - `account_id`: (String) [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
-    - `pending_deposits`: (Array of Numbers) - An array of ids of pending deposits (each represented by `number`) that `account_id` contributed to.
+  - `account_id`: (String) [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
+  - `pending_deposits`: (Array of Numbers) - An array of ids of pending deposits (each represented by `number`) that `account_id` contributed to.
 
 <details>
 <summary>Example</summary>
@@ -176,22 +175,18 @@ Response:
     "pending_withdrawals": [
       {
         "account_id": "5C62Ck4UrFPiBtoCmeSrgF7x9yv9mn38446dhCpsi2mLHiFT",
-        "pending_deposits": [
-          0
-        ]
+        "pending_deposits": [0]
       },
       {
         "account_id": "5C7LYpP2ZH3tpKbvVvwiVe54AapxErdPBbvkYhe6y9ZBkqWt",
-        "pending_deposits": [
-          0
-        ]
+        "pending_deposits": [0]
       }
     ]
   }
 ]
 ```
-</details>
 
+</details>
 
 ### `cf_boost_pool_pending_fees`
 
@@ -202,8 +197,7 @@ Parameters:
 
 - `asset`: [Asset](//lp/lp-api/types#asset) (Optional): allows filtering the response by pool's asset; returns results for every asset if not provided.
 - `at`: Block Hash (Optional): rpc will be executed against the state of the blockchain
-at this block; defaults to the hash of the most recent block.
-
+  at this block; defaults to the hash of the most recent block.
 
 Returns:
 
@@ -213,11 +207,10 @@ A list of items each containing the following fields:
 - `asset`: [Asset](//lp/lp-api/types#asset)
 - `fee_tier`: [Fee Tier](#fee-tier)
 - `pending_fees` - a list of items, each containing:
-    - `deposit_id`: number
-    - `fees` - a list of items, each containing:
-        - `account_id`: [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
-        - `amount`: [Amount](//lp/lp-api/types#amount) - amount in fees to be credited to `account_id` upon `deposit_id`'s finalisation
-
+  - `deposit_id`: number
+  - `fees` - a list of items, each containing:
+    - `account_id`: [account](//lp/lp-api/types#addresses) - identifies boost pool's contributor
+    - `amount`: [Amount](//lp/lp-api/types#amount) - amount in fees to be credited to `account_id` upon `deposit_id`'s finalisation
 
 <details>
 <summary>Example</summary>
@@ -270,4 +263,5 @@ Response:
   }
 ]
 ```
+
 </details>

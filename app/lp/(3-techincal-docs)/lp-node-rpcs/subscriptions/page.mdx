@@ -2,10 +2,9 @@
 title: Node Subscriptions
 
 description: The state chain node subscriptions that are useful for liquidity providers.
-
 ---
 
-import {Callout} from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## Subscriptions
 
@@ -57,19 +56,19 @@ Subscribe:
 
 ```json copy
 {
-   "id":1,
-   "jsonrpc":"2.0",
-   "method":"cf_subscribe_scheduled_swaps",
-   "params":{
-      "base_asset":{
-         "chain":"Ethereum",
-         "asset":"FLIP"
-      },
-      "quote_asset":{
-         "chain":"Ethereum",
-         "asset":"USDC"
-      }
-   }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "cf_subscribe_scheduled_swaps",
+  "params": {
+    "base_asset": {
+      "chain": "Ethereum",
+      "asset": "FLIP"
+    },
+    "quote_asset": {
+      "chain": "Ethereum",
+      "asset": "USDC"
+    }
+  }
 }
 ```
 
@@ -81,49 +80,49 @@ Here is what a possible notification for block 84 might look like:
 
 ```json
 {
-    "block_hash":"0x00d717c77802650d08267f5c2d90efcf4dccde271ea9d69359d30f3de2f3e32e",
-    "block_number":84,
-    "swaps": [
-        {
-            "swap_id":1,
-            "swap_request_id":1,
-            "base_asset":{
-                "chain":"Ethereum",
-                "asset":"FLIP"
-            },
-            "quote_asset":{
-                "chain":"Ethereum",
-                "asset":"USDC"
-            },
-            "side":"sell",
-            "amount":"0x1ad5814560a6c1005b",
-            "execute_at":85,
-            "remaining_chunks":0,
-            "chunk_interval":0
-        },
-        {
-            "swap_id":2,
-            "swap_request_id":2,
-            "base_asset":{
-                "chain":"Ethereum",
-                "asset":"FLIP"
-            },
-            "quote_asset":{
-                "chain":"Ethereum",
-                "asset":"USDC"
-            },
-            "side":"buy",
-            "amount":"0x1d540d83",
-            "source_asset":{
-                "chain":"Bitcoin",
-                "asset":"BTC"
-            },
-            "source_amount":"0x4b877c",
-            "execute_at":86,
-            "remaining_chunks":0,
-            "chunk_interval":0
-        }
-    ]
+  "block_hash": "0x00d717c77802650d08267f5c2d90efcf4dccde271ea9d69359d30f3de2f3e32e",
+  "block_number": 84,
+  "swaps": [
+    {
+      "swap_id": 1,
+      "swap_request_id": 1,
+      "base_asset": {
+        "chain": "Ethereum",
+        "asset": "FLIP"
+      },
+      "quote_asset": {
+        "chain": "Ethereum",
+        "asset": "USDC"
+      },
+      "side": "sell",
+      "amount": "0x1ad5814560a6c1005b",
+      "execute_at": 85,
+      "remaining_chunks": 0,
+      "chunk_interval": 0
+    },
+    {
+      "swap_id": 2,
+      "swap_request_id": 2,
+      "base_asset": {
+        "chain": "Ethereum",
+        "asset": "FLIP"
+      },
+      "quote_asset": {
+        "chain": "Ethereum",
+        "asset": "USDC"
+      },
+      "side": "buy",
+      "amount": "0x1d540d83",
+      "source_asset": {
+        "chain": "Bitcoin",
+        "asset": "BTC"
+      },
+      "source_amount": "0x4b877c",
+      "execute_at": 86,
+      "remaining_chunks": 0,
+      "chunk_interval": 0
+    }
+  ]
 }
 ```
 
@@ -141,34 +140,35 @@ The notification for the next block (85) would look like the following under thi
 
 ```json
 {
-    "block_hash":"0xcd3e34680895f3f98a0fb7f74265cc0b23ed8dc89cddb0cd3e6c60700985d74e",
-    "block_number":85,
-    "swaps": [
-        {
-            "swap_id":2,
-            "request_id":2,
-            "base_asset":{
-                "chain":"Ethereum",
-                "asset":"FLIP"
-            },
-            "quote_asset":{
-                "chain":"Ethereum",
-                "asset":"USDC"
-            },
-            "side":"buy",
-            "amount":"0x1d540d83",
-            "source_asset":{
-                "chain":"Bitcoin",
-                "asset":"BTC"
-            },
-            "source_amount":"0x4b877c",
-            "execute_at":86,
-            "remaining_chunks":0,
-            "chunk_interval":0
-        }
-    ]
+  "block_hash": "0xcd3e34680895f3f98a0fb7f74265cc0b23ed8dc89cddb0cd3e6c60700985d74e",
+  "block_number": 85,
+  "swaps": [
+    {
+      "swap_id": 2,
+      "request_id": 2,
+      "base_asset": {
+        "chain": "Ethereum",
+        "asset": "FLIP"
+      },
+      "quote_asset": {
+        "chain": "Ethereum",
+        "asset": "USDC"
+      },
+      "side": "buy",
+      "amount": "0x1d540d83",
+      "source_asset": {
+        "chain": "Bitcoin",
+        "asset": "BTC"
+      },
+      "source_amount": "0x4b877c",
+      "execute_at": 86,
+      "remaining_chunks": 0,
+      "chunk_interval": 0
+    }
+  ]
 }
 ```
+
 </details>
 
 Using `swap_id` to identify swaps, swap 1 has already been executed and is thus not present. However, swap 2 appears again as it is still scheduled for execution in the next block.
@@ -179,12 +179,13 @@ the next block, and will appear again in the subscription.
 ### `cf_subscribe_pool_price` <span className="badge-danger after:content-['Deprecated']"/>
 
 <Callout type="error">
-    THIS SUBSCRIPTION IS DEPRECATED. Use [cf_subscribe_pool_price_v2](#cf_subscribe_pool_price_v2) instead.
+  THIS SUBSCRIPTION IS DEPRECATED. Use [cf_subscribe_pool_price_v2](#cf_subscribe_pool_price_v2)
+  instead.
 </Callout>
 
 Subscribes to the current price of a pair in a particular direction. This is useful for liquidity providers to see the current price of a pool. Note `{"from_asset": "BTC", "to_asset": "USDC }` is not equivalent to `{"from_asset": "USDC", "to_asset": "BTC"}`, therefore the prices maybe different.
 
-It returns the price at the time of beginning the subscription as the first item in the stream. Subsequent items are only returned if there is a *change* in the price.
+It returns the price at the time of beginning the subscription as the first item in the stream. Subsequent items are only returned if there is a _change_ in the price.
 
 Parameters:
 
@@ -201,38 +202,42 @@ Returns:
 <summary>Example</summary>
 
 Subscribe:
+
 ```json copy
 {
-   "jsonrpc":"2.0",
-   "id":"1",
-   "method":"cf_subscribe_pool_price",
-   "params":{
-      "from_asset":{
-         "chain":"Bitcoin",
-         "asset":"BTC"
-      },
-      "to_asset":{
-         "chain":"Ethereum",
-         "asset":"USDC"
-      }
-   }
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "cf_subscribe_pool_price",
+  "params": {
+    "from_asset": {
+      "chain": "Bitcoin",
+      "asset": "BTC"
+    },
+    "to_asset": {
+      "chain": "Ethereum",
+      "asset": "USDC"
+    }
+  }
 }
 ```
+
 Notification:
+
 ```json
 {
-    "jsonrpc": "2.0",
-    "method": "cf_subscribe_pool_price",
-    "params": {
-        "subscription": "zynJAJ4qG4mIvBEl",
-        "result": {
-            "price": "0x101487bee1c17ddb45ce0badfbe6eff13",
-            "sqrt_price": "0x100a4096906976f1080c4042d",
-            "tick": 50
-        }
+  "jsonrpc": "2.0",
+  "method": "cf_subscribe_pool_price",
+  "params": {
+    "subscription": "zynJAJ4qG4mIvBEl",
+    "result": {
+      "price": "0x101487bee1c17ddb45ce0badfbe6eff13",
+      "sqrt_price": "0x100a4096906976f1080c4042d",
+      "tick": 50
     }
+  }
 }
 ```
+
 </details>
 
 ### `cf_subscribe_pool_price_v2`
@@ -258,46 +263,50 @@ Returns:
 <summary>Example</summary>
 
 Subscribe:
+
 ```json
 {
-   "jsonrpc":"2.0",
-   "id":"1",
-   "method":"cf_subscribe_pool_price_v2",
-   "params":{
-      "base_asset":{
-         "chain":"Bitcoin",
-         "asset":"BTC"
-      },
-      "quote_asset":{
-         "chain":"Ethereum",
-         "asset":"USDC"
-      }
-   }
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "cf_subscribe_pool_price_v2",
+  "params": {
+    "base_asset": {
+      "chain": "Bitcoin",
+      "asset": "BTC"
+    },
+    "quote_asset": {
+      "chain": "Ethereum",
+      "asset": "USDC"
+    }
+  }
 }
 ```
+
 Notification:
+
 ```json
 {
-   "jsonrpc":"2.0",
-   "method":"cf_subscribe_pool_price_v2",
-   "params":{
-      "subscription":"F4pKA7E8C3Br63pA",
-      "result":{
-         "block_hash":"0x12c3662b220472de6d839a8a73dfe6ca873835bc202e282e6d008821dca0ac25",
-         "block_number":1209,
-         "base_asset":{
-            "chain":"Bitcoin",
-            "asset":"BTC"
-         },
-         "quote_asset":{
-            "chain":"Ethereum",
-            "asset":"USDC"
-         },
-         "sell":"0x10b09273676d13f5d254e20a20",
-         "buy":"0x10b09273676d13f5d254e20a20",
-         "range_order":"0x10b09273676d13f5d254e20a20"
-      }
-   }
+  "jsonrpc": "2.0",
+  "method": "cf_subscribe_pool_price_v2",
+  "params": {
+    "subscription": "F4pKA7E8C3Br63pA",
+    "result": {
+      "block_hash": "0x12c3662b220472de6d839a8a73dfe6ca873835bc202e282e6d008821dca0ac25",
+      "block_number": 1209,
+      "base_asset": {
+        "chain": "Bitcoin",
+        "asset": "BTC"
+      },
+      "quote_asset": {
+        "chain": "Ethereum",
+        "asset": "USDC"
+      },
+      "sell": "0x10b09273676d13f5d254e20a20",
+      "buy": "0x10b09273676d13f5d254e20a20",
+      "range_order": "0x10b09273676d13f5d254e20a20"
+    }
+  }
 }
 ```
+
 </details>

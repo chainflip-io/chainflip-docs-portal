@@ -1,12 +1,10 @@
 ---
-
 title: EVM (Ethereum) Vault Design
 
-description: 
-
+description:
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## EVM (Ethereum) Vault Design
 
@@ -41,8 +39,8 @@ The Vault smart contract allows for batching multiple actions into a single tran
 To illustrate the point, let's use some approximate numbers - a signature verification is ~80k gas and an asset transfer is ~10k within the Vault logic.
 
 - 1 transfer = 80k + 10k = 90k gas === 90k gas per transfer
-- 2 transfers = 80k + 2 * 10k = 100k gas === 50k gas per transfer
-- 5 transfers = 80k + 5 * 10k = 130k gas === 26k gas per transfer
+- 2 transfers = 80k + 2 \* 10k = 100k gas === 50k gas per transfer
+- 5 transfers = 80k + 5 \* 10k = 130k gas === 26k gas per transfer
 
 **It's clear that the gas costs per swap decreases significantly as the number of batched actions increase. The more swaps processed by Chainflip's Vault the cheaper it becomes for users. This enhances Chainflip's scalability.**
 

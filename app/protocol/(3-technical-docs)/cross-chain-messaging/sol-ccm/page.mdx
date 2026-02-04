@@ -1,22 +1,21 @@
 ---
-
 title: CCM Swaps to Solana
 
 description: Description CCM swaps to Solana
-
 ---
 
-import { Callout } from "nextra/components";
+import { Callout } from 'nextra/components';
 
 ## CCM Swaps to Solana
 
 Besides the general [implementation checklist](/protocol/cross-chain-messaging/overview#implementation-checklist), there are some specific considerations for Solana.
+
 - The compute unit budget on Solana will be capped at 600k compute units.
 - Some extra parameters are needed when initiating a CCM swap to Solana. See [Solana parameters](#solana-ccm-additional-data).
 - There is a limit on the message length and the number of accounts that can be passed in a CCM swap as explained in [transaction length limitation](#transaction-length-limitation).
 - The receiver program on the destination chain must implement the [described interface](#receive-call-and-asset-on-the-receiver-program).
 - If the amount of computes units requested is not enough to cover the costs of the receiver's logic on the destination chain, the transaction will revert on-chain. An example of a compute unit estimation is provided [below](#compute-budget-estimation).
-- While Chainflip will do its best to successfully execute any swap with cross-chain messaging, CCM transactions that revert on Solana will result in funds not being egressed. In that case the protocol will then send the funds to the fallback address  as explained in the [Fallback mechanism section](#fallback-mechanism).
+- While Chainflip will do its best to successfully execute any swap with cross-chain messaging, CCM transactions that revert on Solana will result in funds not being egressed. In that case the protocol will then send the funds to the fallback address as explained in the [Fallback mechanism section](#fallback-mechanism).
 
 ## Fallback mechanism
 
@@ -26,18 +25,16 @@ Unlike EVM chains, Solana does not support any try-catch mechanisms. Thus, a Fal
 
 A fallback address is provided as part of the [CCM Additional Data](#solana-ccm-additional-data) and funds from failed CCM egresses will be automatically sent there via a simple "Transfer" instruction. This ensures the protection of user's funds, giving users the peace of mind when using our CCM feature.
 
-
 ## Receive call and asset on the receiver program
 
 Chainflip's Vault will transfer the destination asset's amount to the specified address in the instruction previous to the one calling the receiver program. Then it will call the receiver program's address with the following parameters:
 
-| Param | Description | Data type |
-| ----- | ----------- | --------- |
-| `source_chain` | Source [chain ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation) for the swap. | u32 |
-| `source_address` | Address that initiated the swap on the source chain. Addresses are encoded into a {`Vec<u8>`} type | {`Vec<u8>`} |
-| `message` | Message passed to the receiver program. | {`Vec<u8>`} |
-| `amount` | Amount of the destination asset transferred to the receiver address in the previous instruction. | uint |
-
+| Param            | Description                                                                                                     | Data type   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------- |
+| `source_chain`   | Source [chain ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation) for the swap. | u32         |
+| `source_address` | Address that initiated the swap on the source chain. Addresses are encoded into a {`Vec<u8>`} type              | {`Vec<u8>`} |
+| `message`        | Message passed to the receiver program.                                                                         | {`Vec<u8>`} |
+| `amount`         | Amount of the destination asset transferred to the receiver address in the previous instruction.                | uint        |
 
 ```rust
     pub fn cf_receive_token<'c: 'info, 'info>(
@@ -77,60 +74,61 @@ Chainflip's Vault will transfer the destination asset's amount to the specified 
 ```
 
 <Callout type="info">
-    Notice that the receiver interface is written using the [Anchor framework](https://www.anchor-lang.com/).
+  Notice that the receiver interface is written using the [Anchor
+  framework](https://www.anchor-lang.com/).
 </Callout>
 
 ## Safety considerations on the user's logic
 
-There is some safety considerations around the receiver program's logic that should be taken into account. In CCM swaps to Solana the receiver program is called on the receiver's chain with the expected cf_receive_* interface. As described, the funds will be transferred in one instruction and the CPI call will be done in the following one.
+There is some safety considerations around the receiver program's logic that should be taken into account. In CCM swaps to Solana the receiver program is called on the receiver's chain with the expected cf*receive*\* interface. As described, the funds will be transferred in one instruction and the CPI call will be done in the following one.
 
 Those receiver functions could be called by a malicious actor and therefore it's safety needs to be considered. For some applications that don't hold any funds and atomically move them upon receival, such as DEX Aggregators, there is no real necessity to check that the caller is Chainflip or that the funds have been transferred correctly to the receiver as the call will revert otherwise. However, some applications might want to check that it's not a malicious attacker
 that is calling the `cf_receive_*` function. If so, there are two main ways to mitigate this. Either (or both) can be used:
+
 1. Do like DEX aggregators and ensure that the CPI call will revert if no funds are being transferred. For instance, that can be done by having a program that doesn't hold any funds and atomically checks, fetches or moves them upon receiving a CPI call. That will inherently make sure that the caller has sent them as otherwise it will revert.
 2. The receiver can check that the call comes from Chainflip using instruction introspection as shown in the code below called in the `check_chainflip_cpi`:
 
-  ```rust
+```rust
 
 #[program]
 pub mod user_program {
-      use super::*;
+    use super::*;
 
-      pub fn cf_receive_native<'c: 'info, 'info>(
-        ctx: Context<'_, '_, 'c, 'info, CfReceiveNative<'info>>,
-        source_chain: u32,
-        source_address: Vec<u8>,
-        message: Vec<u8>,
-        amount: u64,
-    ) -> Result<()> {
-        check_chainflip_cpi(&sysvar_instructions_account, ctx.program_id)?;
+    pub fn cf_receive_native<'c: 'info, 'info>(
+      ctx: Context<'_, '_, 'c, 'info, CfReceiveNative<'info>>,
+      source_chain: u32,
+      source_address: Vec<u8>,
+      message: Vec<u8>,
+      amount: u64,
+  ) -> Result<()> {
+      check_chainflip_cpi(&sysvar_instructions_account, ctx.program_id)?;
 
-        // Continue with user code
-        ...
-    }
+      // Continue with user code
+      ...
+  }
 }
 
 fn check_chainflip_cpi(
-    sysvar_instructions_account: &AccountInfo,
-    program_id: &Pubkey,
+  sysvar_instructions_account: &AccountInfo,
+  program_id: &Pubkey,
 ) -> Result<()> {
-    // Check the cpi call comes from the CF_VAULT
-    let current_index =
-        sysvar::instructions::load_current_index_checked(sysvar_instructions_account)? as usize;
-    let current_ixn = sysvar::instructions::load_instruction_at_checked(
-        current_index,
-        sysvar_instructions_account,
-    )?;
+  // Check the cpi call comes from the CF_VAULT
+  let current_index =
+      sysvar::instructions::load_current_index_checked(sysvar_instructions_account)? as usize;
+  let current_ixn = sysvar::instructions::load_instruction_at_checked(
+      current_index,
+      sysvar_instructions_account,
+  )?;
 
-    // cf_receiver is in the third positions of the ccm call's context
-    if current_ixn.program_id != Pubkey::from_str(CF_VAULT_ID).unwrap()
-        || current_ixn.accounts[3].pubkey != *program_id
-    {
-        return Err(ProgramError::InvalidInstructionData.into());
-    }
-    Ok(())
+  // cf_receiver is in the third positions of the ccm call's context
+  if current_ixn.program_id != Pubkey::from_str(CF_VAULT_ID).unwrap()
+      || current_ixn.accounts[3].pubkey != *program_id
+  {
+      return Err(ProgramError::InvalidInstructionData.into());
+  }
+  Ok(())
 }
 ```
-
 
 ## Compute budget estimation
 
@@ -141,10 +139,12 @@ Requesting an insufficient amount of compute units will result in the transactio
 The compute unit cost in a Solana transaction is computed as follows, given that Chainflip transactions only contain one signature:
 
 ```typescript copy
-compute_unit_limit = chainflip_compute_unit_overhead + user_gas_budget
-transaction_cost = LAMPORTS_PER_SIGNATURE + prioritization_fee * compute_unit_limit
+compute_unit_limit = chainflip_compute_unit_overhead + user_gas_budget;
+transaction_cost = LAMPORTS_PER_SIGNATURE + prioritization_fee * compute_unit_limit;
 ```
+
 where
+
 - `LAMPORTS_PER_SIGNATURE` is 5000 lamports.
 - `chainflip_compute_unit_overhead` is the compute unit overhead of the Chainflip's Vault program logic. It's computed by the protocol
 - `prioritization_fee` is the current median priority fee of the network with a minimum of 10 lamports per compute unit. It's computed by the protocol
@@ -195,15 +195,17 @@ In Solana a program can't hold the receiving asset in the same address. That app
 As described above Chainflip supports [using Address Lookup Tables](#using-address-lookup-tables) to minimize the transaction length. Those also need to be passed in the `ccm_additional_data` parameter.
 
 To accommodate for that, a list of accounts needs to be passed as `ccm_additional_data` when opening a deposit channel or using the Broker API to encode a Vault swap (otherwise encoded into the `cf_parameters: Vec<u8>` parameter for low level CCM Vault swaps). That list must contain:
+
 - The receiver program's address.
 - The accounts that the receiver program will access in the transaction.
 - The fallback address the funds to be transferred to if the Ccm call reverted.
 - The list of Address Lookup Tables (ALT) to be used in the transaction.
 
 This check is done when verifying the validity of the CCM message, at the following places:
-* When requesting Chainflip to build Vault Swap call
-* When the Vault Swap call is being witnessed by the Chainflip Protocol
-* When a deposit channel is being requested for a Swap
+
+- When requesting Chainflip to build Vault Swap call
+- When the Vault Swap call is being witnessed by the Chainflip Protocol
+- When a deposit channel is being requested for a Swap
 
 For CCM swaps to Solana the `ccm_additional_data` must be correctly encoded as described below. For CCM swaps to EVM chains (Ethereum or Arbitrum) it must be left empty.
 
@@ -213,14 +215,15 @@ If the CCM is invalid the swap request will be rejected.
 
 The `ccm_additional_data` is expected to be the `solVersionedCcmAdditionalData`, encoded into bytes with Parity's Scale codec with the following parameters
 
-| Param | Description | Data Type |
-| ------| ----------- | --------- |
-| `cf_receiver` | Program address to receive the `cf_receive_*` call from Chainflip protocol. | Pubkey |
-| `additional_accounts` | Destination [asset ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation). | Pubkey[] |
-| `fallback_address` | The fallback_address" used for the [fallback mechanism](#fallback-mechanism). | Pubkey |
-| `alts` | The ALTs to be used in the egress transaction to minimize transaction length. | Pubkey[] |
+| Param                 | Description                                                                                             | Data Type |
+| --------------------- | ------------------------------------------------------------------------------------------------------- | --------- |
+| `cf_receiver`         | Program address to receive the `cf_receive_*` call from Chainflip protocol.                             | Pubkey    |
+| `additional_accounts` | Destination [asset ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation). | Pubkey[]  |
+| `fallback_address`    | The fallback_address" used for the [fallback mechanism](#fallback-mechanism).                           | Pubkey    |
+| `alts`                | The ALTs to be used in the egress transaction to minimize transaction length.                           | Pubkey[]  |
 
 For reference, the definition are as follows:
+
 ```rust
 // Pubkey type is raw byte array with a length of 32, representing a base-58 decoded Solana address
 pub struct Pubkey([u8; 32]);
@@ -315,7 +318,7 @@ function newSolanaVersionedCcmAdditionalData() {
   };
 
   // ALTs to use in the egress transaction. Replace with you addresses. It can be an empty array.
-  const ccmAltAccounts = [new PublicKey('AkYRjwVHBCcE1HsjZaTFr5SrTNHPRX7PtwZxdSDMcTvb').toBytes()]
+  const ccmAltAccounts = [new PublicKey('AkYRjwVHBCcE1HsjZaTFr5SrTNHPRX7PtwZxdSDMcTvb').toBytes()];
 
   const ccmAltAdditionalData = {
     ccm_accounts: solCcmAccounts,
@@ -387,4 +390,5 @@ Which will yield the response:
 ```
 
 This Ethereum transaction can then be constructed signed and sent to the Chainflip's Vault smart contract as described in the [EVM Vault Swap docs](/brokers/vault-swaps-api/evm#2-construct-the-transaction).
+
 </details>

@@ -1,9 +1,7 @@
 ---
-
 title: Solana Vault Design
 
-description: 
-
+description:
 ---
 
 ## Solana Vault Design
@@ -39,7 +37,7 @@ In order to reduce rent costs, and therefore the fees for the users, Deposit Cha
 
 ### Batching capabilities to drastically reduce costs
 
-Solana natively supports batching of instructions into a single transaction. Since some transfers have the potential of reverting only fetches are batched into the same instruction. This reduces the costs for the protocol and therefore for users. However, regardless of batching, Solana's transaction costs are generally very low, which means that not batching transfers has pretty much no impact on the user's costs. 
+Solana natively supports batching of instructions into a single transaction. Since some transfers have the potential of reverting only fetches are batched into the same instruction. This reduces the costs for the protocol and therefore for users. However, regardless of batching, Solana's transaction costs are generally very low, which means that not batching transfers has pretty much no impact on the user's costs.
 
 ### Solana Vault Rotations
 

@@ -1,15 +1,12 @@
 ---
-
 title: Broker API Subscriptions
 
 description: All the subscriptions used in Broker API
-
 ---
 
-import { Tabs } from "nextra/components";
+import { Tabs } from 'nextra/components';
 
 ## Broker-API subscriptions
-
 
 ### `broker_subscribe_transaction_screening_events`
 
@@ -18,11 +15,12 @@ Subscribe to all runtime events related to screening of transactions.
 Parameters: None
 
 Return:
+
 - A websocket subscription for transaction screening events. It sends notifications about all screening events, i.e. not filtered by broker.
-There are the following event types:
- - `TransactionRejectionRequestReceived`
- - `TransactionRejectedByBroker`
- - `TransactionRejectionRequestExpired`
+  There are the following event types:
+- `TransactionRejectionRequestReceived`
+- `TransactionRejectedByBroker`
+- `TransactionRejectionRequestExpired`
 
 Example input (the `websocat` utility is useful for testing websocket subscriptions):
 

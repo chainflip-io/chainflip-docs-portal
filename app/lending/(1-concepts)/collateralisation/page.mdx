@@ -2,7 +2,8 @@
 title: Collateral & Liquidations
 description: How LTV, collateralisation, and liquidations work in Chainflip Lending
 ---
-import { Callout } from "nextra/components";
+
+import { Callout } from 'nextra/components';
 
 ## Collateralisation & Liquidations (LTV & Liquidation Thresholds)
 
@@ -35,7 +36,7 @@ To protect borrowers and the system:
 - New loan creation halts while oracles are stale
 - Borrowers may still repay, add collateral, or close positions during these pauses
 
-Future versions will support additional safety mechanisms like taking Chainflip's own DEX  prices into account.
+Future versions will support additional safety mechanisms like taking Chainflip's own DEX prices into account.
 
 ---
 
@@ -53,14 +54,15 @@ Chainflip performs liquidations directly through its own cross-chain DEX. This p
 - Execution is native: LPs fill liquidation orders directly, removing the need for external liquidators demanding steep discounts
 
 <Callout type="info">
-Chainflip does not use external liquidators.
-All liquidation orders are filled natively by LPs on the DEX, using the same quoting logic they use for regular swaps.
-This removes the need for specialist liquidators or discounted auctions found in other lending protocols.
+  Chainflip does not use external liquidators. All liquidation orders are filled natively by LPs on
+  the DEX, using the same quoting logic they use for regular swaps. This removes the need for
+  specialist liquidators or discounted auctions found in other lending protocols.
 </Callout>
 
 Liquidations begin when LTV crosses soft or hard liquidation thresholds.
 
 ---
+
 ### Soft Liquidation
 
 Soft liquidation is triggered when **collateralisation** drops below the soft threshold.
@@ -78,8 +80,9 @@ Liquidation fee does not apply if it was triggered manually.
 However, if at any point during manual liquidation LTV crossess soft/hard liquidation threshold, it will lose its "manual" status, and liquidation fee will still apply (though only on the portion of collateral swapped during the non-manual period).
 
 <Callout type="info">
-Note that since liquidation swaps are processed in discrete chunks, the final chunk may result in some excess of the loan asset after fully repaying the loan.
-Any excess amount obtained this way will be added to the user's collateral.
+  Note that since liquidation swaps are processed in discrete chunks, the final chunk may result in
+  some excess of the loan asset after fully repaying the loan. Any excess amount obtained this way
+  will be added to the user's collateral.
 </Callout>
 
 ---

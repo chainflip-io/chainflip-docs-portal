@@ -1,25 +1,24 @@
 ---
-
 title: LP API Subscriptions
 
 description: All the subscriptions used in LP API
-
 ---
 
-import { Tabs } from "nextra/components";
+import { Tabs } from 'nextra/components';
 
 ## LP-API subscriptions
-
 
 ### `lp_subscribe_order_fills`
 
 A subscription that lists all the orders that have been filled/partially filled by swaps in each block. By default swaps are only considered done once they are in a finalized block.
 You can override this setting by specifying the notification behaviour in the params.
 
-Parameters: 
+Parameters:
+
 - [`notification_behaviour`](/lp/lp-api/types#notification-behaviour) (Optional): Default to Finalized if not provided
 
 Return:
+
 - Block hash
 - Block number
 - JSON array of all the fills in the block.
@@ -45,9 +44,10 @@ Return:
         "liquidity": "0x7055df27b7e148"
     }
 }
-  ```
+```
 
 - For limit order fills these look like this:
+
 ```json
 {
     "limit_order": {
@@ -68,7 +68,7 @@ Return:
         "remaining": "0x100000",
     }
 }
-  ```
+```
 
 <details>
 <summary>Example</summary>

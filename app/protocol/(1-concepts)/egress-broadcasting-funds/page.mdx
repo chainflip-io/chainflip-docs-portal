@@ -1,22 +1,20 @@
 ---
-
 title: Egress, Broadcasting Funds
 
 description: Chainflip also has a generic process for creating, signing and broadcasting transactions out of the protocol, called Egress.
-
 ---
 
 ## Egress: Broadcasting Funds
 
-Registering external events into the protocol is one thing, but sending funds out of it is more complex. Chainflip also has a generic process for creating, signing and broadcasting transactions out of the protocol: **Egress**. 
+Registering external events into the protocol is one thing, but sending funds out of it is more complex. Chainflip also has a generic process for creating, signing and broadcasting transactions out of the protocol: **Egress**.
 Some examples are:
 
 1. Sending the output of a swap to a user's **destination address**
 2. Sending assets to a liquidity provider that is **withdrawing** their collateral
-3. Sending ERC-20 \$FLIP funds from the *StateChainGateway* contract when a Validator or other State Chain account holder **redeems $FLIP** from their State Chain account
+3. Sending ERC-20 \$FLIP funds from the _StateChainGateway_ contract when a Validator or other State Chain account holder **redeems $FLIP** from their State Chain account
 4. Rotating aggregate keys or sweeping funds in the Vaults
 
-As with *Ingress*, the process for *Egress* differs slightly from case to case but shares a common process.
+As with _Ingress_, the process for _Egress_ differs slightly from case to case but shares a common process.
 
 ## Threshold Signing
 

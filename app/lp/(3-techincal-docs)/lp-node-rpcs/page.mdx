@@ -1,22 +1,16 @@
 ---
-
 title: Node RPCs and Subscriptions
 
 description: All the node's exposed RPCs and subscriptions useful for LPs
-
 ---
 
-import { Cards, Callout } from 'nextra/components'
-
+import { Cards, Callout } from 'nextra/components';
 
 ## Node RPCs useful for LPs
 
 Here are the RPCs and subscriptions that are useful for liquidity providers but available on the State Chain node.
 
-<Callout type="info">
-    The following RPCs are only available on `chainflip-node`
-</Callout>
-
+<Callout type="info">The following RPCs are only available on `chainflip-node`</Callout>
 
 ## Requests
 
@@ -34,11 +28,21 @@ Here are the RPCs and subscriptions that are useful for liquidity providers but 
 
 </Cards>
 
-
 ## Subscriptions
 
 <Cards num={2}>
-    <Cards.Card title="cf_subscribe_scheduled_swaps" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_scheduled_swaps" />
-    <Cards.Card title={<span className="badge-danger after:content-['Deprecated']">cf_subscribe_pool_price</span>} href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price" />
-    <Cards.Card title="cf_subscribe_pool_price_v2" href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price_v2" />
+  <Cards.Card
+    title="cf_subscribe_scheduled_swaps"
+    href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_scheduled_swaps"
+  />
+  <Cards.Card
+    title={
+      <span className="badge-danger after:content-['Deprecated']">cf_subscribe_pool_price</span>
+    }
+    href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price"
+  />
+  <Cards.Card
+    title="cf_subscribe_pool_price_v2"
+    href="/lp/lp-node-rpcs/subscriptions#cf_subscribe_pool_price_v2"
+  />
 </Cards>

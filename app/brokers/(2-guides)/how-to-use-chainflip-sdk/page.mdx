@@ -71,7 +71,11 @@ The `options` object accepts the following properties:
 | `backendServiceUrl`(optional) | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network. |                  `string`                   |
 | `broker`(optional)            | The URL of the [Broker API](/brokers/running-broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network.                                    |           `` `{ url: string }` ``           |
 | `rpcUrl`(optional)            | The URL of the [Chainflip RPC node](/protocol/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network.                                          |                  `String`                   |
-| `enabledFeatures`(optional)   | Features that must be explicitly opted into.                                                                                                                                              |          `` `{ dca?: boolean }` ``          |
+| `enabledFeatures`(optional)   | Features that must be explicitly opted into. `dcaV2` enables the new DCA V2 quoting strategy that returns DCA quotes for eligible swaps based on asset configuration and USD value thresholds. |          `` `{ dcaV2?: boolean }` ``          |
+
+<Callout type="warning">
+  The `dca` option in `enabledFeatures` has been deprecated and will be enabled by default in version 2.2. Use `dcaV2` for the new DCA quoting strategy.
+</Callout>
 
 ## Working Examples
 
@@ -83,7 +87,7 @@ import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
 // Initialize SDK
 const swapSDK = new SwapSDK({
   network: "perseverance",
-  enabledFeatures: { dca: true },
+  enabledFeatures: { dcaV2: true },
 });
 
 // Fetch quotes for swap
@@ -129,7 +133,7 @@ import { getDefaultProvider, Wallet } from "ethers";
 // Initialize SDK and Wallet
 const swapSDK = new SwapSDK({
   network: "perseverance",
-  enabledFeatures: { dca: true },
+  enabledFeatures: { dcaV2: true },
 });
 const wallet = new Wallet(
   process.env.SECRET_KEY,
@@ -189,7 +193,7 @@ import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
 // Initialize SDK
 const swapSDK = new SwapSDK({
   network: "perseverance",
-  enabledFeatures: { dca: true },
+  enabledFeatures: { dcaV2: true },
 });
 
 // Fetch quote for swap

@@ -29,6 +29,7 @@ The `fillOrKillParams` object sets two different types of slippage protection wh
 | `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                           |           `string`            |
 | `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                |           `string`            |
 | `livePriceSlippageTolerancePercent` \(optional) | The percentage of deviation from the global index price that is acceptable for the swap to execute. If the deviation is exceeded, the swap will be refunded to the specified refund address. If not set, the default value from the `quote` will be used. Set the value to `false` to disable live price protection. | `string` `false` `undefined ` |
+| `maxOraclePriceSlippage` \(optional)            | Required when `dcaV2` is enabled and live price protection is available for both source and destination assets. This value sets the maximum acceptable slippage from the oracle price. Use `calculateLivePriceSlippageTolerancePercent` to compute an appropriate value.                                            |           `number`            |
 | `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                    |           `string`            |
 | `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds.                                                                                                                                                                  |           `number`            |
 
@@ -82,6 +83,26 @@ const fillOrKillParams = {
   slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
   livePriceSlippageTolerancePercent:
     quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
+};
+```
+
+When using `dcaV2` with live price protection enabled for both assets:
+
+```typescript copy
+// Calculate the recommended maxOraclePriceSlippage
+const maxOraclePriceSlippage = await swapSDK.calculateLivePriceSlippageTolerancePercent({
+  srcAsset: { chain: Chains.Ethereum, asset: Assets.ETH },
+  destAsset: { chain: Chains.Bitcoin, asset: Assets.BTC },
+  brokerCommissionBps: 100,
+});
+
+const fillOrKillParams = {
+  refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  retryDurationBlocks: 100,
+  slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+  livePriceSlippageTolerancePercent:
+    quote.recommendedLivePriceSlippageTolerancePercent,
+  maxOraclePriceSlippage, // required when dcaV2 is enabled with live price protection
 };
 ```
 </details>

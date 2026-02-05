@@ -274,7 +274,7 @@ const quoteRequest = {
 };
 
 const swapSDK = new SwapSDK({
-  enabledFeatures: { dca: true }, // enable DCA feature when initiating the SDK to receive DCA quotes
+  enabledFeatures: { dcaV2: true }, // enable DCA V2 feature when initiating the SDK to receive DCA quotes
 });
 
 console.log(await swapSDK.getQuoteV2(quoteRequest));
@@ -351,6 +351,44 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
     },
   ],
 }
+```
+</details>
+
+## `calculateLivePriceSlippageTolerancePercent`
+
+Calculates the recommended slippage tolerance for live price protection. This method accounts for network fees and broker commission when computing the tolerance, ensuring swaps aren't unnecessarily refunded due to fee-related price differences.
+
+```typescript copy
+function calculateLivePriceSlippageTolerancePercent(params: {
+  srcAsset: { chain: Chain; asset: Asset };
+  destAsset: { chain: Chain; asset: Asset };
+  brokerCommissionBps?: number;
+}): Promise<number | undefined>;
+```
+
+| Param                            | Description                                                                      | Data type |
+| -------------------------------- | -------------------------------------------------------------------------------- | :-------: |
+| `srcAsset`                       | Source asset for the swap, containing chain and asset identifiers                | `Object`  |
+| `destAsset`                      | Destination asset for the swap, containing chain and asset identifiers           | `Object`  |
+| `brokerCommissionBps` (optional) | Broker commission in basis points. If provided, it will be factored into the calculation | `number`  |
+
+Returns `undefined` if live price protection is not available for the asset pair.
+
+<details>
+<summary>Example</summary>
+
+```typescript copy
+import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
+
+const swapSDK = new SwapSDK({ network: "mainnet" });
+
+const tolerance = await swapSDK.calculateLivePriceSlippageTolerancePercent({
+  srcAsset: { chain: Chains.Ethereum, asset: Assets.ETH },
+  destAsset: { chain: Chains.Bitcoin, asset: Assets.BTC },
+  brokerCommissionBps: 100, // 1% broker commission
+});
+
+console.log(tolerance); // e.g., 0.35
 ```
 </details>
 
@@ -581,7 +619,7 @@ const { quotes } = await swapSDK.getQuoteV2({
   amount: (1.5e18).toString(), // 1.5 ETH
 });
 
-// ❗ the DCA feature must be enabled when the SDK is instantiated to receive DCA quotes ❗
+// ❗ the dcaV2 feature must be enabled when the SDK is instantiated to receive DCA quotes ❗
 const quote = quotes.find((quote) => quote.type === "DCA");
 
 const swapDepositAddressRequest = {

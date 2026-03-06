@@ -384,7 +384,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   srcAddress?: string;
   brokerCommissionBps?: number;
@@ -436,7 +436,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   depositChannelId: string;
   depositAddress: string;
@@ -632,7 +632,7 @@ type VaultSwapRequest = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   srcAddress?: string;
   brokerAccount?: `cF${string}`;

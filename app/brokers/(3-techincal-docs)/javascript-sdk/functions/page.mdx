@@ -354,44 +354,6 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
 ```
 </details>
 
-## `calculateLivePriceSlippageTolerancePercent`
-
-Calculates the recommended slippage tolerance for live price protection. This method accounts for network fees and broker commission when computing the tolerance, ensuring swaps aren't unnecessarily refunded due to fee-related price differences.
-
-```typescript copy
-function calculateLivePriceSlippageTolerancePercent(params: {
-  srcAsset: { chain: Chain; asset: Asset };
-  destAsset: { chain: Chain; asset: Asset };
-  brokerCommissionBps?: number;
-}): Promise<number | undefined>;
-```
-
-| Param                            | Description                                                                      | Data type |
-| -------------------------------- | -------------------------------------------------------------------------------- | :-------: |
-| `srcAsset`                       | Source asset for the swap, containing chain and asset identifiers                | `Object`  |
-| `destAsset`                      | Destination asset for the swap, containing chain and asset identifiers           | `Object`  |
-| `brokerCommissionBps` (optional) | Broker commission in basis points. If provided, it will be factored into the calculation | `number`  |
-
-Returns `undefined` if live price protection is not available for the asset pair.
-
-<details>
-<summary>Example</summary>
-
-```typescript copy
-import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
-
-const swapSDK = new SwapSDK({ network: "mainnet" });
-
-const tolerance = await swapSDK.calculateLivePriceSlippageTolerancePercent({
-  srcAsset: { chain: Chains.Ethereum, asset: Assets.ETH },
-  destAsset: { chain: Chains.Bitcoin, asset: Assets.BTC },
-  brokerCommissionBps: 100, // 1% broker commission
-});
-
-console.log(tolerance); // e.g., 0.35
-```
-</details>
-
 ## `requestDepositAddressV2`
 
 Chainflip allows to open a deposit channel for a given set of swap details.
@@ -422,7 +384,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   srcAddress?: string;
   brokerCommissionBps?: number;
@@ -474,7 +436,7 @@ type DepositAddressRequestV2 = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   depositChannelId: string;
   depositAddress: string;
@@ -670,7 +632,7 @@ type VaultSwapRequest = {
     retryDurationBlocks: number;
     refundAddress: string;
     slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number | false;
+    livePriceSlippageTolerancePercent?: number;
   };
   srcAddress?: string;
   brokerAccount?: `cF${string}`;

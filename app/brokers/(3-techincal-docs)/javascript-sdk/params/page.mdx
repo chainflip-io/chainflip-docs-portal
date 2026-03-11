@@ -28,44 +28,9 @@ The `fillOrKillParams` object sets two different types of slippage protection wh
 | :---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------: |
 | `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                           |           `string`            |
 | `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                |           `string`            |
-| `livePriceSlippageTolerancePercent` \(optional) | The percentage of deviation from the global index price that is acceptable for the swap to execute. If the deviation is exceeded, the swap will be refunded to the specified refund address. If not set, the default value from the `quote` will be used. Set the value to `false` to disable live price protection. | `string` `false` `undefined ` |
-| `maxOraclePriceSlippage` \(optional)            | Required when `dcaV2` is enabled and live price protection is available for both source and destination assets. This value sets the maximum acceptable slippage from the oracle price. Use `calculateLivePriceSlippageTolerancePercent` to compute an appropriate value.                                            |           `number`            |
+| `livePriceSlippageTolerancePercent` \(optional) | The percentage deviation from the global index price that is acceptable for the swap to execute. If the deviation exceeds, the swap will be refunded to the specified refund address. If not set, protocol defaults will be used. (if available for the asset pair)                                                  |           `string`            |
 | `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                    |           `string`            |
 | `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds.                                                                                                                                                                  |           `number`            |
-
-Slippage tolerance can be specified by using the `slippageTolerancePercent`
-property. `slippageTolerancePercent` must be a number between 0 and 100. This
-percent is used together with the `estimatedPrice` of the quote to calculate a
-minimum accepted swap price:
-
-```ts
-const minimumPrice =
-  quote.estimatedPrice * (1 - Number(slippageTolerancePercent) / 100);
-```
-
-Alternatively, you can manually provide a `minPrice` value. The minimum price is
-the ratio between the human readable destination amount and the human readable
-source amount, e.g. `3500` for a swap from ETH to USDC if you want to receive
-at least `3500` USDC per ETH after fees.
-
-Live price slippage can be specified by using the `livePriceSlippageTolerancePercent`
-property. It must be a number between 0 and 100. The default behavior is to use the recommended
-value from the quote but can be overridden or set to `false` to disable live price protection.
-If the quote does not have a recommended live price slippage tolerance, this setting is not
-available for the asset pair and should NOT be set.
-
-If either of the slippage tolerance properties are invalidated, the swap will be refunded to
-the specified refund address. Refunds are subject to a broadcast fee on the source chain to pay for the
-transactions sent by the Chainflip protocol. The boost or deposit fee paid will not
-not be refunded.
-
-<Callout type="warning">
-  If overriding live price slippage protection - the tolerance should account
-  for network fees and broker fees. For example, if the network fee is 0.1% and
-  the broker fee is 0.15% - the live price slippage tolerance should be set to
-  at least 0.25% to avoid refunds. The recommended value returned from the quote
-  <strong>already</strong> accounts for these fees.
-</Callout>
 
 <Callout type="warning">
   Slippage tolerance is applied relative to the quoted price unlike live price
@@ -73,7 +38,11 @@ not be refunded.
   checked on the AMM level and do not include deposit or broadcast fees.
 </Callout>
 
-<details>
+<Callout type="warning">
+ Live price slippage protection is only available for asset pairs that have a `recommendedLivePriceSlippageTolerancePercent` in the `quote` and this execution does NOT need to account for protocol or broker fees.
+</Callout>
+
+<details className="overflow-x-auto">
 <summary>Example</summary>
 
 ```typescript copy
@@ -83,26 +52,6 @@ const fillOrKillParams = {
   slippageTolerancePercent: quote.recommendedSlippageTolerancePercent, // use recommended slippage tolerance from quote
   livePriceSlippageTolerancePercent:
     quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
-};
-```
-
-When using `dcaV2` with live price protection enabled for both assets:
-
-```typescript copy
-// Calculate the recommended maxOraclePriceSlippage
-const maxOraclePriceSlippage = await swapSDK.calculateLivePriceSlippageTolerancePercent({
-  srcAsset: { chain: Chains.Ethereum, asset: Assets.ETH },
-  destAsset: { chain: Chains.Bitcoin, asset: Assets.BTC },
-  brokerCommissionBps: 100,
-});
-
-const fillOrKillParams = {
-  refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
-  retryDurationBlocks: 100,
-  slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
-  livePriceSlippageTolerancePercent:
-    quote.recommendedLivePriceSlippageTolerancePercent,
-  maxOraclePriceSlippage, // required when dcaV2 is enabled with live price protection
 };
 ```
 </details>

@@ -1,12 +1,10 @@
 ---
-
 title: Set up a Validator Node on Mainnet
 
 description: Guide on how to set up a Validator node on Mainnet
-
 ---
 
-import {Callout} from "nextra/components";
+import { Callout } from "nextra/components";
 
 ## Mainnet Validator Setup
 
@@ -22,14 +20,12 @@ If you've never used Linux before, you will need some help understanding the bas
 
 ### Some Handy Tips and Resources
 
-- There are many great hosting providers out there. In no particular order, there is Hetzner, Vultr, OVH, Digital Ocean, AWS, Microsoft Azure, Kamatera, and many more. If you really have no idea what you're doing, you can follow this [guide for creating and connecting to DigitalOcean "droplets"](https://flaviocopes.com/digitalocean-create-vps/) which is just a fancy name DigitalOcean gives its VPS offering. However, be warned that DigitalOcean is more expensive than other offerings and you will need to spend upwards of $80 per month for a good server. Renting servers is pretty easy so our recommendation would be to just ask in the [`🛠︱technical-discussion`](https://discord.com/channels/824147014140952596/824147608377098241) channel in Discord for help choosing a provider.
+- There are many great hosting providers out there. In no particular order, there is Hetzner, Vultr, OVH, Digital Ocean, AWS, Microsoft Azure, Kamatera, and many more. If you really have no idea what you're doing, you can follow this [guide for creating and connecting to DigitalOcean "droplets"](https://flaviocopes.com/digitalocean-create-vps/) which is just a fancy name DigitalOcean gives its VPS offering. However, be warned that DigitalOcean is more expensive than other offerings and you will need to spend upwards of $80 per month for a good server. Renting servers is pretty easy so our recommendation would be to just ask in Discord for help choosing a provider.
 - [A great guide for connecting to your server from any desktop computer using SSH](https://www.howtogeek.com/311287/how-to-connect-to-an-ssh-server-from-windows-macos-or-linux/). If you don't know how to do this **you aren't going to make it.**
 - You should know how to navigate folders using the command line. You will need to use a few commands to set up a validator, which can be googled individually as you need them. The way how changing directories and moving files work can be super confusing, so if you are stuck, try Googling what you need to do, even if it's as simple as editing a file or navigating to a directory. You'll get the hang of it. [Here's a good list of some basic commands everyone should know](https://www.lcg.ufrj.br/nodejs/books/linux-commands-handbook.pdf), many of which you'll need. **HOT TIP:** You can always hit the TAB key to autocomplete a path. For example, if there's a folder called `chainflip`, and you want to change to it, you can type `cd c` and then hit tab. Linux will autocomplete the folder or filename for you, leaving you with `cd chainflip` ready to go (there are some caveats, [but hitting the tab key never hurt anyone](https://www.youtube.com/watch?v=siaxGjttoVM))!
 - Control + C is _normally_ how copy-paste works in windows. That is **not** the case here. If you use Ctrl + C in a terminal in windows, you will force exit the program you are using. To copy content from a Terminal, highlight the text you want and right-click. Similarly, if you are trying to paste content, right-click on a blank section of the terminal. Either it will just work or a context menu will appear, allowing you to "Copy" and "Paste." This will differ depending on your operating system and SSH client. If you're stuck, ask in Discord.
 - We've tried to write the instructions so that people with minimal experience will be able to figure it out and copy-paste their way through most of it. Hopefully if you've figured out how to connect to the server's root account (or a user with sudo permissions) through SSH, you shouldn't have any showstopping problems with these docs. If you're stuck and you think there's some key information missing from these docs, please post it in the [`🙋︱help-and-support`](https://discord.com/channels/824147014140952596/824147718444023848) channel in Discord.
 - Don't forget to have fun!
-
-
 
 ## 1. Prerequisites
 
@@ -38,7 +34,9 @@ This section describes what you are going to need to successfully set up a Chain
 ### Tokens
 
 <Callout type="warning">
-    Note there is a **minimum funding requirement** for new Validator nodes: new nodes must have a balance of at least 20K `$FLIP`. Please ensure you have access to enough `$FLIP` to run a node before continuing this process.
+    Note there is a **minimum funding requirement** for new Validator nodes: new
+    nodes must have a balance of at least 20K `$FLIP`. Please ensure you have
+    access to enough `$FLIP` to run a node before continuing this process.
 </Callout>
 
 **ETH (Mainnet)**
@@ -63,7 +61,7 @@ SSD: 500GB+ NVMe (this may increase over time)
 Bandwidth: Minimum 400MBps, Recommended 1GBps connection, 100 GB bandwidth combined up/down per month
 ```
 
-This machine must be available 24/7 and thus it is recommended that you only try this on machines with a stable and reliable internet connection, such as a VPS or Dedicated Server. If you would like some help picking a server to rent, you can come to the Chainflip Community Discord and ask for help in the [`🛠︱technical-discussion`](https://discord.com/channels/824147014140952596/824147608377098241) channel.
+This machine must be available 24/7 and thus it is recommended that you only try this on machines with a stable and reliable internet connection, such as a VPS or Dedicated Server. If you would like some help picking a server to rent, you can come to the Chainflip Community Discord and ask for help.
 
 ### Networking
 
@@ -89,7 +87,6 @@ sudo systemctl enable --now chrony
 ```
 
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
-
 
 ## 2. Creating a new Linux User
 
@@ -158,7 +155,6 @@ But for now you don't need to logout in order to switch users, you can do that s
 su - flip
 ```
 
-
 ## 3. Getting the Validator Software
 
 You have two ways to get the Chainflip binaries through the `apt` package manager or Docker:
@@ -201,12 +197,15 @@ gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | gpg --show-keys
     sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
     sub   rsa4096 2023-11-06 [S] [expires: 2025-11-01]
     ```
+
 </Callout>
 
 3. Add Chainflip's Mainnet Repo to `apt` sources list:
 
 <Callout type="info">
-    Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish) on an AMD processor. Running them on other versions of Ubuntu or other Debian-like distributions may require additional dependencies and configuration.
+    Mainnet binaries were compiled on Ubuntu 22.04 LTS (Jammy Jellyfish) on an
+    AMD processor. Running them on other versions of Ubuntu or other Debian-like
+    distributions may require additional dependencies and configuration.
 </Callout>
 
 ```bash copy
@@ -244,6 +243,7 @@ sudo tar -xzf ./cf_chaindata_pruned_paritydb.tar.gz -C /etc/chainflip/chaindata/
 
 rm -f ./cf_chaindata_pruned_paritydb.tar.{gz.sha512.asc,gz.sha512,gz}
 ```
+
 Some of the steps can take a couple of minutes to run, so be patient.
 
 After that, create a systemd override file for the `chainflip-node` service to use the correct parameters in order for the snapshot to be used.
@@ -268,15 +268,18 @@ sudo systemctl daemon-reload
 ```
 
 <Callout type="info">
-    Snapshots are updated every 6 hours starting at 00:00 UTC. The snapshot holds the state and blocks of the most recent 300 blocks. The size of the snapshot is approximately 50GB.
-    You can override the snapshot to use a different number of blocks by changing the `--blocks-pruning` and `--pruning` parameters in the systemd override file.
+    Snapshots are updated every 6 hours starting at 00:00 UTC. The snapshot
+    holds the state and blocks of the most recent 300 blocks. The size of the
+    snapshot is approximately 50GB. You can override the snapshot to use a
+    different number of blocks by changing the `--blocks-pruning` and
+    `--pruning` parameters in the systemd override file.
 </Callout>
-
 
 ### 3.b Docker Installation
 
 <Callout type="warning">
-    If you have done the **APT Installation** above, you don't need to follow the **Docker Installation** below.
+    If you have done the **APT Installation** above, you don't need to follow
+    the **Docker Installation** below.
 </Callout>
 
 If you are planning to run a validator using a container orchestration system like Kubernetes you can use our pre-built images on [Docker Hub](https://hub.docker.com/u/chainfliplabs).
@@ -288,6 +291,7 @@ docker pull chainfliplabs/chainflip-cli:berghain-1.10.0
 ```
 
 #### Starting up the node in Docker
+
 First, download the latest chaindata snapshot as explained in the [Downloading Latest Chaindata Snapshot](#downloading-latest-chaindata-snapshot) section.
 
 To start the node, you would need the following options passed to the `chainflip-node` binary:
@@ -305,12 +309,12 @@ chainflip-node \
 ```
 
 #### Getting the chainspec
+
 If you have installed binaries through APT, the chainspec is already included in the `chainflip-node` package. However, if you need the chainspec for Kubernetes deployments or other docker orchestration systems, you can download it by running:
 
 ```bash copy
 curl https://repo.chainflip.io/chainspecs/berghain.chainspec.json -o berghain.chainspec.json
 ```
-
 
 ## 4. Generating Validator Keys
 
@@ -349,17 +353,23 @@ Generated fresh Validator keys for your Chainflip Node!
 💾 Saved all secret keys to '/etc/chainflip/keys'.
 ```
 
-<Callout type="error">**The keys above are just for demonstration purposes. DO NOT send any funds to these addresses.**</Callout>
+<Callout type="error">
+    **The keys above are just for demonstration purposes. DO NOT send any funds
+    to these addresses.**
+</Callout>
 
 **Make sure to back up your Seed Phrase and make a note of the public keys and account ID. You will need the Seed Phrase if you ever need to restore your node or recover your funds if you lose access to the node. DO NOT LOSE THIS.**
 
 **The seed phrase is the only valid backup, since all other keys are derived from it. Simply backing up the generated key files is NOT a sufficient backup!**
 
 <Callout type="info">
-    We recommend generating keys on the validator machine then using GPG encryption to securely transfer the ciphertext to a backup location. This is to eliminate the risk of the keys being intercepted in transit or being cached in the clipboard in the case of copying them from the terminal.
+    We recommend generating keys on the validator machine then using GPG
+    encryption to securely transfer the ciphertext to a backup location. This is
+    to eliminate the risk of the keys being intercepted in transit or being
+    cached in the clipboard in the case of copying them from the terminal.
 </Callout>
 
-*If the above command returned any errors, please ensure that the provided --path is accessible and that there are no keys already stored there! For security reasons, the files will not be overwritten automatically, so if you want to replace the stored keys, please make sure to move the old ones first, and back them up somewhere.*
+_If the above command returned any errors, please ensure that the provided --path is accessible and that there are no keys already stored there! For security reasons, the files will not be overwritten automatically, so if you want to replace the stored keys, please make sure to move the old ones first, and back them up somewhere._
 
 Take special note of the **Validator Account ID** beginning with `cF`. This is the ID that you will need to add funds and track your node.
 
@@ -369,7 +379,10 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet and **0.1 ETH** on Ethereum Arbitrum. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
 
-<Callout type="warning">Please also note that the Ethereum key is for the exclusive use of the Validator node. **Do not re-use this key elsewhere.**</Callout>
+<Callout type="warning">
+    Please also note that the Ethereum key is for the exclusive use of the
+    Validator node. **Do not re-use this key elsewhere.**
+</Callout>
 
 ### Update Secret File Permissions
 
@@ -384,7 +397,7 @@ history -c
 
 ### Final Checks
 
-The *private* keys generated above should have been stored at the path provided to the `generate-keys` command. As a sanity check, make sure they are where you expect, and have the correct permissions.
+The _private_ keys generated above should have been stored at the path provided to the `generate-keys` command. As a sanity check, make sure they are where you expect, and have the correct permissions.
 
 Run the following command:
 
@@ -402,13 +415,13 @@ drwxr-xr-x 5 root root 4096 Nov 14 13:38 ..
 -rw------- 1 root root   64 Nov 14 13:28 signing_key_file
 ```
 
-
 ### Recovering Your Keys
 
 In case you lose access to your keys, you can recover the private keys using the seed phrase. Using the example phrase generated above:
 
 <Callout type="info">
-    Please note that the `Node Key` cannot be recovered, a new one will be generated. This will result in a new peer id for your node.
+    Please note that the `Node Key` cannot be recovered, a new one will be
+    generated. This will result in a new peer id for your node.
 </Callout>
 
 ```bash copy
@@ -418,7 +431,6 @@ chainflip-cli generate-keys \
 ```
 
 The output should be the same as above (except the `Node Public Key` and `Node Peer ID`), and the keys should be written to the provided path, as above.
-
 
 ## 5. Engine Settings
 
@@ -436,16 +448,18 @@ Copy the following to your `nano` editor. You also need to replace `PUBLIC_IP_AD
 Also you'll need to provide the `ws_endpoint`, and `http_endpoint` for whichever `Ethereum`, `Arbitrum`, `Polkadot` and `Bitcoin` RPC client you've selected.
 
 <Callout type="info">
-    Make sure that both endpoints (HTTP and WebSockets) are accessible for the Ethereum, Arbitrum and Polkadot nodes. Bitcoin only has HTTP. Otherwise your engine will fail to start.
+    Make sure that both endpoints (HTTP and WebSockets) are accessible for the
+    Ethereum, Arbitrum and Polkadot nodes. Bitcoin only has HTTP. Otherwise your
+    engine will fail to start.
 </Callout>
 
 <Callout type="info">
-    Note that you can optionally provide a backup RPC endpoint for each chain. If
-    the primary endpoint fails, the engine will attempt to connect to the backup
-    endpoint. The engine will only attempt to use the backup endpoint if the
-    primary endpoint fails. You should set your primary endpoint to the cheapest
-    (and most reliable) endpoint you have i.e. a local ETH node to lower
-    your operating costs.
+    Note that you can optionally provide a backup RPC endpoint for each chain.
+    If the primary endpoint fails, the engine will attempt to connect to the
+    backup endpoint. The engine will only attempt to use the backup endpoint if
+    the primary endpoint fails. You should set your primary endpoint to the
+    cheapest (and most reliable) endpoint you have i.e. a local ETH node to
+    lower your operating costs.
 </Callout>
 
 ```toml
@@ -533,21 +547,23 @@ http_endpoint = "https://assethub.someprovider.io:443"
 ```
 
 <Callout type="warning">
-    At least one of the RPC endpoints (primary or backup) *must* be an archive node.
+    At least one of the RPC endpoints (primary or backup) *must* be an archive
+    node.
 </Callout>
 
 <Callout type="info">
-The public address of your node can be obtained with: `curl -s icanhazip.com` or  `curl -s -w "\n" ifconfig.me`
+    The public address of your node can be obtained with: `curl -s
+    icanhazip.com` or `curl -s -w "\n" ifconfig.me`
 </Callout>
 
 <Callout type="warning">
-    **Important:** Make sure that you are using a mainnet RPC, otherwise this will not work!
+    **Important:** Make sure that you are using a mainnet RPC, otherwise this
+    will not work!
 </Callout>
 
 ### Saving the File
 
 Once you're happy with your configuration file and have inserted a valid endpoint address, exit and save the file by using `CTRL(Control)+x` and when prompted type `Y` then hit `Enter`.
-
 
 ## 6. Start the Validator
 
@@ -650,13 +666,17 @@ Nov 14 13:39:23 berghain-validator chainflip-node[1908]: 2023-11-14 13:39:23 �
     If you started syncing in `archive` mode and you wish to update to `warp` sync, make sure to purge the chain and start syncing using `--sync=warp`. The sync parameters get stored in the node's database and simply updating the cli flag won't take effect.
 
     To purge the chaindata, check [this section](/validators/maintenance#purging-chaindata).
+
 </Callout>
 
 ### Starting the Engine
 
 To start the `chainflip-engine`, we issue another command.
+
 <Callout type="warning">
-    The following commands all refer to v1.3 which might be outdated at the time of reading. These commands must be executed using the latest version available!
+    The following commands all refer to v1.3 which might be outdated at the time
+    of reading. These commands must be executed using the latest version
+    available!
 </Callout>
 
 ```bash copy
@@ -714,8 +734,6 @@ sudo systemctl enable chainflip-engine
 ```
 
 <Callout type="info">
-    Anytime you make changes to your engine config file, don't forget to run: `systemctl
-    restart chainflip-engine`
+    Anytime you make changes to your engine config file, don't forget to run:
+    `systemctl restart chainflip-engine`
 </Callout>
-
-

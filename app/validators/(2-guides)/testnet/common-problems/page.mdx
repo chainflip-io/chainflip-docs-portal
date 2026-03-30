@@ -12,17 +12,17 @@ import { Callout } from "nextra/components";
 
 We'll continue updating this page so you can easily troubleshoot your node.
 
+This page assumes you have already worked through [Validator Setup](/validators/testnet/validator-setup) and [Funding and Activation](/validators/testnet/funding).
+
 ## How does this page work?
 
-This page is designed to help you fix all of your problems on your own!
-
-First of all you need dump recent logs from your terminal.
+Start by collecting recent logs from your node and engine:
 
 ```bash copy
 journalctl -f -u "chainflip-*"
 ```
 
-In order to quickly understand your issue, please first check if your log output resembles any of these.
+Then find the section below that best matches the symptom you are seeing.
 
 ## Not Funded
 
@@ -58,7 +58,7 @@ This can have a number of possible issues.
 Error: Failed to create EthDualRpcClient
 
 Caused by:
-    Inconsistent chain configuration. Terminating.Expected ETH chain id 5, received 1 through WebSocket., Expected ETH chain id 5, received 1 through HTTP.
+    Inconsistent chain configuration. Terminating.Expected ETH chain id 11155111, received 1 through WebSocket., Expected ETH chain id 11155111, received 1 through HTTP.
 ```
 
 ### Solution
@@ -125,6 +125,12 @@ Having a swapfile or swap partition is recommended in any case.
 Likely you haven't completed all the steps. Please start from [Generating Keys](/validators/testnet/validator-setup#4-generating-validator-keys) section and work your way very slowly, making sure you have read everything.
 
 It can be, that you did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](/validators/testnet/funding#registering-and-setting-up-your-validator-node) section.
+
+Start by checking:
+
+- that your node is fully synced
+- that funding completed in the Auctions app
+- that `register-account-role`, `rotate`, and `validator start-bidding` all ran successfully
 
 #### Becoming Authority
 
@@ -272,11 +278,11 @@ drwxr-xr-x 5 root root 4096 Dec  7 18:34 ..
 -rw------- 1 root root   77 Jan  3 12:09 6772616e9d6d1af0f2a0ce1c0ac1faaa07c835e42d0be799bbf98dfcb7e8edb7192093df
 ```
 
-If you see any files with size 0 or any files that are not named like the ones above, then you'll need to rotate your keys by running:
+If you see any files with size 0 or any files that are not named like the ones above, then you'll need to generate and register fresh validator session keys by running:
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip rotate
 ```
-This will take effect in the next epoch and you'll continue to miss authorship slots until then.
+This generates fresh validator session keys in the node keystore and registers them on-chain. It will take effect in the next epoch and you'll continue to miss authorship slots until then.
 
 - **System Clock is not synced**: If your system clock isn't synced with the network, then you'll miss authorship slots. The reason is that the block you are trying to author will be rejected by the network because it's timestamp is not within the allowed range. You can check your system clock by running `date` and you can sync it by running:
 ```bash copy

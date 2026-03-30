@@ -272,11 +272,11 @@ drwxr-xr-x 5 root root 4096 Dec  7 18:34 ..
 -rw------- 1 root root   77 Jan  3 12:09 6772616e9d6d1af0f2a0ce1c0ac1faaa07c835e42d0be799bbf98dfcb7e8edb7192093df
 ```
 
-If you see any files with size 0 or any files that are not named like the ones above, then you'll need to rotate your keys by running:
+If you see any files with size 0 or any files that are not named like the ones above, then you'll need to generate and register fresh validator session keys by running:
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip rotate
 ```
-This will take effect in the next epoch and you'll continue to miss authorship slots until then.
+This generates fresh validator session keys in the node keystore and registers them on-chain. It will take effect in the next epoch and you'll continue to miss authorship slots until then.
 
 - **System Clock is not synced**: If your system clock isn't synced with the network, then you'll miss authorship slots. The reason is that the block you are trying to author will be rejected by the network because it's timestamp is not within the allowed range. You can check your system clock by running `date` and you can sync it by running:
 ```bash copy

@@ -40,14 +40,14 @@ Commands:
   get-bound-redeem-address    Shows the redeem address your account is bound to
   get-bound-executor-address  Shows the executor address your account is bound to
   register-account-role       Set your account role to the Validator, Broker, Liquidity Provider
-  rotate                      Rotate your session keys
+  rotate                      Generate validator session keys in the node keystore and register them on-chain
   stop-bidding                Stop bidding, thereby stop participating in auctions. [DEPRECATED - use \'validator
                               stop-bidding\' instead]
   start-bidding               The account starts bidding for all future auctions, until it stops bidding. [DEPRECATED -
                               use \'validator start-bidding\' instead]
   vanity-name                 Set a UTF-8 vanity name for your node (max length 64)
   pre-update-check            Check if it is safe to update your node/engine
-  generate-keys               Generates the private/public keys required needed to run a Chainflip validator node. These
+  generate-keys               Generates the private/public keys required to run a Chainflip node. For validators, these
                               are the Node Key, Ethereum Key and Validator Key. The Validator Key and Ethereum Key can
                               be recovered using the seed phrase. The Node Key does not control any funds and therefore
                               doesn\'t need to be recoverable. It is generated independently of the seed phrase

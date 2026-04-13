@@ -274,7 +274,7 @@ export default {
                 title: 'Testnet',
                 items: {
                     'validator-setup': 'Validator Setup',
-                    'funding': 'Funding',
+                    'funding': 'Funding and Activation',
                     'common-problems': 'Common Problems',
                     'submitting-an-issue': 'Submitting an Issue'
                 }

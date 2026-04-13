@@ -46,9 +46,9 @@ sudo chainflip-cli --config-root /etc/chainflip register-account-role Validator
 
 After succesfully registering your node you should see the new node on "**My Nodes (legacy)**" page.
 
-### Rotate Keys
+### Generate and Register Session Keys
 
-Registration gives your account access to Validator-specific commands on the State Chain. The first of these is rotating and registering your authorship keys:
+Registration gives your account access to Validator-specific commands on the State Chain. The first of these is to generate validator session keys in the node keystore and register them on-chain for block authorship:
 
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip rotate
@@ -63,7 +63,7 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 ```
 
 <Callout type="warning">
-Make sure you rotate session keys and execute the command to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
+Make sure you generate and register your session keys, then execute the command to start bidding. Otherwise you won't be able to join auctions and eventually join the active validator set.
 </Callout>
 
 ### Set Vanity Name

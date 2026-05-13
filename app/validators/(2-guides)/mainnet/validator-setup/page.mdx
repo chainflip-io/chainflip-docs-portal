@@ -534,6 +534,11 @@ http_endpoint = "https://assethub.someprovider.io:443"
 #ws_endpoint = "wss://assethub.someotherprovider.io:443"
 #http_endpoint = "https://assethub.someotherprovider.io:443"
 
+[tron]
+# Tron private key file path. This file should contain a hex-encoded private key.
+# Note: Here we use the same private key file as Ethereum. You can use a different key if you want.
+private_key_file = "/etc/chainflip/keys/ethereum_key_file"
+
 [tron.rpc]
 http_endpoint = "http://tron.someprovider:443/wallet"
 json_rpc_endpoint = "http://tron.someprovider:443/jsonrpc"

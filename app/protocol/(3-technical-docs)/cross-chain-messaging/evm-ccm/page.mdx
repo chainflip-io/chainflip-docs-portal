@@ -84,7 +84,7 @@ The user-provided gas budget value is the amount of gas alllocated for the user 
 
 #### Ethereum and Arbitrum
 
-That can be done using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
+Gas is estimated using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
 
 Arbitrum uses the same `eth_estimateGas` for gas estimations as described in the [Arbitrum documentation](https://docs.arbitrum.io/how-arbitrum-works/gas-fees#estimating-l2-gas). However, that estimation also includes the L1 inclusion fees. Chainflip expects that gas budget to include the L1 inclusion fees, which is extra gas units required as payment to the L1.
 

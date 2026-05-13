@@ -22,7 +22,7 @@ If any individual transfer in a batch transaction fails, the transfer is rolled 
 ### Why Did My Transfer Fail?
 
 There are multiple reasons why a Transfer can fail, even if they are all very unlikely:
-- In EVM chains, a native asset transfer (e.g. Eth) can fail if the recieving address is a smart contract executes logic that consumes more than 8000 gas on the receive logic. Regular multisigs are supported.
+- In EVM chains, a native asset transfer (e.g. Eth) can fail if the receiving address is a smart contract that executes logic consuming more than 8000 gas on receive. Regular multisigs are supported.
 - In EVM chains, an ERC-20 token asset transfer (e.g. USDC) can fail if the receiver is blacklisted by the asset issuer.
 - In Tron, a TRX asset transfer to a smart contract is not supported. The destination address must be an EOA (no code).
 

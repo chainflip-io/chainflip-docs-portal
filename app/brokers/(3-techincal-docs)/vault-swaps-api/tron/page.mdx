@@ -98,7 +98,7 @@ Example response when the source asset is **USDT** (TRC20). Note the inclusion o
   "jsonrpc": "2.0",
   "result": {
     "chain": "Tron",
-    "calldata": ".0xa9059cbb..",
+    "calldata": "0xa9059cbb...",
     "value": "0x0",
     "to": "0x814f36c1bbfd8aabec86273f0d61521e0c2d5287",
     "note": "0x0100...",
@@ -120,7 +120,7 @@ The response fields differ slightly from EVM:
 | `note`                 | Hex-encoded swap parameters to attach as a note on the transaction. This is what identifies the transaction to Chainflip.        |
 | `source_token_address` | (Optional) String-encoded TRC20 token contract address. Present only for TRC20 swaps.                                              |
 
-The transaction construction differs depending on whether you are swapping native TRX or a TRC20 token. For this example the tronWeb library is used.
+The transaction construction differs depending on whether you are swapping native TRX or a TRC20 token. For this example, the TronWeb library is used.
 
 **Native TRX swap:**
 

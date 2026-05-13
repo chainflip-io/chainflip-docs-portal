@@ -110,22 +110,21 @@ Example response when the source asset is **USDT** (TRC20). Note the inclusion o
 
 ### 2. Construct the Transaction
 
-The response fields differ from EVM:
+The response fields differ slightly from EVM:
 
 | Field                  | Description                                                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `calldata`             | For TRC20 swaps: ABI-encoded `transfer(address,uint256)` call. For native TRX swaps: `"0x"` (unused).                           |
 | `value`                | Amount of TRX to send in sun (1 TRX = 1,000,000 sun). Always `"0x0"` for TRC20 swaps.                                           |
-| `to`                   | Hex-encoded destination address. For TRX: the Chainflip Vault. For TRC20: the token contract address. Must be converted to Tron base58 format before use. |
+| `to`                   | String-encoded destination address. For TRX: the Chainflip Vault. For TRC20: the token contract address. |
 | `note`                 | Hex-encoded swap parameters to attach as a note on the transaction. This is what identifies the transaction to Chainflip.        |
-| `source_token_address` | (Optional) Hex-encoded TRC20 token contract address. Present only for TRC20 swaps.                                              |
+| `source_token_address` | (Optional) String-encoded TRC20 token contract address. Present only for TRC20 swaps.                                              |
 
 The transaction construction differs depending on whether you are swapping native TRX or a TRC20 token. For this example the tronWeb library is used.
 
 **Native TRX swap:**
 
 ```typescript copy
-// Convert hex address to Tron base58 format
 const senderAddress = /* user address */;
 
 let transaction = await tronWeb.transactionBuilder.sendTrx(
@@ -145,7 +144,6 @@ transaction = await tronWeb.transactionBuilder.addUpdateData(
 **TRC20 (USDT) swap:**
 
 ```typescript copy
-// Convert hex addresses to Tron base58 format
 const senderAddress = /* user address */;
 
 const result = await tronWeb.transactionBuilder.triggerSmartContract(

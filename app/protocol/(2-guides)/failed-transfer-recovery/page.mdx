@@ -15,13 +15,16 @@ import { Callout } from "nextra/components";
     This topic is relevant to smart contract chains only, and uses Ethereum as an example.
 </Callout>
 
-To reduce transaction fees for users, the Chainflip protocol will always try to send swap outputs in batches. The protocol also sets a limit on the fees it is willing to pay for each transfer. This is to prevent attacks on the protocol that could drain funds from the vault.
+To reduce transaction fees for users, the Chainflip protocol will always try to send swap outputs in batches. The protocol also sets a limit on the fees it is willing to pay for each transfer. This is to prevent attacks on the protocol that could drain or grief the protocol.
 
 If any individual transfer in a batch transaction fails, the transfer is rolled back and emits an event to notify the network of this failure. This event triggers what is called the Transfer Fallback mechanism.
 
 ### Why Did My Transfer Fail?
 
-The most common reason for a failed transfer is that the receiving address is in fact a smart contract, which in turn consumes gas and causes the transfer fee to be higher than expected.
+There are multiple reasons why a Transfer can fail, even if they are all very unlikely:
+- In EVM chains, a native asset transfer (e.g. Eth) can fail if the receiving address is a smart contract that executes logic consuming more than 8000 gas on receive. Regular multisigs are supported.
+- In EVM chains, an ERC-20 token asset transfer (e.g. USDC) can fail if the receiver is blacklisted by the asset issuer.
+- In Tron, a TRX asset transfer to a smart contract is not supported. The destination address must be an EOA (no code).
 
 ## Transfer Fallback
 

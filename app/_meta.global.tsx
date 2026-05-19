@@ -238,6 +238,7 @@ export default {
                     'bitcoin': 'Bitcoin',
                     'evm': 'EVM',
                     'solana': 'Solana',
+                    'tron': 'Tron',
                     'encoding-reference': '',
                 }
             },

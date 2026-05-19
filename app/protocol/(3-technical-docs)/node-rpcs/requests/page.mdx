@@ -8,7 +8,7 @@ description: The state chain node RPCs.
 
 ## RPC requests
 
-### `cf_controlled_deposit_channels`
+### `cf_controlled_deposit_addresses`
 
 Returns all currently open deposit channels for the provided chain.
 If no chain is provided, returns all open deposit channels across all chains.
@@ -25,7 +25,8 @@ Return:
     "Bitcoin": [..],
     "Ethereum": [..],
     "Arbitrum": [..],
-    "Solana": [..]
+    "Solana": [..],
+    "Tron": [..]
 }
 ``` 
 
@@ -61,6 +62,9 @@ Response:
     ],
     "Solana": [
       "9K1rSSRr222DLhjBHukvHws9unAah1ad5gYjWpaEN39T",
+    ],
+    "Tron": [
+      "TX8VqM3w9rJftks1UfqntGpdbp9npPUbyu"
     ]
   },
   "id": "1"
@@ -88,7 +92,8 @@ Return:
     "Bitcoin": [..],
     "Ethereum": [..],
     "Arbitrum": [..],
-    "Solana": [..]
+    "Solana": [..],
+    "Tron": [..]
 }
 ```
 A single entry looks like follows:
@@ -190,6 +195,15 @@ Response:
         "name": "ethereum_vault_contract",
         "address": "0xb7a5bd0345ef1cc5e66bf61bdec17d2461fbd968",
         "explanation": "Holds ETH and all tokens on Ethereum. Directly receives user funds for smart contract-based vault swaps.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      }
+    ],
+    "Tron": [
+      {
+        "name": "tron_vault_contract",
+        "address": "TMkw4gZgD4sDFLtnCu3tW1v2vETdG76MrN",
+        "explanation": "Holds TRX and all tokens on Tron. Directly receives user funds in case of smart contract-based vault swaps.",
         "rotation_policy": "Never",
         "next_predicted_rotation": null
       }

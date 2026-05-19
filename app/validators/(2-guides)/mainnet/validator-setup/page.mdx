@@ -45,6 +45,10 @@ You validator will need Arbitrum `ETH` to pay for transactions fees on the Arbit
 
 `$FLIP` is used to pay transaction fees on Chainflip's State Chain.
 
+**TRX (Tron)**
+
+Your validator will need Tron `TRX` to pay for transaction fees on the Tron network.
+
 ### System Requirements
 
 ```
@@ -371,7 +375,7 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 ### Setting Up Your Validator's Ethereum Account
 
-You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet and **0.1 ETH** on Ethereum Arbitrum. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
+You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum and **300 TRX** on Tron. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
 
 <Callout type="warning">
     Please also note that the Ethereum key is for the exclusive use of the
@@ -529,6 +533,20 @@ http_endpoint = "https://assethub.someprovider.io:443"
 #[hub.backup_rpc]
 #ws_endpoint = "wss://assethub.someotherprovider.io:443"
 #http_endpoint = "https://assethub.someotherprovider.io:443"
+
+[tron]
+# Tron private key file path. This file should contain a hex-encoded private key.
+# Note: Here we use the same private key file as Ethereum. You can use a different key if you want.
+private_key_file = "/etc/chainflip/keys/ethereum_key_file"
+
+[tron.rpc]
+http_endpoint = "http://tron.someprovider:443/wallet"
+json_rpc_endpoint = "http://tron.someprovider:443/jsonrpc"
+
+# optional
+# [tron.backup_rpc]
+# http_endpoint = "http://tron.someprovider.backup:443/wallet"
+# json_rpc_endpoint = "http://tron.someprovider.backup:443/jsonrpc"
 
 # optional
 #[logging]

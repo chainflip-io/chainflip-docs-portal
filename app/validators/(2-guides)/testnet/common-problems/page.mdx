@@ -317,6 +317,35 @@ Not all Tron RPC providers support historical balance queries on Nile testnet. U
 | [Chainstack](https://chainstack.com/) | 🚫 No historical balance support |
 | [Quicknode](https://www.quicknode.com/) | 🚫 No Nile testnet support |
 
+#### Testing Your Tron RPC Endpoint
+
+Before integrating, you can verify whether your provider supports `getBlockBalance` with the following curl command:
+
+```bash copy
+curl -X POST https://<your-tron-rpc-endpoint>/wallet/getblockbalance \
+  -H "Content-Type: application/json" \
+  -d '{"number": 64843264, "hash": "0000000003dd6e006934d46981dab0f3cf1863b6d7b0a50577e198e06bb8560b", "visible": false}'
+```
+
+A working response looks like this:
+
+```json
+{
+  "block_identifier": {
+    "hash": "0000000003dd6e006934d46981dab0f3cf1863b6d7b0a50577e198e06bb8560b",
+    "number": 64843264
+  },
+  "timestamp": 1770990702000,
+  "transaction_balance_trace": [...]
+}
+```
+
+If historical balance queries are not supported, the response will be:
+
+```json
+{"Error":"class org.tron.core.exception.ItemNotFoundException : This block does not exist"}
+```
+
 #### Running Your Own Tron Node
 
 If you are running a self-hosted `java-tron` full node, historical balance queries must be explicitly enabled in your node's `config.conf` file. Add or update the following settings:

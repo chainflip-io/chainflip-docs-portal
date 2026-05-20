@@ -311,6 +311,16 @@ Not all Tron RPC providers support historical balance queries on Mainnet. Use a 
 | [Quicknode](https://www.quicknode.com/) | ✅ Supported |
 | [Trongrid](https://www.trongrid.io/) | 🚫 No historical balance support |
 
+#### RPC Provider Authentication
+
+The Chainflip engine does not support passing authentication headers to RPC endpoints. If your provider requires authentification via an `x-api-key` header, it is usually supported to embed the API key directly in the URL using Basic Authentication format:
+
+```
+https://x-api-key:YOUR_API_KEY@your-tron-mainnet-endpoint.com
+```
+
+Use this URL format when configuring the Tron RPC endpoint in your engine settings (`/etc/chainflip/config/Settings.toml`).
+
 #### Testing Your Tron RPC Endpoint
 
 Before integrating, you can verify whether your provider supports `getBlockBalance` with the following curl command. Replace `<your-tron-rpc-endpoint>` with your provider's Mainnet endpoint:

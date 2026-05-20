@@ -286,6 +286,47 @@ sudo systemctl enable --now chrony
 ```
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 
+## Engine Fails to Start — Tron RPC Missing Historical Balance Support
+
+### Logs
+
+```
+HTTP API node does not support getBlockBalance — ensure the node has the historical balance query feature enabled
+```
+
+### Problem
+
+The Chainflip engine requires the Tron RPC node to support historical balance queries (`getBlockBalance`). If the Tron endpoint does not have this feature enabled, the engine will fail to start.
+
+### Solution
+
+#### Using an RPC Provider
+
+Not all Tron RPC providers support historical balance queries on Mainnet. Use a provider from the supported list below:
+
+| Provider | Mainnet |
+|---|---|
+| [Tatum](https://tatum.io/) | ✅ Supported |
+| [Chainstack](https://chainstack.com/) | ✅ Supported |
+| [Quicknode](https://www.quicknode.com/) | ✅ Supported |
+| [Trongrid](https://www.trongrid.io/) | 🚫 No historical balance support |
+
+#### Running Your Own Tron Node
+
+If you are running a self-hosted `java-tron` full node, historical balance queries must be explicitly enabled in your node's `config.conf` file. Add or update the following settings:
+
+```conf
+storage {
+  historyBalanceLookup = true
+}
+```
+
+After updating the configuration, restart the Chainflip engine:
+
+```bash copy
+sudo systemctl restart chainflip-engine.service
+```
+
 ## It still doesn't work?
 
 Follow instructions under [Submitting an issue](/validators/mainnet/submitting-an-issue).

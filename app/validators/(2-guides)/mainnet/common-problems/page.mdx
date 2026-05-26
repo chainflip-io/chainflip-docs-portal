@@ -286,6 +286,86 @@ sudo systemctl enable --now chrony
 ```
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 
+## Engine Fails to Start — Tron RPC Missing Historical Balance Support
+
+### Logs
+
+```
+HTTP API node does not support getBlockBalance — ensure the node has the historical balance query feature enabled
+```
+
+### Problem
+
+The Chainflip engine requires the Tron RPC node to support historical balance queries (`getBlockBalance`). If the Tron endpoint does not have this feature enabled, the engine will fail to start.
+
+### Solution
+
+#### Using an RPC Provider
+
+Not all Tron RPC providers support historical balance queries on Mainnet. Use a provider from the supported list below:
+
+| Provider | Mainnet |
+|---|---|
+| [Tatum](https://tatum.io/) | ✅ Supported |
+| [Chainstack](https://chainstack.com/) | ✅ Supported |
+| [Quicknode](https://www.quicknode.com/) | ✅ Supported |
+| [Trongrid](https://www.trongrid.io/) | 🚫 No historical balance support |
+
+#### RPC Provider Authentication
+
+The Chainflip engine does not support passing authentication headers to RPC endpoints. If your provider requires authentification via an `x-api-key` header, it is usually supported to embed the API key directly in the URL using Basic Authentication format:
+
+```
+https://x-api-key:YOUR_API_KEY@your-tron-mainnet-endpoint.com
+```
+
+Use this URL format when configuring the Tron RPC endpoint in your engine settings (`/etc/chainflip/config/Settings.toml`).
+
+#### Testing Your Tron RPC Endpoint
+
+Before integrating, you can verify whether your provider supports `getBlockBalance` with the following curl command. Replace `<your-tron-rpc-endpoint>` with your provider's Mainnet endpoint:
+
+```bash copy
+curl -X POST https://<your-tron-rpc-endpoint>/wallet/getblockbalance \
+  -H "Content-Type: application/json" \
+  -d '{"number": 77096758, "hash": "0000000004986736812cbf15ffbcdd229bd3d76a595db895719867cc2da3a5bd", "visible": true}'
+```
+
+A working response looks like this:
+
+```json
+{
+  "block_identifier": {
+    "hash": "0000000004986736812cbf15ffbcdd229bd3d76a595db895719867cc2da3a5bd",
+    "number": 77096758
+  },
+  "timestamp": 1761951333000,
+  "transaction_balance_trace": [...]
+}
+```
+
+If historical balance queries are not supported, the response will be:
+
+```json
+{"Error":"class org.tron.core.exception.ItemNotFoundException : This block does not exist"}
+```
+
+#### Running Your Own Tron Node
+
+If you are running a self-hosted `java-tron` full node, historical balance queries must be explicitly enabled in your node's `config.conf` file. Add or update the following settings:
+
+```conf
+storage {
+  historyBalanceLookup = true
+}
+```
+
+After updating the configuration, restart the Chainflip engine:
+
+```bash copy
+sudo systemctl restart chainflip-engine.service
+```
+
 ## It still doesn't work?
 
 Follow instructions under [Submitting an issue](/validators/mainnet/submitting-an-issue).

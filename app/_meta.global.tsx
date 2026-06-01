@@ -285,6 +285,10 @@ export default {
                 title: 'Technical Reference'
             },
             'maintenance': '',
+            'grandpa-vote-delegation': {
+                href: '/validators/grandpa-vote-delegation',
+                title: <span className="badge-success after:content-['New']">GRANDPA Vote Delegation</span>
+            },
             'default-filepaths-and-ports': ''
         }
     },

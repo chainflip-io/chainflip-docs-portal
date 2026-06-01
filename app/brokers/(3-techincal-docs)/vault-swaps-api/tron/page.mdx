@@ -245,3 +245,30 @@ const signedTx = await tronWeb.trx.sign(transaction, 'your-private-key');
 const broadcast = await tronWeb.trx.sendRawTransaction(signedTx);
 console.log('Transaction ID:', '0x' + broadcast.txid);
 ```
+
+### Encoding Reference
+
+This reference can be used to verify the encoding of the transaction `note` if desired.
+
+<Callout type="warning">
+  You should not need to build this encoding yourself. Always prefer to use the
+  [`broker_request_swap_parameter_encoding()` RPC](/brokers/broker-vault-swaps)
+  to encode the swap parameters. It's more convenient and more reliable.
+</Callout>
+
+The swap parameters attached as the transaction `note` are encoded using [Parity's SCALE](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/#scale-codec) codec, as a tuple in the following order:
+
+| Param            | Description                                                                                                                                                                                                                                          | Data Type                 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `output_asset`   | Destination [asset ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation).                                                                                                                                               | `u8`                      |
+| `output_address` | Encoded destination [address](/brokers/broker-api/types#addresses). SCALE-encoded as a one-byte chain tag followed by the address bytes.                                                                                                              | `EncodedAddress`          |
+| `ccm_data`       | Optional cross-chain message for the destination chain: a `(gas_budget, message)` pair. Encoded as `None` (`0x00`) for non-CCM swaps.                                                                                                                 | `Option<(u128, Vec<u8>)>` |
+| `cf_parameters`  | Length-prefixed, SCALE-encoded [`VersionedCfParameters`](/brokers/vault-swaps-api/encoding-reference#chainflip-parameters-cf_parameters) — carries the refund parameters, DCA, boost fee, broker fee and affiliate fees.                              | `Vec<u8>`                 |
+
+<Callout type="info">
+  Tron Vault swaps reuse the same `cf_parameters` encoding as EVM chains, so the
+  refund parameters, DCA, boost fee, broker fee and affiliate fees are all
+  carried inside `cf_parameters` rather than as top-level fields of the `note`.
+  For Solana destinations, the CCM additional data (the account list) is included
+  in `cf_parameters`, while the gas budget and message are carried in `ccm_data`.
+</Callout>

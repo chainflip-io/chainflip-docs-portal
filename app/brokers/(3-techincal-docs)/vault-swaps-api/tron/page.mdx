@@ -245,3 +245,7 @@ const signedTx = await tronWeb.trx.sign(transaction, 'your-private-key');
 const broadcast = await tronWeb.trx.sendRawTransaction(signedTx);
 console.log('Transaction ID:', '0x' + broadcast.txid);
 ```
+
+
+## SDK Usage
+if you are using the typescript chainflip SDK, you can find a working example in the [SDK repository](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/main/packages/examples/src/tronVaultSwap.ts).

@@ -115,7 +115,7 @@ Yes. Via Safe Mode, governance can temporarily pause:
 - liquidations
 - vault egresses
 
-Repayments or top-ups may remain enabled depending on Safe Mode level.
+Repayments or collateral additions may remain enabled depending on Safe Mode level.
 
 
 ## Liquidity & Execution Behaviour
@@ -148,12 +148,8 @@ Liquidation and non-liquidation flow coexist without queueing or blocking.
 ## Collateral & Position Management
 
 ### Does collateral automatically earn yield?
-No. Collateral is **not** supplied to pools in this version.
-Borrowers pay interest; suppliers earn interest.
-
-### Does auto-top-up guarantee no liquidation?
-It prevents liquidation as long as the account has enough free balance.
-If free balance is insufficient, liquidation proceeds normally.
+Yes. Under the unified pool model, all supplied assets become collateral and are deployed into the lending pool, earning interest from loans taken out against them.
+BTC supply additionally earns Boost fees, as it is partially utilised to power Boosted swaps and deposits.
 
 ### Can I borrow against multiple collateral assets?
 Yes. LTV is calculated per-account using the aggregated oracle value of all collateral assets.

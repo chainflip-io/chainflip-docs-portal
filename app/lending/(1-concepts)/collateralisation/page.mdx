@@ -39,9 +39,11 @@ Future versions will support additional safety mechanisms like taking Chainflip'
 
 ---
 
-### Auto-Collateralisation
+### Collateral Earns Yield
 
-Borrowers may enable auto-top-up, which uses free balance in the State Chain account in their asset of choice to automatically increase collateral when LTV approaches the soft liquidation threshold. Auto-top-up prevents liquidation as long as the borrower has sufficient available balance. Note that for the Beta launch, Auto Top up will be disabled.
+Under the unified pool model, supplied collateral is deployed into the lending pool and earns interest from loans taken out against it. BTC collateral additionally earns Boost fees. See [Supply as Collateral](/lending/utilisation#supply-as-collateral-the-unified-pool-model) for details.
+
+To avoid liquidation, borrowers should monitor their LTV and add collateral or repay debt as needed. The lending app provides warnings when LTV approaches unsafe levels.
 
 ---
 

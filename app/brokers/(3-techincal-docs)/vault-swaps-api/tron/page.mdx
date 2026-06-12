@@ -248,6 +248,7 @@ const broadcast = await tronWeb.trx.sendRawTransaction(signedTx);
 console.log("Transaction ID:", "0x" + broadcast.txid);
 ```
 
+
 ### Encoding Reference
 
 This reference can be used to verify the encoding of the transaction `note` if desired.
@@ -276,3 +277,6 @@ The swap parameters attached as the transaction `note` are encoded using [Parity
     is included in `cf_parameters`, while the gas budget and message are carried
     in `ccm_data`.
 </Callout>
+
+## SDK Usage
+if you are using the typescript chainflip SDK, you can find a working example in the [SDK repository](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/main/packages/examples/src/tronVaultSwap.ts).

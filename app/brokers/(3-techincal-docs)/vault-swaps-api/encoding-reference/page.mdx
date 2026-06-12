@@ -9,9 +9,9 @@ import { Callout } from "nextra/components";
 ## Vault Swap Encoding Reference
 
 <Callout type="warning">
-  It is strongly recommended to use the provided
-  [request_swap_parameter_encoding](/brokers/broker-api/requests#broker_request_swap_parameter_encoding)
-  RPC rather than encoding the payload yourself.
+    It is strongly recommended to use the provided
+    [request_swap_parameter_encoding](/brokers/broker-api/requests#broker_request_swap_parameter_encoding)
+    RPC rather than encoding the payload yourself.
 </Callout>
 
 As described in the [EVM smart contract interface](/brokers/vault-swaps-api/evm#vault-contract-interface-reference) and the [Solana program interface](/brokers/vault-swaps-api/solana#ault-contract-interface-references), Vault Swaps in Solana and EVM chains can be initiated by a call to a smart contract.
@@ -69,31 +69,46 @@ pub struct DcaParameters {
 
 Chainflip uses its own notation for chain and token within our Vault smart contracts. These are the values for the source and destination chains and assets parameters described above. The same values apply for the the corresponding testnets (e.g. Ethereum mainnet and Sepolia share the same value).
 
-| Asset   | Chain    | Asset ID |     | Chain    | Chain ID |
-| ------- | -------- | -------- | --- | -------- | -------- |
-| ETH     | Ethereum | 1        |     | Ethereum | 1        |
-| FLIP    | Ethereum | 2        |     | Polkadot | 2        |
-| USDC    | Ethereum | 3        |     | Bitcoin  | 3        |
-| DOT     | Polkadot | 4        |     | Arbitrum | 4        |
-| BTC     | Bitcoin  | 5        |     | Solana   | 5        |
-| arbETH  | Arbitrum | 6        |     | AssetHub | 6        |
-| arbUSDC | Arbitrum | 7        |     |          |          |
-| USDT    | Ethereum | 8        |     |          |          |
-| SOL     | Solana   | 9        |     |          |          |
-| solUSDC | Solana   | 10       |     |          |          |
-| hubDOT  | AssetHub | 11       |     |          |          |
-| hubUSDT | AssetHub | 12       |     |          |          |
-| hubUSDC | AssetHub | 13       |     |          |          |
+| Chain ID | Chain    | Supported |
+| -------- | -------- | --------- |
+| 1        | Ethereum | ✅        |
+| 2        | Polkadot | ❌        |
+| 3        | Bitcoin  | ✅        |
+| 4        | Arbitrum | ✅        |
+| 5        | Solana   | ✅        |
+| 6        | AssetHub | ✅        |
+| 7        | Tron     | ✅        |
+
+| Asset ID | Asset   | Chain    | Supported |
+| -------- | ------- | -------- | --------- |
+| 1        | ETH     | Ethereum | ✅        |
+| 2        | FLIP    | Ethereum | ✅        |
+| 3        | USDC    | Ethereum | ✅        |
+| 4        | DOT     | Polkadot | ❌        |
+| 5        | BTC     | Bitcoin  | ✅        |
+| 6        | arbETH  | Arbitrum | ✅        |
+| 7        | arbUSDC | Arbitrum | ✅        |
+| 8        | USDT    | Ethereum | ✅        |
+| 9        | SOL     | Solana   | ✅        |
+| 10       | solUSDC | Solana   | ✅        |
+| 11       | hubDOT  | AssetHub | ✅        |
+| 12       | hubUSDT | AssetHub | ✅        |
+| 13       | hubUSDC | AssetHub | ✅        |
+| 14       | WBTC    | Ethereum | ✅        |
+| 15       | arbUSDT | Arbitrum | ✅        |
+| 16       | solUSDT | Solana   | ✅        |
+| 17       | TRX     | Tron     | ✅        |
+| 18       | trxUSDT | Tron     | ✅        |
 
 ---
 
 #### Chainflip parameters (`cf_parameters`)
 
 <Callout type="info">
-  This section is only relevant if you want to encode EVM and Solana Vault swap
-  transactions manually instead of using the provided RPC helpers. If you use
-  the `broker_request_swap_parameter_encoding` RPC call to build the call, this
-  field is automatically encoded for you.
+    This section is only relevant if you want to encode EVM and Solana Vault
+    swap transactions manually instead of using the provided RPC helpers. If you
+    use the `broker_request_swap_parameter_encoding` RPC call to build the call,
+    this field is automatically encoded for you.
 </Callout>
 
 In both the [EVM smart contract interface](/brokers/vault-swaps-api/evm#vault-contract-interface-reference) and the [Solana program interface](/brokers/vault-swaps-api/solana#ault-contract-interface-references), the `cf_parameters` must be passed as part of the transaction data.
@@ -115,41 +130,61 @@ There are two recommended approaches to encode this data to avoid manual encodin
 As described in the [EVM smart contract interface](/protocol/cross-chain-messaging/evm-ccm#ccm-receiver-smart-contract-interface) and the [Solana program interface](/protocol/cross-chain-messaging/sol-ccm#receive-call-and-asset-on-the-receiver-program), the `cf_parameters` must be passed as part of the transaction data. The protocol expects a `VersionedCfParameters` encoded into bytes format using Parity's Scale.
 
 ```rust
+// The current encoding version is `V1`. `V0` is kept for backwards compatibility.
 #[derive(Encode, Decode)]
 pub enum VersionedCfParameters<CcmData = ()> {
-	V0(CfParameters<CcmData>),
+	V0(CfParametersV0<CcmData>),
+	V1(CfParametersV1<CcmData>),
 }
 
-/// By default, the CfParameters do not contain CCM message. Therefore the CcmData is the () type.
+/// By default, the CfParameters do not contain a CCM message. Therefore the CcmData is the () type.
 #[derive(Encode, Decode, MaxEncodedLen, TypeInfo, Clone, PartialEq, Debug)]
-pub struct CfParameters<CcmData = ()> {
+pub struct CfParameters<VaultSwapParams, CcmData = ()> {
 	/// CCMs may require additional data (e.g. CCMs to Solana requires a list of addresses).
 	pub ccm_additional_data: CcmData,
-	pub vault_swap_parameters: VaultSwapParameters,
+	pub vault_swap_parameters: VaultSwapParams,
 }
 
+pub type CfParametersV0<CcmData = ()> = CfParameters<VaultSwapParametersV0, CcmData>;
+pub type CfParametersV1<CcmData = ()> = CfParameters<VaultSwapParametersV1, CcmData>;
+
 /// If CCM is included as part of the Vault Swap, additional data should be included here.
-/// Additional data is Byte array with a maximum size of 3_000. See below for more details.
-pub type VersionedCcmCfParameters = VersionedCfParameters<CcmAdditionalData>;
+/// Additional data is a byte array with a maximum size of 3_000. See below for more details.
 pub type CcmAdditionalData = BoundedVec<u8, ConstU32<3_000>>;
 
 #[derive(Encode, Decode, MaxEncodedLen, TypeInfo, Clone, PartialEq, Debug)]
-pub struct VaultSwapParameters {
-  // Refund parameter, using Chainflip's internal `ForeignChainAddress` address format.
-	pub refund_params: ChannelRefundParameters,
-  // DCA parameters. See Vault Swaps page for its type reference.
+pub struct VaultSwapParameters<RefundParams> {
+	// Refund parameters, using Chainflip's internal `ForeignChainAddress` address format.
+	pub refund_params: RefundParams,
+	// DCA parameters. See Vault Swaps page for its type reference.
 	pub dca_params: Option<DcaParameters>,
 	pub boost_fee: u8,
-  // List of accounts and amount of fees to pay to (in BasisPoint)
+	// List of accounts and amount of fees to pay to (in basis points)
 	pub broker_fee: Beneficiary<AccountId>,
-  // List of Affiliates to pay fees to.
+	// List of affiliates to pay fees to.
 	pub affiliate_fees: BoundedVec<AffiliateAndFee, ConstU32<5>>,
 }
 
-pub struct ChannelRefundParameters {
+// V0 uses the original refund parameters.
+pub type VaultSwapParametersV0 = VaultSwapParameters<ChannelRefundParametersV0>;
+// V1 uses refund parameters that additionally carry refund CCM metadata and the max
+// oracle price slippage (called `ChannelRefundParametersUnchecked` in the codebase).
+pub type VaultSwapParametersV1 = VaultSwapParameters<ChannelRefundParametersV1>;
+
+pub struct ChannelRefundParametersV0 {
 	pub retry_duration: BlockNumber, // u32
 	pub refund_address: Address,
 	pub min_price: Price, // U256
+}
+
+pub struct ChannelRefundParametersV1 {
+	pub retry_duration: BlockNumber, // u32
+	pub refund_address: Address,
+	pub min_price: Price, // U256
+	// Set when the refund should itself be a cross-chain message.
+	pub refund_ccm_metadata: Option<CcmChannelMetadata>,
+	// Maximum oracle price slippage in basis points. `None` disables the check.
+	pub max_oracle_price_slippage: Option<u16>,
 }
 ```
 
@@ -160,106 +195,133 @@ import { bytesToHex, hexToBytes } from "@chainflip/utils/bytes";
 import * as ss58 from "@chainflip/utils/ss58";
 import { isHex } from "@chainflip/utils/string";
 import {
-  u32,
-  Struct,
-  Option,
-  u16,
-  u256,
-  Bytes as TsBytes,
-  Enum,
-  Vector,
-  u8,
+    u32,
+    Struct,
+    Option,
+    u16,
+    u128,
+    u256,
+    Bytes as TsBytes,
+    Enum,
+    Vector,
+    u8,
 } from "scale-ts";
 
+// Optional refund CCM metadata (V1).
+// For regular swaps, leave as `undefined` (encoded as `None`).
+const ccmChannelMetadataCodec = Struct({
+    message: TsBytes(), // up to 15_000 bytes
+    gasBudget: u128,
+    ccmAdditionalData: TsBytes(), // up to 3_000 bytes
+});
+
 const vaultSwapParametersCodec = Struct({
-  refundParams: Struct({
-    retryDurationBlocks: u32,
-    // Use 20 for EVM chains and 32 for Solana
-    refundAddress: TsBytes(20),
-    minPriceX128: u256,
-  }),
-  dcaParams: Option(Struct({ numberOfChunks: u32, chunkIntervalBlocks: u32 })),
-  boostFee: u8,
-  brokerFees: Struct({ account: TsBytes(32), commissionBps: u16 }),
-  affiliateFees: Vector(Struct({ account: u8, commissionBps: u8 })),
+    refundParams: Struct({
+        retryDurationBlocks: u32,
+        // Use 20 for EVM chains and 32 for Solana
+        refundAddress: TsBytes(20),
+        minPriceX128: u256,
+        // V1 additions:
+        refundCcmMetadata: Option(ccmChannelMetadataCodec),
+        maxOraclePriceSlippageBps: Option(u16),
+    }),
+    dcaParams: Option(
+        Struct({ numberOfChunks: u32, chunkIntervalBlocks: u32 }),
+    ),
+    boostFee: u8,
+    brokerFees: Struct({ account: TsBytes(32), commissionBps: u16 }),
+    affiliateFees: Vector(Struct({ account: u8, commissionBps: u8 })),
 });
 
-const versionedCcmCfParametersCodec = Enum({
-  V0: Struct({
-    ccmAdditionalData: TsBytes(),
-    vaultSwapParameters: vaultSwapParametersCodec,
-  }),
-});
+// The `[1]` argument sets the SCALE enum variant index to 1, i.e. `V1`.
+const versionedCcmCfParametersCodec = Enum(
+    {
+        V1: Struct({
+            ccmAdditionalData: TsBytes(),
+            vaultSwapParameters: vaultSwapParametersCodec,
+        }),
+    },
+    [1],
+);
 
-const versionedCfParametersCodec = Enum({
-  V0: Struct({
-    vaultSwapParameters: vaultSwapParametersCodec,
-  }),
-});
+const versionedCfParametersCodec = Enum(
+    {
+        V1: Struct({
+            vaultSwapParameters: vaultSwapParametersCodec,
+        }),
+    },
+    [1],
+);
 
 function encodeCfParameters(
-  fillOrKillParams: {
-    retryDurationBlocks: number;
-    refundAddress: string;
-    minPriceX128: string;
-  },
-  brokerFees: {
-    account: string;
-    commissionBps: number;
-  },
-  ccmAdditionalData?: string | undefined,
-  boostFeeBps?: number,
-  dcaParams?: {
-    numberOfChunks: number;
-    chunkIntervalBlocks: number;
-  },
-  affiliateFees?: {
-    account: number;
-    commissionBps: number;
-  }[]
-): string {
-  const vaultSwapParameters = {
-    refundParams: {
-      retryDurationBlocks: fillOrKillParams.retryDurationBlocks,
-      refundAddress: hexToBytes(
-        fillOrKillParams.refundAddress as `0x${string}`
-      ),
-      minPriceX128: BigInt(fillOrKillParams.minPriceX128),
+    fillOrKillParams: {
+        retryDurationBlocks: number;
+        refundAddress: string;
+        minPriceX128: string;
     },
-    dcaParams,
-    boostFee: boostFeeBps ?? 0,
     brokerFees: {
-      account: isHex(brokerFees.account)
-        ? hexToBytes(brokerFees.account)
-        : ss58.decode(brokerFees.account).data,
-      commissionBps: brokerFees.commissionBps,
+        account: string;
+        commissionBps: number;
     },
-    affiliateFees: affiliateFees ?? [],
-  };
+    ccmAdditionalData?: string | undefined,
+    boostFeeBps?: number,
+    dcaParams?: {
+        numberOfChunks: number;
+        chunkIntervalBlocks: number;
+    },
+    affiliateFees?: {
+        account: number;
+        commissionBps: number;
+    }[],
+): string {
+    const vaultSwapParameters = {
+        refundParams: {
+            retryDurationBlocks: fillOrKillParams.retryDurationBlocks,
+            refundAddress: hexToBytes(
+                fillOrKillParams.refundAddress as `0x${string}`,
+            ),
+            minPriceX128: BigInt(fillOrKillParams.minPriceX128),
+            // Optional V1 fields. Leave as `undefined` (encoded as `None`) unless the
+            // refund is itself a CCM or you want to cap the oracle price slippage.
+            refundCcmMetadata: undefined,
+            maxOraclePriceSlippageBps: undefined,
+        },
+        dcaParams,
+        boostFee: boostFeeBps ?? 0,
+        brokerFees: {
+            account: isHex(brokerFees.account)
+                ? hexToBytes(brokerFees.account)
+                : ss58.decode(brokerFees.account).data,
+            commissionBps: brokerFees.commissionBps,
+        },
+        affiliateFees: affiliateFees ?? [],
+    };
 
-  return bytesToHex(
-    ccmAdditionalData !== undefined
-      ? versionedCcmCfParametersCodec.enc({
-          tag: "V0",
-          value: {
-            ccmAdditionalData: hexToBytes(ccmAdditionalData as `0x${string}`),
-            vaultSwapParameters,
-          },
-        })
-      : versionedCfParametersCodec.enc({
-          tag: "V0",
-          value: {
-            vaultSwapParameters,
-          },
-        })
-  );
+    return bytesToHex(
+        ccmAdditionalData !== undefined
+            ? versionedCcmCfParametersCodec.enc({
+                  tag: "V1",
+                  value: {
+                      ccmAdditionalData: hexToBytes(
+                          ccmAdditionalData as `0x${string}`,
+                      ),
+                      vaultSwapParameters,
+                  },
+              })
+            : versionedCfParametersCodec.enc({
+                  tag: "V1",
+                  value: {
+                      vaultSwapParameters,
+                  },
+              }),
+    );
 }
 ```
 
 <Callout type="info">
-  The `ccmAdditionalData` parameter should not be encoded for non-CCM swaps - it
-  should be undefined in the code above. For CCM swaps, when the destination
-  chain is different than Solana it should be an empty hex string. For Solana
-  CCM swaps, it should be encoded as described in the [Solana CCM message
-  section](/brokers/vault-swaps-api/solana#interface-references).
+    The `ccmAdditionalData` parameter should not be encoded for non-CCM swaps -
+    it should be undefined in the code above. For CCM swaps, when the
+    destination chain is different than Solana it should be an empty hex string.
+    For Solana CCM swaps, it should be encoded as described in the [Solana CCM
+    message section](/brokers/vault-swaps-api/solana#interface-references).
 </Callout>

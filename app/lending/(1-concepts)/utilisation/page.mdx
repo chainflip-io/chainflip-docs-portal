@@ -109,7 +109,9 @@ This ensures there is always enough of each collateral asset available (i.e. not
 
 Actual utilisation can still temporarily exceed the cap due to price movement or supplier withdrawals, but no new borrowing is allowed until the pool recovers. The cap exists specifically to stop a large Boost deposit, or any other borrower activity, from leaving an asset unavailable for liquidations.
 
-100% loan coverage is a very conservative default, as there are almost no scenarios in which 100% of loans need to be liquidated at the same time. Partial liquidations can restore loans to healthy LTV levels without requiring full liquidations.
+Default value for the loan coverage is 100%, which is quite conservative, as there are almost no scenarios in which 100% of loans need to be liquidated at the same time. Partial liquidations can restore loans to healthy LTV levels without requiring full liquidations.
+
+Loan coverage value can be updated through Chainflip governance, similar to other lending parameters. 
 
 ---
 

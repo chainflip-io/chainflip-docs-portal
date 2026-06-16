@@ -107,7 +107,7 @@ If you are uncomfortable with your collateral being used in other loans, you can
 
 Supply as collateral might initially sound like it adds risk to the lending protocol, but that risk is managed. Lending enforces a **utilisation cap** on every asset: a new loan is rejected if it would reduce loan coverage below **100%**.
 
-This ensures there is always enough of each collateral asset available, meaning not locked in outstanding loans, to fully liquidate all loans at current Oracle prices.
+This ensures there is always enough of each collateral asset available (i.e. not locked in outstanding loans) to fully liquidate all loans at current Oracle prices.
 
 Actual utilisation can still temporarily exceed the cap due to price movement or supplier withdrawals, but no new borrowing is allowed until the pool recovers. The cap exists specifically to stop a large Boost deposit, or any other borrower activity, from leaving an asset unavailable for liquidations.
 

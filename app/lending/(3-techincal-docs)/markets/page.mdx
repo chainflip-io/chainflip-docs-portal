@@ -39,8 +39,6 @@ The following thresholds govern loan creation and liquidation behaviour:
 
 - **Minimum Creation LTV: 80%**
   Maximum LTV allowed when opening a new loan
-- **Auto Top-Up Trigger: 85%**
-  Auto-collateralisation begins adding collateral here
 - **Soft Liquidation Threshold: 90%**
   Triggers soft liquidation
 - **Soft Liquidation Abort: 88%**
@@ -107,7 +105,7 @@ Chainflip Lending is designed to minimise systemic risk through:
 - Oracle-driven collateral valuations
 - Early, gradual liquidations (rather than all or nothing)
 - Integrated DEX execution, reducing dependency on external liquidators
-- Auto-top-up, preventing accidental liquidations
+- Utilisation caps enforcing 100% loan coverage when issuing new loans, preserving liquidation capacity
 
 However, lenders may be exposed to:
 

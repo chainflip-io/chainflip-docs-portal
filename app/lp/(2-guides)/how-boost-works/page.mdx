@@ -76,8 +76,17 @@ for (booster, owed_amount) in pending_boosts[deposit_id] {
 
 ## Boost Risks
 
-If the deposit is not finalised before the channel expires, it is considered lost.
-Internally this is done by removing the corresponding record from `pending_boosts` without crediting the boosters.
+In the unlikely scenario where a boosted deposit is not finalised before its channel expires, it is considered lost.
+In practice this can happen if the pre-witnessed (boosted) transaction is removed from a block due to a reorg.
+The Chainflip protocol is designed to be resistant to this risk: while short reorgs do occur, most transactions from
+a replaced block reappear in the blocks that replace it, and the protocol knows how to find them.
+Further, the decentralised nature of transaction witnessing in Chainflip provides protection against
+temporary forks: because validators observe the network from many different vantage points, a transaction has to
+be accepted by the majority of them before it can be boosted.
+A transaction that is only present on one side of a transient fork is therefore unlikely to gather enough witnesses to be boosted in the first place.
+
+However, there is always a theoretical risk that a boosted deposit does not get finalised.
+If that happens, the protocol will remove the corresponding record from `pending_boosts` without crediting the boosters.
 
 > [!NOTE]
 >
@@ -222,14 +231,3 @@ available_amounts = {
 ```
 
 The boost fee is now part of the funds available to boost future deposits.
-
-
-
-
-
-
-
-
-
-
-

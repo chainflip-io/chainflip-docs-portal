@@ -42,7 +42,7 @@ export default function SocialCards({ className }: { className?: string }) {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:grid-cols-3">
         <SocialCard
           Icon={<GithubIcon />}
-          title="Github"
+          title="GitHub"
           description="View all Chainflip repositories"
           href="https://github.com/chainflip-io"
         />

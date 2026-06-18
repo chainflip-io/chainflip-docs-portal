@@ -1,26 +1,24 @@
-import { getEnhancedPageMap } from '@components/get-page-map'
-import type { Folder } from 'nextra'
-import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
-import type { UseMDXComponents } from 'nextra/mdx-components'
-import { generateDefinition, TSDoc } from 'nextra/tsdoc'
-import type { ComponentProps } from 'react'
+import { getEnhancedPageMap } from '@components/get-page-map';
+import { ImageProps } from 'next/image';
+import type { Folder } from 'nextra';
+import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs';
+import { generateDefinition, TSDoc } from 'nextra/tsdoc';
+import type { ComponentProps } from 'react';
+import type React from 'react';
 
-type TSDocProps = ComponentProps<typeof TSDoc>
-type GenerateDefinitionArgs = Parameters<typeof generateDefinition>[0]
+type TSDocProps = ComponentProps<typeof TSDoc>;
+type GenerateDefinitionArgs = Parameters<typeof generateDefinition>[0];
 
 interface APIDocsProps
-  extends Partial<TSDocProps>,
-    Pick<GenerateDefinitionArgs, 'code' | 'flattened'> {
-  componentName?: string
-  groupKeys?: string
-  packageName?: string
+  extends Partial<TSDocProps>, Pick<GenerateDefinitionArgs, 'code' | 'flattened'> {
+  componentName?: string;
+  groupKeys?: string;
+  packageName?: string;
 }
 
 const { img: Image, ...docsComponents } = getDocsMDXComponents({
-  // @ts-expect-error -- FIXME
-  figure: props => <figure className="mt-[1.25em]" {...props} />,
-  // @ts-expect-error -- FIXME
-  figcaption: props => (
+  figure: (props: React.ComponentProps<'figure'>) => <figure className="mt-[1.25em]" {...props} />,
+  figcaption: (props: React.ComponentProps<'figcaption'>) => (
     <figcaption className="mt-2 text-center text-sm" {...props} />
   ),
   async APIDocs({
@@ -33,14 +31,14 @@ const { img: Image, ...docsComponents } = getDocsMDXComponents({
     ...props
   }: APIDocsProps) {
     if (Object.keys(props).length) {
-      throw new Error(`Unexpected props: ${Object.keys(props)}`)
+      throw new Error(`Unexpected props: ${Object.keys(props)}`);
     }
-    let code: string
+    let code: string;
 
     if (componentName) {
       const result = groupKeys
         ? `Omit<MyProps, keyof ${groupKeys}> & { '...props': ${groupKeys} }>`
-        : 'MyProps'
+        : 'MyProps';
 
       code = `
 import type { ComponentProps } from 'react'
@@ -48,22 +46,16 @@ import type { ${componentName.split('.')[0]} } from '${packageName}'
 type MyProps = ComponentProps<typeof ${componentName}>
 type $ = ${result}
 
-export default $`
+export default $`;
     } else {
-      code = $code
+      code = $code;
     }
     const definition =
-      $definition ??
-      generateDefinition(
-        // @ts-expect-error -- exist
-        { code, flattened }
-      )
+      $definition ?? generateDefinition({ code, flattened } as GenerateDefinitionArgs);
 
     // TODO pass `'/api'` as first argument
-    const pageMap = await getEnhancedPageMap()
-    const apiPageMap = pageMap.find(
-      (o): o is Folder => 'name' in o && o.name === 'api'
-    )!.children
+    const pageMap = await getEnhancedPageMap();
+    const apiPageMap = pageMap.find((o): o is Folder => 'name' in o && o.name === 'api')!.children;
 
     return (
       <TSDoc
@@ -71,12 +63,13 @@ export default $`
         typeLinkMap={{
           ...Object.fromEntries(
             apiPageMap
-              .filter(o => 'route' in o && o.name !== 'index')
-              // @ts-expect-error -- fixme
-              .map(o => [o.title, o.route])
+              .filter(
+                (o): o is typeof o & { route: string; title: string } =>
+                  'route' in o && o.name !== 'index',
+              )
+              .map((o) => [o.title, o.route]),
           ),
-          NextConfig:
-            'https://nextjs.org/docs/pages/api-reference/config/next-config-js',
+          NextConfig: 'https://nextjs.org/docs/pages/api-reference/config/next-config-js',
           RehypePrettyCodeOptions: 'https://rehype-pretty.pages.dev/#options',
           PluggableList: 'https://github.com/unifiedjs/unified#pluggablelist',
           GitHubIcon:
@@ -102,23 +95,18 @@ export default $`
           MDXRemote:
             'https://github.com/shuding/nextra/blob/main/packages/nextra/src/client/mdx-remote.tsx',
           MDXComponents:
-            'https://github.com/DefinitelyTyped/DefinitelyTyped/blob/4c3811099cbe9ee60151c11a679b780d0ba785bf/types/mdx/types.d.ts#L65'
+            'https://github.com/DefinitelyTyped/DefinitelyTyped/blob/4c3811099cbe9ee60151c11a679b780d0ba785bf/types/mdx/types.d.ts#L65',
         }}
       />
-    )
-  }
-})
+    );
+  },
+});
 
-export const useMDXComponents: any = <T,>(
-  components?: T
-) => ({
+const mdxComponents = {
   ...docsComponents,
-  // @ts-expect-error -- FIXME
-  img: props => (
-    <Image
-      {...props}
-      className="nextra-border rounded-xl border drop-shadow-sm"
-    />
+  img: (props: ImageProps) => (
+    <Image {...props} className="nextra-border rounded-xl border drop-shadow-sm" />
   ),
-  ...components
-})
+};
+
+export const useMDXComponents = () => mdxComponents;

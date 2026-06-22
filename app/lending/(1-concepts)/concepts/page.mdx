@@ -3,17 +3,18 @@ title: Concepts
 description: Core concepts behind Chainflip Lending
 ---
 
-## Concepts and Roles
+# Lending Concepts and Roles
 
-### Core Concepts
+## Core Concepts
 
-#### Native Cross-Chain Custody
+### Native Cross-Chain Custody
 Chainflip Lending is built into the existing Chainflip cross-chain infrastructure. When users deposit assets from their native chains into the Chainflip system, their funds are held in Vaults on the native chain controlled by the decentralised network through a 100 of 150 threshold signature scheme.
 See [Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview) for more details.
 
-#### Permissionless Lending Architecture
+### Permissionless Lending Architecture
 Using this basic building block, Chainflip Lending adds a range of features to allow for the permissionless creation of loan positions for both lenders and borrowers.
 
+### Isolated Markets & Loan Positions
 #### Supply as Collateral (Unified Pool Model)
 All supplied assets act as collateral. This allows borrowers to earn yield on their collateral, offsetting the cost of borrowing and making the lending product more attractive for both passive suppliers and borrowers. This is paired with [utilisation caps](/lending/utilisation#utilisation-caps-protect-liquidation-capacity) that ensure full loan coverage when issuing new loans.
 For BTC, supply in the unified pool also powers [Boosted](/protocol/boost) swaps and deposits, earning additional Boost yield on top of lending interest.
@@ -24,10 +25,10 @@ However, liquidations are account-wide, not per-loan.
 All collateral and debt in a borrower’s State Chain account contribute to one combined LTV. If this LTV breaches a threshold, the system starts liquidating all loan positions in the account until it becomes healthy again.
 Per-loan liquidations are not supported in this version.
 
-#### Deposit & Withdrawal Behaviour
+### Deposit & Withdrawal Behaviour
 Deposits and withdrawals are permissionless, with temporary pauses only during oracle failures or system safety checks. These pauses automatically resolve when safe conditions return.
 
-#### Shared Infrastructure With the Chainflip Swapping DEX
+### Shared Infrastructure With the Chainflip Swapping DEX
 
 Lending is part of Chainflip’s core State Chain logic and inherits the same
 [consensus rules, safety guarantees, and TSS/MPC vault protections](https://docs.chainflip.io/protocol/egress-broadcasting-funds#egress-broadcasting-funds)

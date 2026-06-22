@@ -3,9 +3,9 @@ title: Pricing & Execution
 description: How liquidation pricing, matching, and stress behaviour work in Chainflip Lending
 ---
 
-## Pricing, Matching & Stress Behaviour
+# Pricing, Matching & Stress Behaviour
 
-### Pricing and Execution Fundamentals
+## Pricing and Execution Fundamentals
 
 All liquidation activity and internal loan-related swaps are executed directly on the Chainflip DEX using the JIT AMM. This provides several consistent pricing characteristics:
 
@@ -18,7 +18,7 @@ Because the DEX already processes large volumes of cross-chain swaps, liquidatio
 
 ---
 
-### Matching Engine Behaviour
+## Matching Engine Behaviour
 
 The matching engine treats liquidation orders similarly to internal DCA-style swaps:
 
@@ -39,7 +39,7 @@ Liquidations do **not** override or block non-liquidation swaps; both types of f
 
 ---
 
-### Behaviour During Soft Liquidation
+## Behaviour During Soft Liquidation
 
 Soft liquidations behave like a controlled unwind:
 
@@ -52,7 +52,7 @@ This approach reduces borrower losses and prevents unnecessary hard-liquidation 
 
 ---
 
-### Behaviour During Hard Liquidation
+## Behaviour During Hard Liquidation
 
 When LTV breaches the hard threshold:
 
@@ -65,7 +65,7 @@ LP competition continues to anchor fills to market rates.
 
 ---
 
-### Handling Many Liquidations Simultaneously
+## Handling Many Liquidations Simultaneously
 
 Chainflip is designed to handle large-scale liquidation events **without degrading normal swap UX**.
 
@@ -81,7 +81,7 @@ The DEX’s architecture avoids the “clear the books first” behaviour seen i
 
 ---
 
-### LP Behaviour and Strategy Under Stress
+## LP Behaviour and Strategy Under Stress
 
 LPs may adjust spreads or participation during heavy liquidation flow. Important properties:
 
@@ -100,7 +100,7 @@ Chainflip’s DEX has proven the ability to rebalance across severe global volat
 
 ---
 
-### Swapper UX During Liquidations
+## Swapper UX During Liquidations
 
 Normal user swaps continue unaffected:
 
@@ -115,7 +115,7 @@ This is a major advantage versus systems where liquidations compete for gas or b
 
 ---
 
-### Summary of Stress Behaviour Guarantees
+## Summary of Stress Behaviour Guarantees
 
 Chainflip’s pricing and matching engine ensures:
 

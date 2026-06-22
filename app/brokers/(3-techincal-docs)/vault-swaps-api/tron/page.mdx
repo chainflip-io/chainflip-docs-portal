@@ -1,0 +1,282 @@
+---
+title: Tron Vault swaps
+description: Description of performing Vault Swaps on the Tron network
+---
+
+import { Callout } from "nextra/components";
+
+## Tron Vault swaps
+
+Initiating a [Vault Swap](/brokers/broker-vault-swaps) on Tron works differently from EVM chains. Rather than calling the Chainflip Vault smart contract, it is a **direct transfer** of assets to the Chainflip Vault address, with the encoded swap parameters attached as a **note** on the transaction. This approach makes Vault swaps cheaper and removes the need to do token approvals for TRC-20 tokens, such as USDT.
+
+The Vault contract addresses can be found in [Testnet addresses](/protocol/supported-chains-assets/testnet-addresses) and [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses). Tron Vault Swaps follow the same pattern mentioned in the [Vault Swaps introduction](/brokers/broker-vault-swaps):
+
+1. Request the [swap parameter encoding](#1-request-the-encoded-parameters-via-rpc).
+2. Use the return values to [build a Tron transaction](#2-construct-the-transaction).
+3. [Sign and broadcast](#3-sign-and-send) the transaction to the Tron network.
+
+<Callout type="info">
+    Vault Swaps are the recommended way to initiate swaps on Tron. They are
+    cheaper for the user because it doesn't require a fetch transaction by the
+    protocol, removing the ingress fee.
+</Callout>
+
+## Swap Parameter Encoding via Broker API
+
+### 1. Request the encoded parameters via RPC
+
+The request uses the same `broker_request_swap_parameter_encoding` RPC as other chains, with `"chain": "Tron"` in both `source_asset` and `extra_parameters`. Refund addresses must be valid Tron addresses.
+
+Example request swapping native TRX:
+
+```bash copy
+curl -H "Content-Type: application/json" -d '{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "broker_request_swap_parameter_encoding",
+    "params": {
+        "source_asset": { "chain": "Tron", "asset": "TRX" },
+        "destination_asset": { "chain": "Bitcoin", "asset": "BTC" },
+        "destination_address": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+        "broker_commission": 0,
+        "extra_parameters": {
+            "chain": "Tron",
+            "input_amount": "0x3b9aca00",
+            "refund_parameters": {
+                "retry_duration": 10,
+                "refund_address": "TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g",
+                "min_price": "0x0"
+            }
+        }
+    }
+}' http://my-broker-api:9944
+```
+
+Example response for a native TRX swap:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "chain": "Tron",
+        "calldata": "0x",
+        "value": "0x3b9aca00",
+        "to": "0x814f36c1bbfd8aabec86273f0d61521e0c2d5287",
+        "note": "0x010068bf29d88fd78713..."
+    },
+    "id": 1
+}
+```
+
+Example request swapping USDT (TRC20):
+
+```bash copy
+curl -H "Content-Type: application/json" -d '{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "broker_request_swap_parameter_encoding",
+    "params": {
+        "source_asset": { "chain": "Tron", "asset": "USDT" },
+        "destination_asset": { "chain": "Ethereum", "asset": "ETH" },
+        "destination_address": "0xcf0871027a5f984403aEfD2fb22831D4bEBc11Ef",
+        "broker_commission": 0,
+        "extra_parameters": {
+            "chain": "Tron",
+            "input_amount": "0x989680",
+            "refund_parameters": {
+                "retry_duration": 10,
+                "refund_address": "TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g",
+                "min_price": "0x0"
+            }
+        }
+    }
+}' http://my-broker-api:9944
+```
+
+Example response when the source asset is **USDT** (TRC20). Note the inclusion of `source_token_address` and the token transfer `calldata`:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "chain": "Tron",
+        "calldata": "0xa9059cbb...",
+        "value": "0x0",
+        "to": "0x814f36c1bbfd8aabec86273f0d61521e0c2d5287",
+        "note": "0x0100...",
+        "source_token_address": "0xa24205e83c1805fcdae7a93db837dc6a0b843340"
+    },
+    "id": 1
+}
+```
+
+### 2. Construct the Transaction
+
+The response fields differ slightly from EVM:
+
+| Field                  | Description                                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `calldata`             | For TRC20 swaps: ABI-encoded `transfer(address,uint256)` call. For native TRX swaps: `"0x"` (unused).                     |
+| `value`                | Amount of TRX to send in sun (1 TRX = 1,000,000 sun). Always `"0x0"` for TRC20 swaps.                                     |
+| `to`                   | String-encoded destination address. For TRX: the Chainflip Vault. For TRC20: the token contract address.                  |
+| `note`                 | Hex-encoded swap parameters to attach as a note on the transaction. This is what identifies the transaction to Chainflip. |
+| `source_token_address` | (Optional) String-encoded TRC20 token contract address. Present only for TRC20 swaps.                                     |
+
+The transaction construction differs depending on whether you are swapping native TRX or a TRC20 token. For this example, the TronWeb library is used.
+
+**Native TRX swap:**
+
+```typescript copy
+const senderAddress = /* user address */;
+
+let transaction = await tronWeb.transactionBuilder.sendTrx(
+  to,
+  Number(value),   // value is already in sun
+  senderAddress,
+);
+
+// Attach swap parameters as note
+transaction = await tronWeb.transactionBuilder.addUpdateData(
+  transaction,
+  note.substring(2), // strip leading 0x
+  'hex',
+);
+```
+
+**TRC20 (USDT) swap:**
+
+```typescript copy
+const senderAddress = /* user address */;
+
+const result = await tronWeb.transactionBuilder.triggerSmartContract(
+  source_token_address,
+  'transfer(address,uint256)',
+  { feeLimit: 100_000_000 },
+  [
+    { type: 'address', value: to },
+    { type: 'uint256', value: tokenAmount }, // amount in token's smallest unit
+  ],
+  senderAddress,
+);
+
+let transaction = result.transaction;
+
+// Attach swap parameters as note
+transaction = await tronWeb.transactionBuilder.addUpdateData(
+  transaction,
+  note.substring(2), // strip leading 0x
+  'hex',
+);
+```
+
+### 3. Sign and Send
+
+Sign the transaction with the sender's private key and broadcast it to the network:
+
+```typescript copy
+const signedTx = await tronWeb.trx.sign(transaction, privateKey);
+const broadcast = await tronWeb.trx.sendRawTransaction(signedTx);
+const txHash = "0x" + broadcast.txid;
+```
+
+## Full Example
+
+A complete TypeScript example using TronWeb:
+
+```typescript copy
+import TronWeb from "tronweb";
+
+const tronWeb = new TronWeb({
+    fullHost: "https://api.trongrid.io",
+    privateKey: "your-private-key",
+});
+
+// Step 1: Request encoded parameters
+const response = await fetch("http://my-broker-api:9944", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        id: 1,
+        jsonrpc: "2.0",
+        method: "broker_request_swap_parameter_encoding",
+        params: {
+            source_asset: { chain: "Tron", asset: "TRX" },
+            destination_asset: { chain: "Bitcoin", asset: "BTC" },
+            destination_address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+            broker_commission: 10,
+            extra_parameters: {
+                chain: "Tron",
+                input_amount: "0x3b9aca00",
+                refund_parameters: {
+                    retry_duration: 10,
+                    refund_address: senderAddress,
+                    min_price: "0x0",
+                },
+            },
+        },
+    }),
+});
+
+const { result: vaultSwapDetails } = (await response.json()) as {
+    result: {
+        chain: "Tron";
+        calldata: string;
+        value: string;
+        to: string;
+        note: string;
+        source_token_address?: string;
+    };
+};
+
+// Step 2: Build the transaction
+let transaction = await tronWeb.transactionBuilder.sendTrx(
+    vaultSwapDetails.to,
+    Number(vaultSwapDetails.value),
+    senderAddress,
+);
+
+// Attach swap parameters as note
+transaction = await tronWeb.transactionBuilder.addUpdateData(
+    transaction,
+    vaultSwapDetails.note.substring(2),
+    "hex",
+);
+
+// Step 3: Sign and broadcast
+const signedTx = await tronWeb.trx.sign(transaction, "your-private-key");
+const broadcast = await tronWeb.trx.sendRawTransaction(signedTx);
+console.log("Transaction ID:", "0x" + broadcast.txid);
+```
+
+
+### Encoding Reference
+
+This reference can be used to verify the encoding of the transaction `note` if desired.
+
+<Callout type="warning">
+    You should not need to build this encoding yourself. Always prefer to use
+    the [`broker_request_swap_parameter_encoding()`
+    RPC](/brokers/broker-vault-swaps) to encode the swap parameters. It's more
+    convenient and more reliable.
+</Callout>
+
+The swap parameters attached as the transaction `note` are encoded using [Parity's SCALE](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/#scale-codec) codec, as a tuple in the following order:
+
+| Param            | Description                                                                                                                                                                                                              | Data Type                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
+| `output_asset`   | Destination [asset ID](/brokers/vault-swaps-api/encoding-reference#supported-chain-and-asset-notation).                                                                                                                  | `u8`                      |
+| `output_address` | Encoded destination [address](/brokers/broker-api/types#addresses). SCALE-encoded as a one-byte chain tag followed by the address bytes.                                                                                 | `EncodedAddress`          |
+| `ccm_data`       | Optional cross-chain message for the destination chain: a `(gas_budget, message)` pair. Encoded as `None` (`0x00`) for non-CCM swaps.                                                                                    | `Option<(u128, Vec<u8>)>` |
+| `cf_parameters`  | Length-prefixed, SCALE-encoded [`VersionedCfParameters`](/brokers/vault-swaps-api/encoding-reference#chainflip-parameters-cf_parameters) — carries the refund parameters, DCA, boost fee, broker fee and affiliate fees. | `Vec<u8>`                 |
+
+<Callout type="info">
+    Tron Vault swaps reuse the same `cf_parameters` encoding as EVM chains, so
+    the refund parameters, DCA, boost fee, broker fee and affiliate fees are all
+    carried inside `cf_parameters` rather than as top-level fields of the
+    `note`. For Solana destinations, the CCM additional data (the account list)
+    is included in `cf_parameters`, while the gas budget and message are carried
+    in `ccm_data`.
+</Callout>
+
+## SDK Usage
+if you are using the typescript chainflip SDK, you can find a working example in the [SDK repository](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/main/packages/examples/src/tronVaultSwap.ts).

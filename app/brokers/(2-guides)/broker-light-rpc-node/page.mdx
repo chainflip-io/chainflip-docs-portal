@@ -40,8 +40,8 @@ If you don't have a Broker account key, you can generate one using the following
 
 ```bash
 mkdir -p ./chainflip/keys/broker
-docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-1.12.0 generate-keys --json > chainflip/broker-keys.json
-cat chainflip/broker-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/broker/signing_key_file
+docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-2.1.9 generate-keys --json > chainflip/broker-keys.json
+jq -r '.signing_key.secret_key' chainflip/broker-keys.json > chainflip/keys/broker/signing_key_file
 ```
 
 ### Funding the Account
@@ -52,9 +52,15 @@ Get the public key of the Broker account:
 cat chainflip/broker-keys.json | jq -r '.signing_account_id'
 ```
 
-* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+* Head to the [Auctions Web App](https://auctions.chainflip.io)
 
-* Click "Register Node" and follow the instructions to fund the account
+* Click *Connect Wallet* and connect a crypto wallet holding `FLIP`
+
+* Click `Register Node`, paste the Broker `signing_account_id`, then continue through the funding flow
+
+* Approve the token allowance transaction, then submit the add-funds transaction
+
+> Note: The `Min. Active Bid` or `Min stake` values shown in the Auctions app are for validator bidding. They do not apply to Broker account funding.
 
 ### Running the node
 * Start a Broker RPC node and wait for it to sync:
@@ -217,8 +223,5 @@ If you inspect the above command we achieve disk space-saving by a combination o
 * Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
 * Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
 * Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`
-
-
-
 
 

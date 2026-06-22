@@ -238,6 +238,7 @@ export default {
                     'bitcoin': 'Bitcoin',
                     'evm': 'EVM',
                     'solana': 'Solana',
+                    'tron': 'Tron',
                     'encoding-reference': '',
                 }
             },
@@ -274,7 +275,7 @@ export default {
                 title: 'Testnet',
                 items: {
                     'validator-setup': 'Validator Setup',
-                    'funding': 'Funding',
+                    'funding': 'Funding and Activation',
                     'common-problems': 'Common Problems',
                     'submitting-an-issue': 'Submitting an Issue'
                 }
@@ -284,6 +285,10 @@ export default {
                 title: 'Technical Reference'
             },
             'maintenance': '',
+            'grandpa-vote-delegation': {
+                href: '/validators/grandpa-vote-delegation',
+                title: <span className="badge-success after:content-['New']">GRANDPA Vote Delegation</span>
+            },
             'default-filepaths-and-ports': ''
         }
     },

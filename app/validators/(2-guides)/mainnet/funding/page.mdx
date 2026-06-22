@@ -46,9 +46,9 @@ sudo chainflip-cli --config-root /etc/chainflip register-account-role Validator
 
 After succesfully registering your node you should see the new node on "**My Nodes (legacy)**" page.
 
-### Rotate Keys
+### Generate and Register Session Keys
 
-Registration gives your account access to Validator-specific commands on the State Chain. The first of these is rotating and registering your authorship keys:
+Registration gives your account access to Validator-specific commands on the State Chain. The first of these is to generate validator session keys in the node keystore and register them on-chain for block authorship:
 
 ```bash copy
 sudo chainflip-cli --config-root /etc/chainflip rotate
@@ -63,7 +63,7 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 ```
 
 <Callout type="warning">
-Make sure you rotate session keys and execute the command to start bidding, otherwise you won't be able to join auctions and eventually join the active validator set.
+Make sure you generate and register your session keys, then execute the command to start bidding. Otherwise you won't be able to join auctions and eventually join the active validator set.
 </Callout>
 
 ### Set Vanity Name
@@ -90,6 +90,8 @@ This will ensure you don't participate in the next auction, and your funds will 
 ## Rebalancing
 
 If you administer multiple Validators, you may want to move funds between them to optimise your auction bids. This can be cumbersome using the normal funding and redeeming flow, so there is a way to short-circuit this and transfer funds directly between accounts.
+
+> If you run multiple Validators, you can also consolidate them onto a single node for block authorship and finality using [GRANDPA Vote Delegation](/validators/grandpa-vote-delegation).
 
 Moving funds between Validators is known as *rebalancing*.
 

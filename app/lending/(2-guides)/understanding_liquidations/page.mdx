@@ -42,31 +42,17 @@ Liquidation occurs automatically when LTV exceeds the threshold, which can happe
 - An increase in the borrowed asset's price
 - Accrued interest increasing debt
 
-Before liquidation, Chainflip attempts **auto top-up** using your primary collateral asset.
-
 
 ## Can I avoid liquidation?
 
 Yes. You can:
 
-- Enable auto top-up (uses free balance of your primary collateral asset)
 - Manually add more collateral at any time
 - Repay part of your loan
 - Monitor LTV in the app (with warnings when LTV is at risk)
 
 Liquidation only occurs if no corrective action is taken.
 
-
-## What happens after liquidation?
-
-After liquidation:
-
-- Liquidated value repays part (or all) of your loan
-- A small liquidation fee (e.g., 5 bps) on the liquidated amount is deducted
-- Remaining collateral is returned
-- You retain control of the loan if it wasn’t fully repaid
-
-Chainflip’s liquidation system is automated, incremental, and designed to minimise losses.
 
 ## What happens after liquidation?
 
@@ -88,9 +74,9 @@ The protocol submits small DCA-style liquidation orders with a minimum price sli
 
 Liquidation continues until:
 
-- the loan becomes healthy
-- the loan is fully repaid
-- collateral is exhausted
+- The loan becomes healthy
+- The loan is fully repaid
+- Collateral is exhausted
 
 Borrowers may also manually trigger soft liquidation to unwind a position and reclaim remaining collateral.
 

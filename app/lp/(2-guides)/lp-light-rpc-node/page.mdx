@@ -40,21 +40,27 @@ If you don't have an LP account key, you can generate one using the following st
 
 ```bash
 mkdir -p ./chainflip/keys/lp
-docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-1.12.0 generate-keys --json > chainflip/lp-keys.json
-cat chainflip/lp-keys.json | jq -r '.signing_key.secret_key' > chainflip/keys/lp/signing_key_file
+docker run --platform=linux/amd64 --entrypoint=/usr/local/bin/chainflip-cli chainfliplabs/chainflip-cli:berghain-2.1.9 generate-keys --json > chainflip/lp-keys.json
+jq -r '.signing_key.secret_key' chainflip/lp-keys.json > chainflip/keys/lp/signing_key_file
 ```
 
 ### Funding the Account
 > The minimum funding amount for registering as a Broker or LP role is technically 1 FLIP. However, we recommend funding your accounts with at least 5 FLIP to account for transaction fees.
 
-Get the public key of the Broker account:
+Get the public key of the LP account:
 ```bash
 cat chainflip/lp-keys.json | jq -r '.signing_account_id'
 ```
 
-* Head to the [Auctions Web App](https://auctions.chainflip.io/auction)
+* Head to the [Auctions Web App](https://auctions.chainflip.io)
 
-* Click "Register Node" and follow the instructions to fund the account
+* Click *Connect Wallet* and connect a crypto wallet holding `FLIP`
+
+* Click `Register Node`, paste the LP `signing_account_id`, then continue through the funding flow
+
+* Approve the token allowance transaction, then submit the add-funds transaction
+
+> Note: The `Min. Active Bid` or `Min stake` values shown in the Auctions app are for validator bidding. They do not apply to LP account funding.
 
 
 ### Running the node
@@ -218,5 +224,3 @@ If you inspect the above command we achieve disk space-saving by a combination o
 * Enabling Chainflip special light-rpc sync mode using: `--sync=light-rpc`
 * Setting the number of blocks data to prune to 128 using: `--blocks-pruning=128`
 * Setting the number of blocks state data to prune to 128 using: `--state-pruning=128`
-
-

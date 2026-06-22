@@ -194,7 +194,7 @@ Parameters:
       - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
     - `Solana`:
       - `from`: [Address](#addresses) of the sender.
-      - `event_data_account`: [Address](#addresses) of the event data account.
+      - `seed`: Seed used by the program to derive the [event data account](/brokers/vault-swaps-api/solana#swap-event-data-account). The maximum valid length is 32-bytes.
       - `input_amount`: Amount of the input asset in the smallest unit.
       - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
       - `from_token_account`: (Optional) Associated token account (ATA) of the `from` account.
@@ -283,7 +283,7 @@ Input parameter for the given vault swap. See [vault swaps](/brokers/broker-vaul
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `Solana`:
 - `from`: [Address](#addresses) of the sender.
-- `event_data_account`: [Address](#addresses) of the event data account.
+- `seed`: Seed used by the program to derive the [event data account](/brokers/vault-swaps-api/solana#swap-event-data-account). The maximum valid length is 32-bytes.
 - `input_amount`: Amount of the input asset in the smallest unit.
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `from_token_account`: Associated token account (ATA) of the `from` account.

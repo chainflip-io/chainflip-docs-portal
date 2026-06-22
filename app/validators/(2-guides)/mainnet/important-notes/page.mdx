@@ -64,9 +64,9 @@ Session keys are used by the `chainflip-node` for authoring blocks and are store
 
 <Callout type="warning">
 
-It is critical to the Chainflip network that Validators back up their session keys and chaindata after each rotation. If you lose these irrecoverably, your node will miss out on up to two Epochs' worth of rewards; it won't be able to author blocks for the remainder of the current epoch; and it will be banned from the next keygen ceremony.
+It is critical to the Chainflip network that Validators back up their session keys and chaindata after each session-key rotation. If you lose these irrecoverably, your node will miss out on up to two Epochs' worth of rewards; it won't be able to author blocks for the remainder of the current epoch; and it will be banned from the next keygen ceremony.
 
-If you *do* lose your session keys irrecoverably, run `sudo chainflip-cli --config-root /etc/chainflip rotate` to generate and register a fresh key (assuming you still have access to the VPS and the data is not corrupted). However note that key cannot author blocks until the following epoch.
+If you *do* lose your session keys irrecoverably, run `sudo chainflip-cli --config-root /etc/chainflip rotate` to generate fresh validator session keys in the node keystore and register them on-chain (assuming you still have access to the VPS and the data is not corrupted). However note that the new keys cannot author blocks until the following epoch.
 
 </Callout>
 

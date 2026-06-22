@@ -9,12 +9,17 @@ description: Core concepts behind Chainflip Lending
 
 ### Native Cross-Chain Custody
 Chainflip Lending is built into the existing Chainflip cross-chain infrastructure. When users deposit assets from their native chains into the Chainflip system, their funds are held in Vaults on the native chain controlled by the decentralised network through a 100 of 150 threshold signature scheme.
-See Protocol Overview for more details.
+See [Protocol Overview](https://docs.chainflip.io/protocol/protocol-overview) for more details.
 
 ### Permissionless Lending Architecture
 Using this basic building block, Chainflip Lending adds a range of features to allow for the permissionless creation of loan positions for both lenders and borrowers.
 
 ### Isolated Markets & Loan Positions
+#### Supply as Collateral (Unified Pool Model)
+All supplied assets act as collateral. This allows borrowers to earn yield on their collateral, offsetting the cost of borrowing and making the lending product more attractive for both passive suppliers and borrowers. This is paired with [utilisation caps](/lending/utilisation#utilisation-caps-protect-liquidation-capacity) that ensure full loan coverage when issuing new loans.
+For BTC, supply in the unified pool also powers [Boosted](/protocol/boost) swaps and deposits, earning additional Boost yield on top of lending interest.
+
+#### Isolated Markets & Loan Positions
 Each lending market is isolated per asset. Activity in the BTC pool does not affect the USDC or ETH pools.
 However, liquidations are account-wide, not per-loan.
 All collateral and debt in a borrower’s State Chain account contribute to one combined LTV. If this LTV breaches a threshold, the system starts liquidating all loan positions in the account until it becomes healthy again.

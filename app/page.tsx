@@ -88,8 +88,8 @@ const IndexPage: FC = () => {
                                 The Chainflip Network is distributed, permissionless, proof-of-stake system run
                                 by {' '}
                                 <Link href="/validators">
-                                    150 Validators working together to
-                                </Link>{' '} secure a the protocol without intermediaries centralised control.
+                                    150 Validators working together
+                                </Link>{' '} to secure a the protocol without intermediaries centralised control.
                             </p>
                         </Feature>
 

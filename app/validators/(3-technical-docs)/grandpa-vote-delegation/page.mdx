@@ -1,0 +1,114 @@
+---
+title: GRANDPA Vote Delegation
+
+description: Delegate a validator's GRANDPA finality vote to a shared delegate key so a single chainflip-node can author and finalise blocks for up to 5 validators.
+---
+
+import { Callout } from "nextra/components";
+
+## What it is
+
+Chainflip uses **GRANDPA** as its block-finality gadget. Every validator in the active set has a GRANDPA key — part of its registered [session keys](/validators/mainnet/validator-setup) — that signs finality votes.
+
+**GRANDPA vote delegation** lets a validator hand the job of casting its finality votes to a separate _delegate key_, without changing its registered session keys. The delegate key lives in a node's keystore and votes on finality on the validator's behalf. The validator's on-chain identity, bond, rewards and block-authoring duties are unaffected — only _the key that signs the GRANDPA finality vote_ changes.
+
+A single delegate key can vote for up to **5 validators** at once.
+
+## When to use it
+
+The typical setup runs one `chainflip-node` per validator, and that node's registered GRANDPA key votes on finality directly. If that describes you, you do **not** need this feature.
+
+GRANDPA vote delegation is for operators who run **several validator identities** and want to consolidate them onto a **single `chainflip-node`** instead of running one node per validator. That node holds the block-authoring (AURA) keys for each validator, so it authors blocks for all of them.
+
+The feature solves the **finality** half. By default, a single node can only cast a single GRANDPA vote, so even if each validator's individual GRANDPA key is added to the node, only one vote is cast. With vote delegation, every validator **delegates its GRANDPA vote to one shared delegate key** on that node. The node then casts finality votes for all of its validators through that single delegate key.
+
+Because the limit is 5 delegators per delegate key, a single shared node can finalise on behalf of **up to 5 validator identities** through one delegate key.
+
+<Callout type="info">
+    In short: use GRANDPA vote delegation when you want **one `chainflip-node`
+    to perform block authorship and finality voting for multiple (up to 5)
+    validator identities**.
+</Callout>
+
+## How it works
+
+You don't create or manage the delegate key by hand: the `chainflip-cli` command wraps the whole flow:
+
+1. The shared node holds a single **GRND delegate key** in its keystore. It is generated automatically the first time you delegate, and the _same_ delegate key is reused for every subsequent delegation made through that node.
+2. When a validator delegates, the node signs and submits a short authorisation extrinsic containing the GRND delegate key and submit this to the network.
+3. The submission is verified in the runtime and the key delegation is queued for the upcoming epoch.
+4. From the next epoch onwards, the delegate key's finality votes count as the validator's votes — until the delegation is revoked.
+
+**Delegation is per-validator, not per-node.** Even when several validators share one node, you delegate once for _each_ validator identity — running the CLI with that validator's own config file / signing-key path each time. There is no command to delegate for all accounts at once.
+
+## Prerequisites
+
+Before delegating, for **each** validator that will be voted for by the shared node:
+
+- The account must be a **registered validator**.
+- Its **session keys must already be registered on the shared node** — i.e. you must have run `rotate` against that node so its keystore holds that validator's AURA + GRANDPA keys, and the on-chain session record points at them. If keys aren't registered, the CLI fails with _"No session keys registered. Run 'rotate' first."_
+- The shared node must be running **as a validator** (`--validator`), otherwise the delegation-signing capability is not available.
+- You run `chainflip-cli` **once per validator**, each time using **that validator's own config file / signing-key path**, pointed at the **shared node's State Chain RPC endpoint** — not a public or other RPC node. The delegate key is generated and stored in the keystore of whichever node the CLI connects to, and that must be the node that will cast the votes.
+- There must be **no validator-set rotation / auction in progress**. Delegating or revoking during a rotation fails with the `RotationInProgress` error; wait until the rotation completes.
+
+## Setting it up
+
+Provision one `chainflip-node`, started in validator mode, that will author and finalise for all the validator identities you want to consolidate (at most 5).
+
+For each validator identity — running the CLI with that validator's own config file / signing-key path each time:
+
+1. **Register / rotate its session keys onto the shared node** so the node holds its AURA and GRANDPA keys (run with the CLI pointed at the shared node):
+
+    ```bash copy
+    sudo chainflip-cli --config-root /etc/chainflip/acct-1 rotate
+    ```
+
+2. **Delegate the GRANDPA vote** to the node's delegate key:
+
+    ```bash copy
+    sudo chainflip-cli --config-root /etc/chainflip/acct-1 delegate-grandpa-vote
+    ```
+
+3. **Repeat for up to 4 more accounts**:
+
+    ```bash copy
+    sudo chainflip-cli --config-root /etc/chainflip/acct-2 rotate
+    sudo chainflip-cli --config-root /etc/chainflip/acct-2 delegate-grandpa-vote
+    # etc...
+    ```
+
+On the first delegation the node generates the shared GRND delegate key and prints it (`Using GRND delegate key: 0x…`). Each subsequent validator delegating through the same node reuses that same delegate key, up to the limit of 5.
+
+## Revoking
+
+To stop delegating and return finality voting to the validator's own registered GRANDPA key, run this once per validator — using that validator's own config file / signing-key path, with the CLI pointed at the node that holds the delegation:
+
+    ```bash copy
+    sudo chainflip-cli --config-root /etc/chainflip/node-1 revoke-grandpa-delegation
+    ```
+
+Delegation is also **revoked automatically** if the validator [deregisters](/validators/mainnet/funding#deregistration) — you don't need to revoke first in that case.
+
+## Constraints & gotchas
+
+<Callout type="warning">
+    **You cannot rotate session keys while a delegation is active.** Calling
+    `rotate` for a validator with an active delegation fails with the
+    `GrandpaDelegationActive` error. Revoke the delegation first, then rotate,
+    then (optionally) re-delegate.
+</Callout>
+
+- **Max 5 delegations per delegate key** (`MaxDelegatorsPerGrandpaAuthority = 5`). A single shared node's delegate key can therefore finalise for at most 5 validators.
+- **Delegate once per validator, using that validator's own config / signing-key path.** There is no bulk command — each validator is delegated individually. The CLI must connect to the node that will hold the delegate key, since the key is generated in the connected node's keystore; pointing it elsewhere would put the key on a node that isn't doing the voting.
+- **No rotation in progress.** Both delegating and revoking require the validator set to be idle (not mid-auction / rotation), or they fail with `RotationInProgress`.
+- **The delegation persists across sessions** once recorded — you only delegate once. It does not expire; it stays in effect until you revoke it (or the validator deregisters).
+
+### Error reference
+
+| Error                                               | Meaning                                                                                                                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GrandpaKeyOwnershipMismatch`                       | The GRANDPA key supplied isn't the one registered to this validator in the session pallet. Make sure session keys are registered on the connected node. |
+| `InvalidDelegateProof`                              | The delegate key's authorisation signature didn't verify. Normally handled by the CLI; indicates a keystore / session mismatch.                         |
+| `GrandpaDelegationActive`                           | Tried to rotate session keys while a delegation is active. Revoke first.                                                                                |
+| `RotationInProgress`                                | A validator-set rotation / auction is underway. Retry once it completes.                                                                                |
+| _"No session keys registered. Run 'rotate' first."_ | The validator hasn't registered session keys on the connected node yet.                                                                                 |

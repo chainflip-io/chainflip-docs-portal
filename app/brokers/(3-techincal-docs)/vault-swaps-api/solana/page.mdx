@@ -387,3 +387,6 @@ const txHash = await sendAndConfirmTransaction(connection, tx, [userKeypair]);
 | `fromTokenAccount`        | Token account where the tokens should be transferred from. Normally this is the "from"'s associated token account. This is only needed when swapping tokens.                                                                           | Signer       |
 | `tokenSupportedAccount`   | Chainflip's Token Supported Account for the specific token. This is only needed when swapping tokens. Mainnet addresses can be found [here]( [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses)).                | Data Account |
 | `mint`                    | Address of the SPL-token to swap. The token should be supported by Chainflip, otherwise the transaction will revert. Mainnet addresses can be found [here]( [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses)). | Data Account |
+
+## SDK Usage
+if you are using the typescript chainflip SDK, you can find a working example in the [SDK repository](https://github.com/chainflip-io/chainflip-sdk-monorepo/blob/main/packages/examples/src/solanaVaultSwap.ts).

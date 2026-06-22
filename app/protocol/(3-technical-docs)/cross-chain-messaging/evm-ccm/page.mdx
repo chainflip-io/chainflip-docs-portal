@@ -13,10 +13,11 @@ import { Callout } from "nextra/components";
 ### EVM Considerations
 
 Besides the general [implementation checklist](/protocol/cross-chain-messaging/overview#implementation-checklist), there are some specific considerations for EVM chains.
-- The gas limit on the destination chain (EVM) will be capped to 10 million gas.
 - The receiver contract on the destination chain must implement the `cfReceive` function specified in [this section](#smart-contract-interface---receive-call-and-asset-on-the-receiver-contract-ccm).
-- If the amount of gas requested (`gas_budget`) is not enough to cover the gas costs of the receiver's logic on the destination chain, the transaction won't be broadcasted. An example of a gas estimation is provided [below](#gas-budget-estimation).
+- If the gas budget requested is not enough to cover the gas costs of the receiver's logic on the destination chain, the transaction won't be broadcasted. An example of a gas estimation is provided [below](#gas-budget-estimation).
 - In the event of a transaction not being broadcasted due to insufficient gas, the signed payload will be available for the user to broadcast as described [here](#ccm-broadcast-failure).
+- CCM swaps to Tron (TVM) work identically to EVM, except energy is used instead of gas.
+- The gas limit on EVM destination chains is capped to 10 million gas. In Tron the fee limit is capped to 1k TRX.
 
 ### CCM Receiver Smart contract interface 
 
@@ -79,9 +80,11 @@ If the receiver is not a contract, doesn't have the specified interface or the l
 
 ### Gas budget estimation
 
-The user-provided gas budget value is the amount of gas alllocated for the user logic in the CCM egress transaction on the destination chain.
+The user-provided gas budget value is the amount of gas alllocated for the user logic in the CCM egress transaction on the destination chain. The simplest way to estimate the gas needed on the destination chain is to simulate the execution of the receiver's logic with a direct call to the receiver contract with the parameters expected from the Chainflip call.
 
-The simplest way to estimate the gas needed on the destination chain is to simulate the execution of the receiver's logic with a direct call to the receiver contract with the parameters expected from the Chainflip call. That can be done using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
+#### Ethereum and Arbitrum
+
+Gas is estimated using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
 
 Arbitrum uses the same `eth_estimateGas` for gas estimations as described in the [Arbitrum documentation](https://docs.arbitrum.io/how-arbitrum-works/gas-fees#estimating-l2-gas). However, that estimation also includes the L1 inclusion fees. Chainflip expects that gas budget to include the L1 inclusion fees, which is extra gas units required as payment to the L1.
 
@@ -106,6 +109,11 @@ const gasBudget = userGasEstimation * overestimationRatio;
 <Callout type="info">
 Arbitrum L1 inclusion fees depend on the L1 gas price so it fluctuates over time. Therefore, the gas budget required for an Arbitrum CCM call can also vary. It is recommended to run new gas estimations especially when there are large gas price fluctuations on the L1 or to increase the gas budget to account for that.
 </Callout>
+
+#### Tron
+
+The analogous estimation can be done on Tron using the `wallet/triggerconstantcontract` HTTP API endpoint, which simulates the contract call and returns the energy consumed.
+
 
 ###  Gas budget estimation example
 

@@ -3,9 +3,9 @@ title: Oracles & Custody
 description: How Chainflip Lending uses oracle pricing, vault custody, and State Chain execution for safety and reliability
 ---
 
-## Oracles, Security & Custody
+# Oracles, Security & Custody
 
-### Oracle Pricing
+## Oracle Pricing
 
 Chainflip Lending relies on external oracle prices to determine collateral values, loan health (LTV), and liquidation thresholds. This prevents internal pool price movements from affecting loan safety and ensures predictable liquidation behaviour.
 
@@ -20,7 +20,7 @@ Because Chainflip only supports highly liquid assets (BTC, ETH, SOL, USDC, USDT)
 
 ---
 
-### Native Cross-Chain Custody (Vaults)
+## Native Cross-Chain Custody (Vaults)
 
 All assets deposited into Chainflip Lending are held in native-chain vaults secured by the Chainflip validator network using a **100-of-150 threshold signature scheme (TSS/MPC)**.
 
@@ -40,7 +40,7 @@ For more background, see **Protocol Overview → Vaults & Security**.
 
 ---
 
-### State Chain Execution Environment
+## State Chain Execution Environment
 
 All lending operations: loan creation, collateral updates, repayments, interest accrual, and liquidation scheduling, are executed on the Chainflip State Chain, a custom Rust-based chain designed for:
 
@@ -59,7 +59,7 @@ Because the State Chain powers both the DEX and Lending:
 
 ---
 
-### Operational History & Audits
+## Operational History & Audits
 
 Chainflip’s cross-chain infrastructure has processed **$5.1B+ in cumulative swap volume** since late 2023 with:
 
@@ -72,7 +72,7 @@ Lending inherits the same security posture, operational track record, and valida
 
 ---
 
-### Summary of Security Guarantees
+## Summary of Security Guarantees
 
 - Native asset custody secured by a decentralised TSS/MPC validator set  
 - Oracle-driven liquidations ensure correct pricing  

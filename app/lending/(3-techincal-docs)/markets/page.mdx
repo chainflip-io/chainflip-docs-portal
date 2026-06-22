@@ -3,9 +3,9 @@ title: Markets & Risk Parameters
 description: Market isolation, parameter configuration, and risk considerations in Chainflip Lending
 ---
 
-## Markets, Parameters & Risk
+# Markets, Parameters & Risk
 
-### Isolated Lending Markets
+## Isolated Lending Markets
 
 Each asset in Chainflip Lending has its own isolated lending market.
 
@@ -19,7 +19,7 @@ This isolation ensures predictable risk for suppliers and straightforward market
 
 ---
 
-### Per-Asset Parameters
+## Per-Asset Parameters
 
 Every lending market defines a set of core parameters that determine:
 
@@ -33,7 +33,7 @@ Current parameters used in closed beta testing are intentionally aggressive and 
 
 ---
 
-### LTV Thresholds
+## LTV Thresholds
 
 The following thresholds govern loan creation and liquidation behaviour:
 
@@ -54,7 +54,7 @@ These thresholds may change as the system matures and liquidity grows.
 
 ---
 
-### Minimum Operational Amounts
+## Minimum Operational Amounts
 
 To keep the system efficient and avoid excessive “micro-transactions”, a few minimum amounts apply:
 
@@ -67,17 +67,17 @@ These minimums ensure consistent UX and reduce unnecessary State Chain load.
 
 ---
 
-### Liquidation Execution Parameters
+## Liquidation Execution Parameters
 
 Liquidation orders follow defined size and slippage limits to ensure predictable behaviour for LPs and borrowers.
 
-#### Soft Liquidation
+### Soft Liquidation
 
 - **Swap Chunk size:** $10,000
 - **Slippage limit:** 0.5% below oracle price
 - **Submitted:** once per block
 
-#### Hard Liquidation
+### Hard Liquidation
 
 - **Swap Chunk size:** $50,000
 - **Slippage limit:** 5% below oracle price
@@ -87,7 +87,7 @@ LPs compete on price, so execution usually remains very close to market rates, e
 
 ---
 
-### Supported Assets
+## Supported Assets
 
 At launch, Chainflip Lending supports:
 
@@ -99,7 +99,7 @@ Additional assets may be added progressively as liquidity improves and risk para
 
 ---
 
-### Risk Considerations
+## Risk Considerations
 
 Chainflip Lending is designed to minimise systemic risk through:
 

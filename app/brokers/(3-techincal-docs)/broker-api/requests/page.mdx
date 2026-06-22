@@ -8,9 +8,9 @@ description: All RPC endpoints defined in the Broker API
 
 import { Callout } from "nextra/components";
 
-## Broker-API Methods
+# Broker-API Requests
 
-### `broker_request_swap_deposit_address`
+## `broker_request_swap_deposit_address`
 
 Parameters:
 - `source_asset`: Source [asset](#assets).
@@ -39,7 +39,7 @@ Return:
 
 - deposit [address](#addresses).
 
-### `broker_register_account`
+## `broker_register_account`
 
 Parameters:
 
@@ -56,7 +56,7 @@ curl 'http://localhost/' \
   --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_register_account"}' | jq
 ```
 
-### `broker_withdraw_fees`
+## `broker_withdraw_fees`
 
 Withdraw all accumulated fees for a given asset.
 
@@ -99,7 +99,7 @@ Example output:
 }
 ```
 
-### `broker_mark_transaction_for_rejection`
+## `broker_mark_transaction_for_rejection`
 
 Request an incoming transaction to be rejected. Only available for bitcoin. This call will always succeed, but the transaction will
 only be refunded if it hasn't been witnessed on-chain yet. For un-boosted channels this means prior to 6 blocks confirmation, for boosted
@@ -132,7 +132,7 @@ Example output (success):
 }
 ```
 
-### `broker_get_open_deposit_channels`
+## `broker_get_open_deposit_channels`
 
 Return all deposit channels which have been opened and are relevant for `broker_mark_transaction_for_rejection`. Only returns bitcoin channels.
 
@@ -173,7 +173,7 @@ Example output:
 }
 ```
 
-### `broker_request_swap_parameter_encoding`
+## `broker_request_swap_parameter_encoding`
 
 Create an encoded swap with the given parameters. The encoding depends on the chain of the input asset.
 See [Vault Swaps](/brokers/broker-vault-swaps) for more details.
@@ -342,7 +342,7 @@ Example output:
 ```
 
 
-### `broker_encode_cf_parameters`
+## `broker_encode_cf_parameters`
 
 Validates and encode the `cf_parameter` needed as part of a Vault Swap call.
 See [Vault Swaps](/brokers/broker-vault-swaps) and [Chainflip parameters](/brokers/vault-swaps-api/encoding-reference) for more details.
@@ -399,7 +399,7 @@ Example output:
 }
 ```
 
-### `broker_open_private_btc_channel`
+## `broker_open_private_btc_channel`
 
 A private Bitcoin channel is a dedicated persistent deposit channel unique to a single broker.
 
@@ -452,7 +452,7 @@ Example output:
 }
 ```
 
-### `broker_affiliate_withdrawal_request`
+## `broker_affiliate_withdrawal_request`
 
 Request a withdrawal of the affiliate's collected commissions. The affiliate will receive the funds to their registered withdrawal address.
 
@@ -494,7 +494,7 @@ Example output:
 }
 ```
 
-### `broker_get_affiliates`
+## `broker_get_affiliates`
 
 Get a list of all affiliates registered to your broker account.
 

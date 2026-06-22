@@ -8,9 +8,9 @@ description: All the endpoints used in LP API
 
 import {Callout, Tabs} from "nextra/components";
 
-## LP-API Methods
+# LP-API Methods
 
-### `lp_register_account`
+## `lp_register_account`
 
 Submits an extrinsic that registers your account as an LP, so that allow this account can provide liquidity. The role of an account only needs to be registered once, and cannot be changed after it has been. It waits for the extrinsic to be successfully included in a block, and returns an error if the extrinsic expires before being included, or the extrinsic dispatch fails on-chain.
 
@@ -18,7 +18,7 @@ Parameters: None
 
 Returns: The transaction hash of the extrinsic, otherwise an error.
 
-### `lp_liquidity_deposit` <span className="badge-danger after:content-['Deprecated']"/>
+## `lp_liquidity_deposit` <span className="badge-danger after:content-['Deprecated']"/>
 
 <Callout type="error">
 This RPC is deprecated as of 1.9.
@@ -37,7 +37,7 @@ Parameters:
 [Response](/lp/lp-api/types#wait-for-result):
 - The encoded deposit [address](/lp/lp-api/types#addresses) that you should send the deposit to.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -62,7 +62,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_request_liquidity_deposit_address`
+## `lp_request_liquidity_deposit_address`
 
 > [!NOTE]
 >
@@ -86,7 +86,7 @@ Parameters:
 }
 ```
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -114,7 +114,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_register_liquidity_refund_address`
+## `lp_register_liquidity_refund_address`
 
 Submits an extrinsic that sets your lp account's refund address for one of the external chains. For your lp account to have any assets associated with it, you must set a refund address with the external chain which those assets are associated with. For example, to create an order in the DOT-USDC pool, you must have Polkadot and Ethereum refund addresses registered. You can change your registered addresses at anytime via this RPC.
 
@@ -125,7 +125,7 @@ Parameters:
 Return:
 - The transaction hash of the extrinsic that registered the new withdrawal [address](/lp/lp-api/types#foreign-chain-addresses).
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -145,7 +145,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_withdraw_asset`
+## `lp_withdraw_asset`
 
 This RPC allows you to withdraw assets associated with your lp account that are not currently deployed in orders. Note fees you earn are not automatically redeployed into your orders, and are therefore immediately withdrawable via this RPC.
 
@@ -161,7 +161,7 @@ Parameters:
 [<chain>, <unsigned 64 bit integer ID>]
 ```
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id": 1,
@@ -187,7 +187,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_transfer_asset`
+## `lp_transfer_asset`
 
 This RPC allows you to transfer assets internally between your lp accounts. The destination account must be registered as an LP account.
 
@@ -200,7 +200,7 @@ Response:
 
 - The transaction hash of the extrinsic that transferred the funds.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
     "id":1,
@@ -221,7 +221,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_update_range_order`
+## `lp_update_range_order`
 
 This RPC submits an extrinsic that will increase or decrease the size of an existing range order in the specified pool. If you try to increase the size of a non-existent order, that will result in a new range order being created with that id. If you decrease the size of an order by an amount equal to or greater than the order's size, that will close the order.
 
@@ -256,7 +256,7 @@ For example if a `lp_update_range_order` request moves an existing range order t
 
 Also this list will begin with updates to range orders, that do nothing to those range orders, and are just reporting the `collected_fees`, from any range orders that have collected fees since the last successful order update/asset withdrawal. So you will likely want to filter these out.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
     "id": 1,
@@ -324,7 +324,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_set_range_order`
+## `lp_set_range_order`
 
 This RPC submits an extrinsic that will open/close a range order in the specified pool. If you set a range order to a "zero" size, that will result in that range order being closed. If you set a non-existent range order to a non-zero "size", that will result in the creation of a new order.
 
@@ -359,7 +359,7 @@ For example if a `lp_set_range_order` request changes the total size of an exist
 
 Also this list will begin with updates to range orders, that do nothing to those range orders, and are just reporting the `collected_fees`, from any range orders that have collected fees since the last successful order update/asset withdrawal. So you will likely want to filter these out.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
     "id": 1,
@@ -425,7 +425,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_update_limit_order`
+## `lp_update_limit_order`
 
 This RPC submits an extrinsic that will increase or decrease the size of an existing limit order in the specified pool. If you try to increase the size of a non-existent order, that will result in a new limit order being created with that id. If you decrease the size of an order by an amount equal to or greater than the order's size, that will close the order.
 
@@ -464,7 +464,7 @@ For example if a `lp_update_limit_order` request changes the total size of an ex
 
 Also this list will begin with updates to limit orders, that do nothing to those limit orders, and are just reporting the `collected_fees`, from any limit orders that have collected fees since the last successful order update/asset withdrawal. So you will likely want to filter these out.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
     "id": 1,
@@ -511,7 +511,7 @@ curl -H "Content-Type: application/json" -d '{
 
 **_NOTE:_** If you pass the `dispatch_at` parameter the response may not return any results due to the fact that order is not created/updated yet. Instead the `response` array will be empty. The exception to this would be if the transaction is included in the `dispatch_at` block, in which case the operation is executed immediately.
 
-### `lp_set_limit_order`
+## `lp_set_limit_order`
 
 This RPC submits an extrinsic that will set the size of an existing limit order in the specified pool.
 If you try to set the size of a non-existent order,
@@ -561,7 +561,7 @@ Also this list will begin with updates to limit orders, that do nothing to those
 
 **_NOTE:_** If you pass the `dispatch_at` parameter the response may not return any results due to the fact that order is not created/updated yet. The exception to this would be if the submitted extrinsic is included in the `dispatch_at` block, in which case the operation is executed immediately.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
     "id": 1,
@@ -604,7 +604,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_free_balances`
+## `lp_free_balances`
 
 > [!TIP]
 >
@@ -618,7 +618,7 @@ Parameters: None
 Return:
 - An JSON object where each key is a Chain, and the values are arrays of `{ <asset>, <amount> }` pairs.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -652,7 +652,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_get_open_swap_channels`
+## `lp_get_open_swap_channels`
 
 Returns a list of all the open deposit addresses currently open for swaps at the current finalized block. These are addresses that swappers will send funds they want to swap. Once a deposit to one of these addresses is detected we will then perform the swap on the State Chain after a waiting period to confirm the deposit.
 
@@ -661,7 +661,7 @@ Parameters: None
 Return:
 - All the open swap channels and their associated details in JSON format.
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -765,7 +765,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_request_redemption`
+## `lp_request_redemption`
 
 Request a redemption of all $FLIP or a specified amount.
 Please see [Redeeming Funds & Retiring](/validators/mainnet/funding#redeeming-funds--retiring) for more details on redeeming.
@@ -776,7 +776,7 @@ Parameters:
 - [`exact_amount`](/lp/lp-api/types#asset) (Optional): The amount of flip to redeem. If not specified, all $FLIP will be redeemed.
 - [`executor_address`](/lp/lp-api/types#addresses) (Optional): Restricts the `executeRedemption` function call in the [Gateway contract](/protocol/funding-state-chain-account#state-chain-flip-gateway) to only be callable by the specified address for this redemption. If not specified, anyone can execute the redemption.
 
-#### Example
+### Example
 
 Redeem all $FLIP:
 
@@ -809,7 +809,7 @@ curl -H "Content-Type: application/json" \
 ```
 
 
-### `lp_order_fills`
+## `lp_order_fills`
 
 Returns a list of all the fills in a given block.
 
@@ -821,7 +821,7 @@ Return:
 - Block number
 - JSON array of all the fills in this finalized block. Exactly matching the structures returned by [`lp_subscribe_order_fills`](#lp_subscribe_order_fills)
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id": 1,
@@ -913,7 +913,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_cancel_all_orders`
+## `lp_cancel_all_orders`
 
 This RPC queries for all your open orders (both range and limit) in all the available pools, and submits one/multiple extrinsics to delete them all.
 
@@ -946,7 +946,7 @@ A chronological list of all the updates that were done as part of the operation.
 
 Where the content of RangeOrder or LimitOrder is the same as the response of the above functions [`lp_set_limit_order`](#lp_set_limit_order) and [`lp_set_range_order`](#lp_set_range_order).
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id":1,
@@ -1250,7 +1250,7 @@ curl -H "Content-Type: application/json" -d '{
 }
 ```
 
-### `lp_cancel_orders_batch`
+## `lp_cancel_orders_batch`
 
 This RPC allows you to cancel multiple orders in the same extrinsic (up to 100), this can mix both limit and range orders.
 
@@ -1289,7 +1289,7 @@ A chronological list of all the updates that were done as part of the operation.
 Where the content of RangeOrder or LimitOrder is the same as the response of the above functions [`lp_set_limit_order`](#lp_set_limit_order) and [`lp_set_range_order`](#lp_set_range_order).
 
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '
 {
@@ -1397,7 +1397,7 @@ curl -H "Content-Type: application/json" -d '
 ```
 
 
-### `lp_schedule_swap`<span className="badge-success after:content-['New']"/>
+## `lp_schedule_swap`<span className="badge-success after:content-['New']"/>
 
 This RPC allows you to initiate an [internal swap](/lp/internal-swaps).
 

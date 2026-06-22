@@ -8,10 +8,10 @@ description: All the subscriptions used in LP API
 
 import { Tabs } from "nextra/components";
 
-## LP-API subscriptions
+# LP-API subscriptions
 
 
-### `lp_subscribe_order_fills`
+## `lp_subscribe_order_fills`
 
 A subscription that lists all the orders that have been filled/partially filled by swaps in each block. By default swaps are only considered done once they are in a finalized block.
 You can override this setting by specifying the notification behaviour in the params.
@@ -70,7 +70,7 @@ Return:
 }
   ```
 
-#### Example
+### Example
 ```sh
 curl -H "Content-Type: application/json" -d '{
   "id": 1,

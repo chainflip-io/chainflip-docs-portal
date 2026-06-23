@@ -6,7 +6,7 @@ description: How to fund your account with the necessary amount of tFLIP on Test
 
 import { Callout } from "nextra/components";
 
-## Funding & Bidding
+# Funding & Bidding on Testnet
 
 Before your Validator is considered for the active set, you must fund your account with the necessary amount of `tFLIP`.
 
@@ -14,7 +14,7 @@ This page assumes you have already completed [Validator Setup](/validators/testn
 
 <Callout type="warning">We only support MetaMask wallets currently.</Callout>
 
-### Getting `tFLIP`
+## Getting `tFLIP`
 
 Becoming a Chainflip Validator requires you to own some `tFLIP` and win a Validator slot in an auction cycle. **The amount of `tFLIP` that you need to own in order to participate as a Validator is not fixed and will change on a fairly regular basis**. For this reason it is recommended that you have more `tFLIP` than the current minimum cost of a Validator node if you want to continue adding funds through multiple epochs.
 
@@ -46,7 +46,7 @@ Finally, **you do not need to move the `tFLIP` to your Validators' Ethereum wall
 
 To become an active validator, you'll need to win an Auction. To win an auction, you'll need to fund your account with some `tFLIP`. For more information about Auctions and how they are supposed to work, you can check out this article: [Chainflip Validator Auction Theory](/validators/validators-role#the-auction-system-allocating-validator-slots).
 
-### Adding Funds to your Validator Node
+## Adding Funds to your Validator Node
 
 In order to fund your account, you should use the Auctions App. You could also interact with the Smart Contract directly, but since that's ugly we'll use the Dashboard for the purposes of this tutorial.
 
@@ -72,7 +72,7 @@ sudo systemctl restart chainflip-engine
 Even after you successfully added funds, your node could still be in the <span style={{ color: "red" }}>**Offline**</span> state. Just wait for your node
 to sync all the blocks.
 
-### Registering and setting up your Validator node
+## Registering and setting up your Validator node
 
 Before you start bidding to become an Authority node, you need to tell the network that your account will be used by a node performing the Validator role, and register the cryptographic keys that will be used for consensus.
 
@@ -115,7 +115,7 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 
 If this succeeds, open the Auctions app, look under `Current Auction State`, disable `Hide unqualified nodes`, and search for your node ID in the search box. Your node should appear with the `Bidding` label. After the next rotation, a healthy node should move toward `Backup` / `Qualified`, and later `Authority` if selected.
 
-### Expected Validator States
+## Expected Validator States
 
 After completing the steps on this page, the Auctions app should typically move through these states:
 
@@ -139,7 +139,7 @@ Once the Auction cycle is complete, the network will attempt to include your nod
 
 If your validator does not move into the expected state, continue to [Common Problems on Testnet](/validators/testnet/common-problems).
 
-## Rebalancing
+# Rebalancing
 
 If you administer multiple Validators, you may want to move funds between them to optimise your auction bids. This can be cumbersome using the normal funding and redeeming flow, so there is a way to short-circuit this and transfer funds directly between accounts.
 
@@ -186,13 +186,13 @@ Options:
   -h, --help                                     Print help
 ```
 
-## Redeeming Funds & Retiring
+# Redeeming Funds & Retiring
 
 You can redeem your `tFLIP`, subject to certain conditions. In order to do so, the funds may neither be bonded, nor tied up in auction bidding.
 
 For a detailed account of the process and its restrictions see [Redeeming ERC-20 `$FLIP` through the Gateway](/protocol/funding-state-chain-account#redeeming-erc-20-flip-through-the-gateway).
 
-### Retiring from Auctions
+## Retiring from Auctions
 
 To end your participation in auctions, use the Chainflip CLI.
 
@@ -202,7 +202,7 @@ sudo chainflip-cli --config-root /etc/chainflip validator stop-bidding
 
 Your node will cease to participate in auctions. When your node has left the validator set, it will still be a `Keyholder` for another epoch. You then have to wait another epoch until your `tFLIP` can be redeemed, so that your node is no longer a `Keyholder`. Once your node is no longer a Keyholder you can redeem all your `tFLIP` by following the next steps.
 
-### Redeeming your `tFLIP`
+## Redeeming your `tFLIP`
 
 The redemption process can be initiated via the [Chainflip Auctions App](https://auctions.perseverance.chainflip.io/auctions) > **My Nodes**, and the Chainflip CLI. You will need the address of the Ethereum account to which you want your `tFLIP` to be sent.
 
@@ -231,13 +231,13 @@ This will generate a redemption certificate that will be sent to the Ethereum ne
 
 Once you have completed the request, proceed to the Auctions App. The redemption should automagically appear here, where you will be able to continue with the process.
 
-### Redemption Expired
+## Redemption Expired
 
 If for some reason, you couldn't finish the redemption process, **your redemption certificate will eventually expire**. This means you need to refund your `tFLIP` back to your State Chain balance, before starting a new redemption.
 
 You only need to click on 'Refund FLIP to your balance' and start the process again.
 
-### Deregistration and Account Deletion
+## Deregistration and Account Deletion
 
 Accounts are automatically deleted once all funds have been redeemed.
 
@@ -249,11 +249,11 @@ sudo chainflip-cli validator deregister-account
 
 Deregistration is not possible until your account has stopped bidding and is no longer a key holder for an active Epoch (usually this implies that at least one Epoch has passed since your account was last in the authority set).
 
-## Advanced Account Management
+# Advanced Account Management
 
 These are some features that advanced operators should be aware of.
 
-### Redeem Address Binding
+## Redeem Address Binding
 
 Any account may be explicitly _bound_ to a single redemption address. Henceforth, any redemption request from that account can _only redeem to this exact address_.
 
@@ -283,7 +283,7 @@ In order to permanently bind a redeem address:
 chainflip-cli bind-redeem-address <ETH_ADDRESS>
 ```
 
-### Redemption Execution Address Binding
+## Redemption Execution Address Binding
 
 > Note: At the time of writing, executor binding via the CLI is not yet supported on Perseverance network. This feature is planned for release as of version 1.0.0.
 

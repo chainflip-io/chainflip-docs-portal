@@ -8,9 +8,9 @@ description: Description of CCM swaps to EVM chains.
 
 import { Callout } from "nextra/components";
 
-## CCM Swaps to EVM Chains
+# CCM Swaps to EVM Chains
 
-### EVM Considerations
+## EVM Considerations
 
 Besides the general [implementation checklist](/protocol/cross-chain-messaging/overview#implementation-checklist), there are some specific considerations for EVM chains.
 - The receiver contract on the destination chain must implement the `cfReceive` function specified in [this section](#smart-contract-interface---receive-call-and-asset-on-the-receiver-contract-ccm).
@@ -19,7 +19,7 @@ Besides the general [implementation checklist](/protocol/cross-chain-messaging/o
 - CCM swaps to Tron (TVM) work identically to EVM, except energy is used instead of gas.
 - The gas limit on EVM destination chains is capped to 10 million gas. In Tron the fee limit is capped to 1k TRX.
 
-### CCM Receiver Smart contract interface 
+## CCM Receiver Smart contract interface
 
 Chainflip's Vault will transfer the destination token amount to the specified address either within the same call (for native token) or by transferring the ERC20 token to it. Then it will call the destination address with the following parameters:
 
@@ -78,11 +78,11 @@ If the receiver is not a contract, doesn't have the specified interface or the l
 
 </Callout>
 
-### Gas budget estimation
+## Gas budget estimation
 
 The user-provided gas budget value is the amount of gas alllocated for the user logic in the CCM egress transaction on the destination chain. The simplest way to estimate the gas needed on the destination chain is to simulate the execution of the receiver's logic with a direct call to the receiver contract with the parameters expected from the Chainflip call.
 
-#### Ethereum and Arbitrum
+### Ethereum and Arbitrum
 
 Gas is estimated using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
 
@@ -110,7 +110,7 @@ const gasBudget = userGasEstimation * overestimationRatio;
 Arbitrum L1 inclusion fees depend on the L1 gas price so it fluctuates over time. Therefore, the gas budget required for an Arbitrum CCM call can also vary. It is recommended to run new gas estimations especially when there are large gas price fluctuations on the L1 or to increase the gas budget to account for that.
 </Callout>
 
-#### Tron
+### Tron
 
 The analogous estimation can be done on Tron using the `wallet/triggerconstantcontract` HTTP API endpoint, which simulates the contract call and returns the energy consumed.
 
@@ -134,7 +134,7 @@ The analogous estimation can be done on Tron using the `wallet/triggerconstantco
 7. The receiver contract executes its logic, which can entail decoding the received `message` from the source chain and execute logic accordingly, i.e. swap `ETH` into `<any-long-tail-asset>` in a Uniswap pool.
 
 
-### CCM broadcast failure
+## CCM broadcast failure
 
 While Chainflip will do it's best to broadcast and successfully execute any swap with cross-chain messaging, there are some factors that can make the broadcast transaction revert that are external to Chainflip. Here are some examples.
 

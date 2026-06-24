@@ -33,9 +33,8 @@ The emission targets are distributed among the following recipients:
 |Recipient| Target Rate      | Distribution |
 |----------|--------------------|----------------|
 |Authority Validators   | 4.5% annual | Equal Shares |
-|Backup Validators | 0.5% annual | Pro-Rata |
 
-Note: Emission rates were at 7% and 1% respectively until 22nd May, 2024. 
+Note: The emission rate was at 7% until 22nd May, 2024. 
 
 ### Estimated Yields and Lockup Ratio for Validators
 
@@ -58,21 +57,6 @@ Therefore, we would expect the auction market to stabilise when Validators are e
 ![Chainflip Lockup Matrix](/concepts/lockup-matrix.png)
 
 Given the budget of 4.5%, we would expect the staking ratio to end up between ~24% and ~42% of the total supply, aided by the existence of liquid staking products built for Chainflip. We would also expect validators to eventually require between 130,000 $FLIP and 260,000 $FLIP tokens to make it into the authority set, though we expect this to be lower in the opening months of the auctions and gradually increase with competition for strong starting yields.
-
-### Backup Validator Rewards
-
-Backup Validators are normally the top 50 bidding non-Authorities (see [Auction Theory](/validators/validators-role#the-auction-system-allocating-validator-slots)) and receive rewards from a limited budget of 1% per year target rate. The budget for rewards is distributed on a pro-rated basis, meaning those backup validators with a higher relative stake to the other Backup Validators will receive more rewards.
-
-The system immediately reflects increased bids for Backup Validators in the rewards they are paid. This provides a direct and immediate incentive to stake as much as possible as soon as possible, both increasing total bidding and increasing the likelihood that these more active and collateralised Backup Validators will be included in the next Authority set.
-
-<Callout type="info">
-In more precise terms, a given Backup Validator's rewards will be equal to 80% of the minimum between the Authority reward OR the Authority reward divided by the Minimum Active Bid squared, multiplied by the stake of the Backup Validator squared. This minimum check is performed to ensure that Backup Validators never earn more than 80% of the rewards of an actual Authority, even if they happen to be staking more than the minimum required bid.
-
-If the total sum of all Backup Validator rewards exceeds an emission cap, then each of the Backup Validator's rewards will be multiplied by the 'capping factor' which is just the emissions cap divided by the total targeted rewards. By multiplying the rewards by the capping factor, it ensures Backup Validators as a whole are collectively never paid more than what is budgeted for in the emissions schedule.
-
-</Callout>
-
-Yields for Backup Validators depend both on the stake of each validator as well as the number of tokens staked across the whole backup set and are therefore volatile and unpredictable, but overall capped at the target rate of 1% annual inflation.
 
 ## Burn Mechanisms
 

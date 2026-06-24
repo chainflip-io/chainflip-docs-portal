@@ -113,7 +113,7 @@ Now your node should be synced, your account be fully registered, your ports ope
 sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
 ```
 
-If this succeeds, open the Auctions app, look under `Current Auction State`, disable `Hide unqualified nodes`, and search for your node ID in the search box. Your node should appear with the `Bidding` label. After the next rotation, a healthy node should move toward `Backup` / `Qualified`, and later `Authority` if selected.
+If this succeeds, open the Auctions app, look under `Current Auction State`, disable `Hide unqualified nodes`, and search for your node ID in the search box. Your node should appear with the `Bidding` label. After the next rotation, a healthy node should move toward `Qualified`, and later `Authority` if selected.
 
 ## Expected Validator States
 
@@ -121,7 +121,7 @@ After completing the steps on this page, the Auctions app should typically move 
 
 - `Offline`: the node is not fully funded, synced, or registered yet
 - `Bidding`: the validator is participating in auctions
-- `Backup` / `Qualified`: the validator is healthy and eligible, but not currently selected as an authority
+- `Qualified`: the validator is healthy and eligible, but not currently selected as an authority
 - `Authority`: the validator has been selected into the active set
 
 **Optionally**, you can set a Vanity Name for your validator by running:

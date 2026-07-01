@@ -18,28 +18,102 @@ Passive liquidity provisioning is for:
 * Stablecoin holders looking to put idle funds to work
 * Institutional or retail users interested in low-risk exposure
 
-## Automated Trading Strategies
-
-<Callout type="info">
-This feature is available from version 1.9 onwards.
-</Callout>
+## Automated Stablecoin Strategies (ASS)
 
 LPs can deploy funds from their account into a trading strategy, which will automatically create and manage limit orders on their behalf.
 Each deployed strategy is assigned a unique id and in many ways is treated like a regular LP account by the protocol, e.g. it has its own account balance and starts with `cF...`.
-When a strategy's order is filled (fully or partially), the funds are automatically returned to the strategy's account balance.
-When the amount of free balance of some asset reaches a certain threshold, the strategy will automatically use it to create a new limit order (or update an existing one) according to the strategy's parameters.
-When a strategy is closed, all of its orders are cancelled and the funds are returned to its free balance.
+The strategy will then automatically manage the orders in the pool according to the strategy's rules.
+In the more advanced strategies, it will Open, Close, and Update orders as needed to maintain the strategy's target position.
+When a strategy is closed, all of its orders are cancelled and the funds are returned to the LP.
+
+One positive side effect of these strategies is that they can provide a very tight and predictable spread for swaps.
+Always having a strategy that is willing to buy and sell at a tight spread, the active LP's are forced to compete with the strategies, which leads to better pricing for users.
 
 
 ## Supported Strategies
 
-The only strategy currently supported is `TickZeroCentered` which is suitable for trading stable coin pairs.
+### Oracle Tracking (Recommended)
 
-### TickZeroCentered
+Using the Live price as a center point, this strategy tries to keep a 50/50 split of value on both sides by placing orders in a band around the oracle price.
+This is the same as the [Inventory Based](#inventory-based) strategy, except it uses a live oracle price instead of assuming a fixed 1:1 peg.
 
-A simple strategy that trades in the `base_asset`/USDC pool, creating sell and buy orders at ticks `spread_tick`
-and `-spread_tick`, respectively.
+Every block the strategy reads the oracle price of `base_asset` relative to `quote_asset`,
+converts it to a tick, and uses it as an **offset** when placing orders. 
 
+* When one side holds **more than half** of the total inventory, that side is split into two
+  orders: an *anchor* order at the average of the side's tick band holding half the total, plus a
+  *dynamic* order at a more aggressive tick (towards the band edge) holding the surplus.
+* When a side holds **less than half** of the total inventory, it places a single *dynamic* order
+  at a more defensive tick.
+
+The dynamic tick moves within the configured band in proportion to how lopsided the inventory is,
+which nudges the portfolio back towards a 50/50 split over time. Splitting the surplus across two
+orders (rather than placing it all at the most aggressive tick) avoids the inventory ping-ponging
+back and forth in an unprofitable loop. Instead, when the aggressive order is fully filled, it will
+perfectly balance out the inventory.
+
+Orders are refreshed when the strategy's free balance grows past the update threshold, **or** when
+the oracle price moves enough to shift the target ticks. If the oracle price is stale,
+all open orders are cancelled and the strategy waits until a fresh price is available.
+
+Name: `OracleTracking`
+Parameters:
+    * min_buy_offset_tick: [Tick](/lp/lp-api/types#tick) — lower bound of the buy-side band, relative to the oracle tick.
+    * max_buy_offset_tick: [Tick](/lp/lp-api/types#tick) — upper bound of the buy-side band, relative to the oracle tick.
+    * min_sell_offset_tick: [Tick](/lp/lp-api/types#tick) — lower bound of the sell-side band, relative to the oracle tick.
+    * max_sell_offset_tick: [Tick](/lp/lp-api/types#tick) — upper bound of the sell-side band, relative to the oracle tick.
+    * base_asset: [Asset](/lp/lp-api/types#asset) — the asset to market-make; must have a supported oracle price feed.
+    * quote_asset: [Asset](/lp/lp-api/types#asset) — the quote asset, which must be USDC.
+
+The tick ranges must satisfy `min_buy_offset_tick ≤ max_buy_offset_tick`, `min_sell_offset_tick ≤ max_sell_offset_tick`, and
+the buy and sell bands must not overlap aggressively (`min_sell_offset_tick ≥` the average buy offset tick and
+`max_buy_offset_tick ≤` the average sell offset tick).
+
+### Inventory Based
+
+A market-making strategy for stable / pegged pairs that tries to keep the strategy balanced
+with a 50/50 split of value on both sides. 
+
+* When one side holds **more than half** of the total inventory, that side is split into two
+  orders: an *anchor* order at the average of the side's tick band holding half the total, plus a
+  *dynamic* order at a more aggressive tick (towards the band edge) holding the surplus.
+* When a side holds **less than half** of the total inventory, it places a single *dynamic* order
+  at a more defensive tick.
+
+The dynamic tick moves within the configured band in proportion to how lopsided the inventory is,
+which nudges the portfolio back towards a 50/50 split over time.
+
+Name: `InventoryBased`
+Parameters:
+    * min_buy_tick: [Tick](/lp/lp-api/types#tick) — lower bound of the buy-side band.
+    * max_buy_tick: [Tick](/lp/lp-api/types#tick) — upper bound of the buy-side band.
+    * min_sell_tick: [Tick](/lp/lp-api/types#tick) — lower bound of the sell-side band.
+    * max_sell_tick: [Tick](/lp/lp-api/types#tick) — upper bound of the sell-side band.
+    * base_asset: [Asset](/lp/lp-api/types#asset) — the non-USDC asset to market-make (must share USDC's decimals).
+
+The tick ranges must satisfy `min_buy_tick ≤ max_buy_tick`, `min_sell_tick ≤ max_sell_tick`, and
+the buy and sell bands must not overlap aggressively (`min_sell_tick ≥` the average buy tick and
+`max_buy_tick ≤` the average sell tick).
+
+### Simple Buy Sell
+
+A simple asymmetric strategy that trades in the `base_asset`/USDC pool, creating a buy order at `buy_tick` and a sell order at `sell_tick`.
+When a threshold amount is filled, the strategy will automatically update the orders to re-use the filled funds, keeping utilization high.
+
+Name: `SimpleBuySell`
+Parameters:
+    * buy_tick: [Tick](/lp/lp-api/types#tick),
+    * sell_tick: [Tick](/lp/lp-api/types#tick),
+    * base_asset: [Asset](/lp/lp-api/types#asset),
+
+Buy and sell ticks must satisfy `buy_tick < sell_tick`.
+
+### Zero Centered
+
+A simple symmetrical strategy that trades in the `base_asset`/USDC pool, creating sell and buy orders at ticks `0+spread_tick` and `0-spread_tick`, respectively.
+When a threshold amount is filled, the strategy will automatically update the orders to re-use the filled funds, keeping utilization high.
+
+Name: `TickZeroCentered`
 Parameters:
     * spread_tick: [Tick](/lp/lp-api/types#tick),
 	* base_asset: [Asset](/lp/lp-api/types#asset),

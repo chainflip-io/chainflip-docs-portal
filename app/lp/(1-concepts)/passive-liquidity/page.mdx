@@ -22,8 +22,7 @@ Passive liquidity provisioning is for:
 
 LPs can deploy funds from their account into a trading strategy, which will automatically create and manage limit orders on their behalf.
 Each deployed strategy is assigned a unique id and in many ways is treated like a regular LP account by the protocol, e.g. it has its own account balance and starts with `cF...`.
-The strategy will then automatically manage the orders in the pool according to the strategy's rules.
-In the more advanced strategies, it will Open, Close, and Update orders as needed to maintain the strategy's target position.
+The strategy will then automatically manage the orders in the pool by opening/closing/updating them according to the strategy's rules and parameters.
 When a strategy is closed, all of its orders are cancelled and the funds are returned to the LP.
 
 One positive side effect of these strategies is that they can provide a very tight and predictable spread for swaps.

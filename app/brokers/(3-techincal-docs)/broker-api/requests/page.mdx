@@ -99,6 +99,29 @@ Example output:
 }
 ```
 
+## `broker_bind_fee_withdrawal_address`
+
+Bind the broker's fee withdrawals for Ethereum-chain assets to one Ethereum address.
+
+This binding can only be made once and cannot be changed or removed.
+Once bound, fee withdrawals of Ethereum-chain assets (notably USDC) must use this address.
+Withdrawals on other chains are not affected.
+
+Parameters:
+- `address`: The Ethereum address to bind to the broker account.
+
+Return:
+- Transaction hash.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_bind_fee_withdrawal_address", "params": {"address": "0xabababababababababababababababababababab"}}' | jq
+```
+
 ## `broker_mark_transaction_for_rejection`
 
 Request an incoming transaction to be rejected. Only available for bitcoin. This call will always succeed, but the transaction will

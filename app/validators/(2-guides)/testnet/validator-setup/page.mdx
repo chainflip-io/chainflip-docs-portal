@@ -366,7 +366,13 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 ## Setting Up Your Validator's Ethereum Account
 
-You must ensure that the public Ethereum address generated above has at least 0.1 sETH in Ethereum Sepolia, 0.1 sETH in Arbitrum Sepolia and 100 TRX on Tron Nile testnet. **Make sure you send 0.1 sETH to this account's address before trying to add funds to your validator node**. This requirement is subject to change based on Sepolia Ethereum transaction fees but for now should be sufficient.
+You must ensure that the public Ethereum address generated above has at least 0.1 sETH in Ethereum Sepolia, 0.1 sETH in Arbitrum Sepolia, 100 TRX on Tron Nile testnet and testnet `BNB` on BSC Testnet (Chapel). **Make sure you send 0.1 sETH to this account's address before trying to add funds to your validator node**. This requirement is subject to change based on Sepolia Ethereum transaction fees but for now should be sufficient.
+
+<Callout type="info">
+    **New in version 2.3:** BSC support requires a `[bsc]` section in your
+    `Settings.toml` and a funded BSC broadcaster address. Testnet `BNB` can be
+    obtained from a [BSC Testnet faucet](https://www.bnbchain.org/en/testnet-faucet).
+</Callout>
 
 <Callout type="warning">
     Please also note that the Ethereum key is for the exclusive use of the
@@ -451,8 +457,8 @@ If you use a hosted RPC provider such as Alchemy, Infura, or Rivet, create a Sep
 
 <Callout type="info">
     Make sure that both endpoints (HTTP and WebSockets) are accessible for the
-    Ethereum, Arbitrum and Polkadot nodes. Bitcoin only has HTTP. Otherwise your
-    engine will fail to start.
+    Ethereum, Arbitrum and Polkadot nodes. Bitcoin, Solana, Tron and BSC only
+    have HTTP. Otherwise your engine will fail to start.
 </Callout>
 
 <Callout type="info">
@@ -524,6 +530,19 @@ http_endpoint = "http://my_solana_rpc.someprovider:443"
 #optional
 #[sol.backup_rpc]
 #http_endpoint = "http://my_solana_rpc_backup.someprovider:443"
+
+[bsc]
+# BSC private key file path. This file should contain a hex-encoded private key.
+# Note: Here we use the same private key file as Ethereum. You can use a different key if you want.
+private_key_file = "/etc/chainflip/keys/ethereum_key_file"
+
+[bsc.rpc]
+# Perseverance and Sisyphos use BSC Testnet (Chapel).
+http_endpoint = "http://my_bsc_testnet_node:8545"
+
+# optional
+#[bsc.backup_rpc]
+#http_endpoint = "http://my_bsc_node_backup.someprovider/<secret_access_key>"
 
 # Chainflip runs its own testnet AssetHub network. So use these endpoints for AssetHub.
 [hub.rpc]

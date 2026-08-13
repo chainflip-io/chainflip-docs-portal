@@ -8,7 +8,14 @@ import { Callout } from "nextra/components";
 
 # EVM Vault swaps
 
-Initiating a [Vault Swap](/brokers/broker-vault-swaps) on an EVM chain (currently Ethereum or Arbitrum) requires making a smart contract call to Chainflip's Vault contract. The contract addresses can be found in [Testnet addresses](/protocol/supported-chains-assets/testnet-addresses) and [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses).
+Initiating a [Vault Swap](/brokers/broker-vault-swaps) on an EVM chain (currently Ethereum, Arbitrum or BSC) requires making a smart contract call to Chainflip's Vault contract. The contract addresses can be found in [Testnet addresses](/protocol/supported-chains-assets/testnet-addresses) and [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses).
+
+<Callout type="info">
+    **New in version 2.3:** BSC is supported as an EVM Vault Swap source chain.
+    The flow is identical to Ethereum and Arbitrum — pass `"Bsc"` as the `chain`
+    in the `extra_parameters`, and send the returned transaction to the BSC Vault
+    contract.
+</Callout>
 
 EVM Vault Swaps follow the same pattern mentioned in the [Vault Swaps introduction](/brokers/broker-vault-swaps):
 
@@ -65,7 +72,7 @@ Example response:
 }
 ```
 
-Example response when the source asset is an **ERC-20 token** rather than native ETH or arbETH. Note the inclusion of the `source_token_address`:
+Example response when the source asset is an **ERC-20 token** rather than a native asset (ETH, arbETH or BNB). Note the inclusion of the `source_token_address`:
 
 ```json
 {
@@ -88,8 +95,8 @@ Note the return values from the above RPC call:
 | Field                  | Description                                                                                                           |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `calldata`             | Hex-encoded EVM calldata.                                                                                             |
-| `value`                | Hex-encoded amount of native currency - (Eth for Ethereum or ArbEth or Arbitrum). Always returns 0 for ERC-20 tokens. |
-| `to`                   | Chainflip's Vault Smart Contract address for either Ethereum or Arbitrum.                                             |
+| `value`                | Hex-encoded amount of native currency - (ETH for Ethereum, arbETH for Arbitrum or BNB for BSC). Always returns 0 for ERC-20 tokens. |
+| `to`                   | Chainflip's Vault Smart Contract address for Ethereum, Arbitrum or BSC.                                               |
 | `source_token_address` | (Optional) The token address requiring approval.                                                                      |
 
 The first three fields map closely to common EVM transaction building APIs and need to be included in the transaction. Other values such as `gas` or `gasPrice` can be estimated and set by the user or wallet.
@@ -163,12 +170,12 @@ import Web3 from 'web3';
 });
 
 const encodedVaultSwapDetails = await response.json() as {
-  chain: 'Ethereum' | 'Arbitrum';
+  chain: 'Ethereum' | 'Arbitrum' | 'Bsc';
   calldata: string;
   value: string;
   to: string;
 };
-  chain: 'Ethereum' | 'Arbitrum';
+  chain: 'Ethereum' | 'Arbitrum' | 'Bsc';
   calldata: string;
   value: string;
   to: string;

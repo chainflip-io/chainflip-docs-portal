@@ -366,12 +366,12 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 ## Setting Up Your Validator's Ethereum Account
 
-You must ensure that the public Ethereum address generated above has at least 0.1 sETH in Ethereum Sepolia, 0.1 sETH in Arbitrum Sepolia, 100 TRX on Tron Nile testnet and testnet `BNB` on BSC Testnet (Chapel). **Make sure you send 0.1 sETH to this account's address before trying to add funds to your validator node**. This requirement is subject to change based on Sepolia Ethereum transaction fees but for now should be sufficient.
+You must ensure that the public Ethereum address generated above has at least 0.1 sETH in Ethereum Sepolia, 0.1 sETH in Arbitrum Sepolia, 100 TRX on Tron Nile testnet and testnet `BNB` on BSC Testnet. **Make sure you send 0.1 sETH to this account's address before trying to add funds to your validator node**. This requirement is subject to change based on Sepolia Ethereum transaction fees but for now should be sufficient.
 
 <Callout type="info">
-    **New in version 2.3:** BSC support requires a `[bsc]` section in your
-    `Settings.toml` and a funded BSC broadcaster address. Testnet `BNB` can be
-    obtained from a [BSC Testnet faucet](https://www.bnbchain.org/en/testnet-faucet).
+    **New in version 2.3:** you also need a `[bsc]` section in your
+    `Settings.toml`. Testnet `BNB` can be obtained from a [BSC Testnet
+    faucet](https://www.bnbchain.org/en/testnet-faucet).
 </Callout>
 
 <Callout type="warning">

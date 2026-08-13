@@ -11,10 +11,9 @@ import { Callout } from "nextra/components";
 Initiating a [Vault Swap](/brokers/broker-vault-swaps) on an EVM chain (currently Ethereum, Arbitrum or BSC) requires making a smart contract call to Chainflip's Vault contract. The contract addresses can be found in [Testnet addresses](/protocol/supported-chains-assets/testnet-addresses) and [Mainnet addresses](/protocol/supported-chains-assets/mainnet-addresses).
 
 <Callout type="info">
-    **New in version 2.3:** BSC is supported as an EVM Vault Swap source chain.
-    The flow is identical to Ethereum and Arbitrum — pass `"Bsc"` as the `chain`
-    in the `extra_parameters`, and send the returned transaction to the BSC Vault
-    contract.
+    **New in version 2.3:** BSC is supported for EVM Vault Swaps. It works the
+    same way as Ethereum and Arbitrum: pass `"Bsc"` as the `chain`, and send the
+    returned transaction to the BSC Vault contract.
 </Callout>
 
 EVM Vault Swaps follow the same pattern mentioned in the [Vault Swaps introduction](/brokers/broker-vault-swaps):

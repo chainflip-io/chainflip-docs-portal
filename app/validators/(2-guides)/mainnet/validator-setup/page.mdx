@@ -54,11 +54,11 @@ Your validator will need Tron `TRX` to pay for transaction fees on the Tron netw
 Your validator will need `BNB` to pay for transaction fees on the BNB Smart Chain network.
 
 <Callout type="warning">
-    **New in version 2.3:** BSC support requires action from every validator
-    *before* the upgrade. You must add a `[bsc]` section to your `Settings.toml`
-    (see [Editing the Config](#editing-the-config)) and fund your BSC broadcaster
-    address with `BNB`. A validator without a working BSC RPC endpoint will fail
-    to start after the upgrade.
+    **New in version 2.3:** every validator must set up BSC *before* the upgrade.
+    Add a `[bsc]` section to your `Settings.toml` (see [Editing the
+    Config](#editing-the-config)) and send `BNB` to your validator's address.
+    Without a working BSC RPC endpoint, your engine will not start after the
+    upgrade.
 </Callout>
 
 ## System Requirements
@@ -387,7 +387,7 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 ## Setting Up Your Validator's Ethereum Account
 
-You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum, **300 TRX** on Tron and enough **BNB** on BSC to cover broadcast fees. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
+You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum, **300 TRX** on Tron and enough **BNB** on BSC to pay for transaction fees. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
 
 <Callout type="warning">
     Please also note that the Ethereum key is for the exclusive use of the

@@ -11,9 +11,8 @@ import { Callout } from "nextra/components";
 # Chainflip Supported Chains & Assets
 
 <Callout type="info">
-    **New in version 2.3:** BSC (BNB Smart Chain) is supported as a new chain
-    with the assets `BNB` and `USDT`, and `cbBTC` is supported as a new ERC-20
-    asset on Ethereum.
+    **New in version 2.3:** BSC (BNB Smart Chain) is a new chain, with the assets
+    `BNB` and `USDT`. `cbBTC` is a new ERC-20 asset on Ethereum.
 </Callout>
 
 ## Chains
@@ -60,19 +59,17 @@ Our SDK/API uses human-readable strings to identify assets. For more information
   | **[USDT (BEP-20)](https://bscscan.com/address/0x55d398326f99059fF775485246999027B3197955)** | Bsc | `perseverance` `sisyphos` `mainnet` |
 
 <Callout type="warning">
-    **Check the decimals for the new assets.** `USDT` on BSC has **18 decimals**,
-    unlike `USDT` on every other supported chain, which has 6. `cbBTC` has **8
-    decimals**, like BTC, rather than the 18 used by most Ethereum ERC-20s. Use
-    [Get Assets](/brokers/javascript-sdk/functions#get-assets.md "mention") to
-    read the decimals of an asset programmatically rather than assuming them per
-    ticker.
+    `USDT` on BSC has **18 decimals**, unlike `USDT` on the other chains, which
+    has 6. `cbBTC` has **8 decimals**, like BTC. Use [Get
+    Assets](/brokers/javascript-sdk/functions#get-assets.md "mention") to read
+    the decimals of an asset instead of assuming them.
 </Callout>
 
 <Callout type="info">
-    `BNB`, `USDT` on BSC and `cbBTC` ship without an oracle price feed. This
-    means they cannot be used as lending collateral, are not eligible for
-    oracle-based [trading strategies](/lp/passive-liquidity), and have no default
-    oracle price slippage protection applied to swaps.
+    `BNB`, `USDT` on BSC and `cbBTC` have no oracle price feed. They can't be
+    used as lending collateral or in oracle-based [trading
+    strategies](/lp/passive-liquidity), and swaps in these assets get no default
+    slippage protection.
 </Callout>
 
 ## Chainflip Networks

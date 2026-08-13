@@ -18,7 +18,7 @@ Besides the general [implementation checklist](/protocol/cross-chain-messaging/o
 - In the event of a transaction not being broadcasted due to insufficient gas, the signed payload will be available for the user to broadcast as described [here](#ccm-broadcast-failure).
 - CCM swaps to Tron (TVM) work identically to EVM, except energy is used instead of gas.
 - The gas limit on EVM destination chains is capped to 10 million gas. In Tron the fee limit is capped to 1k TRX.
-- CCM swaps to BSC work identically to Ethereum and Arbitrum, including the 10 million gas cap. The receiver contract implements the same `cfReceive` interface.
+- CCM swaps to BSC work identically to Ethereum and Arbitrum, including the 10 million gas cap.
 
 ## CCM Receiver Smart contract interface
 

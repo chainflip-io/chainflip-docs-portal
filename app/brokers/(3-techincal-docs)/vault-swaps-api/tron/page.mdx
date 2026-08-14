@@ -5,7 +5,7 @@ description: Description of performing Vault Swaps on the Tron network
 
 import { Callout } from "nextra/components";
 
-## Tron Vault swaps
+# Tron Vault swaps
 
 Initiating a [Vault Swap](/brokers/broker-vault-swaps) on Tron works differently from EVM chains. Rather than calling the Chainflip Vault smart contract, it is a **direct transfer** of assets to the Chainflip Vault address, with the encoded swap parameters attached as a **note** on the transaction. This approach makes Vault swaps cheaper and removes the need to do token approvals for TRC-20 tokens, such as USDT.
 

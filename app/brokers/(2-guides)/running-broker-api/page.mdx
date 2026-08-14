@@ -8,14 +8,14 @@ description: Running an Broker-API guide.
 
 import { Callout } from "nextra/components";
 
-## Running Broker API binary
+# Running Broker API binary
 
 The Broker API is a standalone client that exposes _Broker_ functionality via a JSON API interface. It can be obtained from the same location as the chainflip-node, i.e. you can install it via `apt`, use the provided docker image or compile it yourself from the sources on Github.
 
 Brokers need to run the client for the API themselves, as the Broker holds keys used to sign extrinsics and collect any fees set for [Deposit Channels](/brokers/broker-deposit-channels-swaps#deposit-channels). The API client works by pointing it to an RPC node — also run by the same Broker, ideally.
 
 
-### Command line arguments and defaults
+## Command line arguments and defaults
 
 - The `state_chain.ws_endpoint` should point at a **synced Chainflip State Chain RPC node**. The default is `ws://localhost:9944` — assuming it is run locally.
 - The `state_chain.signing_key_file` should be a path to a file containing the hex-encoded **private key** for the on-chain Broker account. The default file path is `/etc/chainflip/keys/signing_key_file`. The account should be [funded](/validators/mainnet/funding#adding-funds-to-your-validator-node) and the account role should be set to Broker.

@@ -7,11 +7,11 @@ description: The state chain node subscriptions that are useful for liquidity pr
 
 import {Callout} from "nextra/components";
 
-## Subscriptions
+# LP Node Subscriptions
 
 Example usages are using a Websocket utility such as [Websocat](https://github.com/vi/websocat):
 
-### `cf_subscribe_scheduled_swaps`
+## `cf_subscribe_scheduled_swaps`
 
 Subscribes to a stream of all swaps that are scheduled to be executed in the next few blocks in a given pool.
 Note that all Chainflip swaps get scheduled 2 State Chain blocks after the deposit that triggers it is witnessed,
@@ -45,6 +45,7 @@ where `ScheduledSwap` contains the following details of an upcoming swap as a js
 - `remaining_chunks`: number - The number of swap chunks of the same size that are remaining for this request.
 - `chunk_interval`: number - The number of blocks between each swap chunk (a new chunk will not be scheduled until the previous one succeeds). Each block is 6 seconds.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -176,7 +177,7 @@ In practice a swap can be expected to appear in at least two websocket notificat
 Note that in the rare case of swaps failing (e.g. due to insufficient liquidity in the pool), they will be re-scheduled for
 the next block, and will appear again in the subscription.
 
-### `cf_subscribe_pool_price` <span className="badge-danger after:content-['Deprecated']"/>
+## `cf_subscribe_pool_price` <span className="badge-danger after:content-['Deprecated']"/>
 
 <Callout type="error">
     THIS SUBSCRIPTION IS DEPRECATED. Use [cf_subscribe_pool_price_v2](#cf_subscribe_pool_price_v2) instead.
@@ -197,6 +198,7 @@ Returns:
 - `sqrt_price`: [Square Root Price](/lp/lp-api/types#square-root-price)
 - `tick`: [Tick](/lp/lp-api/types#tick)
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -235,7 +237,7 @@ Notification:
 ```
 </details>
 
-### `cf_subscribe_pool_price_v2`
+## `cf_subscribe_pool_price_v2`
 
 Subscribes to the current pool price. Note that, at the time of writing, all pools are quoted in USDC, so the `quote_asset` will always be USDC.
 
@@ -254,6 +256,7 @@ Returns:
 - `buy`: Option\<[Square Root Price](/lp/lp-api/types#square-root-price)\>
 - `range_order`: [Square Root Price](/lp/lp-api/types#square-root-price)
 
+### Example
 <details>
 <summary>Example</summary>
 

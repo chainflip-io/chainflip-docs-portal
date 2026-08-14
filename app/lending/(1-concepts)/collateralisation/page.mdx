@@ -4,9 +4,9 @@ description: How LTV, collateralisation, and liquidations work in Chainflip Lend
 ---
 import { Callout } from "nextra/components";
 
-## Collateralisation & Liquidations (LTV & Liquidation Thresholds)
+# Collateralisation & Liquidations (LTV & Liquidation Thresholds)
 
-### Collateralisation and LTV
+## Collateralisation and LTV
 
 Chainflip Lending uses external oracle prices to determine loan collateralisation and liquidation thresholds. This prevents internal pool price movements from affecting loan safety. Because Chainflip supports only highly liquid assets, concerns often associated with oracle dependency are significantly reduced.
 
@@ -27,7 +27,7 @@ Chainflip supports multi-collateral accounts. The oracle value of all supported 
 
 ---
 
-### Oracle Safety Controls
+## Oracle Safety Controls
 
 To protect borrowers and the system:
 
@@ -39,6 +39,13 @@ Future versions will support additional safety mechanisms like taking Chainflip'
 
 ---
 
+## Auto-Collateralisation
+
+Borrowers may enable auto-top-up, which uses free balance in the State Chain account in their asset of choice to automatically increase collateral when LTV approaches the soft liquidation threshold. Auto-top-up prevents liquidation as long as the borrower has sufficient available balance. Note that for the Beta launch, Auto Top up will be disabled.
+
+---
+
+## Liquidation Overview
 ### Liquidation Overview
 
 Chainflip performs liquidations directly through its own cross-chain DEX. This provides two major advantages over traditional lending platforms:
@@ -55,7 +62,7 @@ This removes the need for specialist liquidators or discounted auctions found in
 Liquidations begin when LTV crosses soft or hard liquidation thresholds.
 
 ---
-### Soft Liquidation
+## Soft Liquidation
 
 Soft liquidation is triggered when **collateralisation** drops below the soft threshold.
 
@@ -78,7 +85,7 @@ Any excess amount obtained this way will be added to the user's collateral.
 
 ---
 
-### Hard Liquidation
+## Hard Liquidation
 
 Hard liquidation activates if LTV falls below the hard liquidation threshold.
 
@@ -94,7 +101,7 @@ The maximum liquidation loss for borrowers is **5% of the loaned asset**, simila
 
 ---
 
-### Insufficient Collateral and Socialised Losses
+## Insufficient Collateral and Socialised Losses
 
 If collateral cannot fully cover the loan after liquidation, an extremely rare scenario, losses are socialised among lenders of **that specific asset only**. Other assets and markets remain unaffected.
 

@@ -132,7 +132,7 @@ It can be, that you did not successfully submit the `chainflip-cli` commands. Pl
 <img src="/testnet/validator_authority.png" alt="validator online" />
 <br />
 
-You need to wait until the next Rotation. Make sure your node is <span style={{ color: "green"}}> <strong> Online </strong> </span> with the labels **Backup** and **Bidding** and **Qualified**.
+You need to wait until the next Rotation. Make sure your node is <span style={{ color: "green"}}> <strong> Online </strong> </span> with the labels **Bidding** and **Qualified**.
 
 ### Authority Offline — Reasons
 
@@ -155,11 +155,7 @@ Now check the logs:
 journalctl -f -u "chainflip-*"
 ```
 
-### Backup and Bidding but not Qualified — Reasons
-
-<br />
-<img src="/testnet/validator_backup.png" alt="validator backup" />
-<br />
+### Bidding but not Qualified — Reasons
 
 You did not successfully submit the `chainflip-cli` commands. Please run all the commands in [Funding and Bidding](/validators/mainnet/funding#register-node-as-a-validator) section.
 
@@ -168,7 +164,7 @@ The commands that already ran successfully will fail with an error resembling th
 <img src="/testnet/validaotr_cli_commands_failing.png" alt="validator cli commands failing(command already executed before)" />
 <br />
 
-This is expected, continue with the next command until you complete them all, after completing this your node should appear **Backup** and **Bidding** and **Qualified**.
+This is expected, continue with the next command until you complete them all, after completing this your node should appear **Bidding** and **Qualified**.
 
 ## Ethereum Keyfile Error
 

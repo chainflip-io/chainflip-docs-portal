@@ -6,11 +6,11 @@ description: Guide on how to set up a Validator node on Mainnet
 
 import { Callout } from "nextra/components";
 
-## Mainnet Validator Setup
+# Mainnet Validator Setup
 
 This is the one and only official guide for setting up your Chainflip Validator. This guide is officially maintained by the Chainflip team. For general information about the Chainflip protocol, we strongly recommend checking out the Concepts. We run both a Testnet and Mainnet, this guide helps you through setting up a validator on Mainnet. For Testnet please refer to this [guide instead](/validators/testnet/validator-setup).
 
-### Before You Start
+## Before You Start
 
 This guide assumes you can:
 
@@ -21,11 +21,11 @@ This guide assumes you can:
 
 Operating a validator assumes Linux administration skills. Do not run a validator on a laptop or home machine unless you already understand the operational risks.
 
-## 1. Prerequisites
+# 1. Prerequisites
 
 This section describes what you are going to need to successfully set up a Chainflip validator node.
 
-### Tokens
+## Tokens
 
 <Callout type="warning">
     Note there is a **minimum funding requirement** for new Validator nodes: new
@@ -49,7 +49,7 @@ You validator will need Arbitrum `ETH` to pay for transactions fees on the Arbit
 
 Your validator will need Tron `TRX` to pay for transaction fees on the Tron network.
 
-### System Requirements
+## System Requirements
 
 ```
 OS: Ubuntu 22.04 | Our binaries are not compiled on any other OS
@@ -61,7 +61,7 @@ Bandwidth: Minimum 400MBps, Recommended 1GBps connection, 100 GB bandwidth combi
 
 This machine must be available 24/7 and thus it is recommended that you only try this on machines with a stable and reliable internet connection, such as a VPS or Dedicated Server. If you would like some help picking a server to rent, you can come to the Chainflip Community Discord and ask for help.
 
-### Networking
+## Networking
 
 **Firewall**
 
@@ -86,14 +86,14 @@ sudo systemctl enable --now chrony
 
 Make sure your firewall allows NTP outbound traffic (Port 123 UDP).
 
-## 2. Creating a new Linux User
+# 2. Creating a new Linux User
 
 Using the `root` user to run a Validator works. However, it is a good security practice to create a separate user with limited access to run the Chainflip binaries.
 Depending on your VPS provider, you may already have a sudo user created for you (like `ubuntu`). If this is the case, you can skip these steps.
 
 You can call the new user whatever you like. In the following commands we will call it `flip`.
 
-### Create the user
+## Create the user
 
 ```bash copy
 sudo useradd -s /bin/bash -d /home/flip/ -m -G sudo flip
@@ -106,7 +106,7 @@ This command does the following:&#x20;
 - Sets the default shell for the new user to `/bin/bash`
 - Adds the `flip` user to the sudo group which gives the user the required access and permissions to install and configure the required software.
 
-### Add a Password
+## Add a Password
 
 It is recommended to add a password to your newly created user. You can do that by running:
 
@@ -123,7 +123,7 @@ Congratulations, your new user is now protected with a password üîê
     documentation whenever you execute a command with `sudo`
 </Callout>
 
-### Setup SSH Access
+## Setup SSH Access
 
 To be able to login over ssh using the new user we will need to set it up by running the following commands:
 
@@ -153,11 +153,11 @@ But for now you don't need to logout in order to switch users, you can do that s
 su - flip
 ```
 
-## 3. Getting the Validator Software
+# 3. Getting the Validator Software
 
 You have two ways to get the Chainflip binaries through the `apt` package manager or Docker:
 
-### 3.a Installation using `apt`
+## 3.a Installation using `apt`
 
 It's a good practice to use a fresh node and upgrade all system dependencies before installing the validator software.
 
@@ -166,7 +166,7 @@ sudo apt update
 sudo apt upgrade -y
 ```
 
-#### Adding Chainflip's `apt` Repo
+### Adding Chainflip's `apt` Repo
 
 We distribute our binaries as debian packages through our `apt` repository. To install the packages, you need to add our repo to your `apt` sources list.
 
@@ -212,7 +212,7 @@ gpg --export 4E506212E4EF4E0D3E37E568596FBDCACBBCDD37 | sudo tee /etc/apt/truste
 echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/chainflip-mainnet.gpg] https://pkgs.chainflip.io/ubuntu/ jammy berghain" | sudo tee /etc/apt/sources.list.d/chainflip-berghain-mainnet.list
 ```
 
-#### Installing The Packages
+### Installing The Packages
 
 To install, run the following commands:
 
@@ -221,7 +221,7 @@ sudo apt update
 sudo apt install -y chainflip-cli chainflip-node chainflip-engine
 ```
 
-#### Downloading Latest Chaindata Snapshot
+### Downloading Latest Chaindata Snapshot
 
 First, download the latest chaindata snapshot and unpack it to the correct location.
 
@@ -273,7 +273,7 @@ sudo systemctl daemon-reload
     `--pruning` parameters in the systemd override file.
 </Callout>
 
-### 3.b Docker Installation
+## 3.b Docker Installation
 
 <Callout type="warning">
     If you have done the **APT Installation** above, you don't need to follow
@@ -288,7 +288,7 @@ docker pull chainfliplabs/chainflip-engine:berghain-1.10.0
 docker pull chainfliplabs/chainflip-cli:berghain-1.10.0
 ```
 
-#### Starting up the node in Docker
+### Starting up the node in Docker
 
 First, download the latest chaindata snapshot as explained in the [Downloading Latest Chaindata Snapshot](#downloading-latest-chaindata-snapshot) section.
 
@@ -306,7 +306,7 @@ chainflip-node \
   --pruning=300
 ```
 
-#### Getting the chainspec
+### Getting the chainspec
 
 If you have installed binaries through APT, the chainspec is already included in the `chainflip-node` package. However, if you need the chainspec for Kubernetes deployments or other docker orchestration systems, you can download it by running:
 
@@ -314,11 +314,11 @@ If you have installed binaries through APT, the chainspec is already included in
 curl https://repo.chainflip.io/chainspecs/berghain.chainspec.json -o berghain.chainspec.json
 ```
 
-## 4. Generating Validator Keys
+# 4. Generating Validator Keys
 
 Validator nodes take actions on behalf of the Chainflip network, and all of these actions are authorised using cryptographic keys. Specifically, to run a validator node, you will need two private/public key pairs: an Ethereum key pair for interacting with Ethereum, and a Chainflip-native key pair for interacting with the State Chain.
 
-### Validator Keys
+## Validator Keys
 
 Generate and save the required keys using the following `chainflip-cli` command:
 
@@ -373,7 +373,7 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 <Callout type="error">**NEVER REVEAL YOUR PRIVATE KEYS TO ANYONE.**</Callout>
 
-### Setting Up Your Validator's Ethereum Account
+## Setting Up Your Validator's Ethereum Account
 
 You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum and **300 TRX** on Tron. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
 
@@ -382,7 +382,7 @@ You must ensure that the public Ethereum address generated above has at least **
     Validator node. **Do not re-use this key elsewhere.**
 </Callout>
 
-### Update Secret File Permissions
+## Update Secret File Permissions
 
 The following commands will ensure that only the current user can read the files, and that the private keys are not available in your shell history:
 
@@ -393,7 +393,7 @@ sudo chmod 600 /etc/chainflip/keys/node_key_file
 history -c
 ```
 
-### Final Checks
+## Final Checks
 
 The _private_ keys generated above should have been stored at the path provided to the `generate-keys` command. As a sanity check, make sure they are where you expect, and have the correct permissions.
 
@@ -413,7 +413,7 @@ drwxr-xr-x 5 root root 4096 Nov 14 13:38 ..
 -rw------- 1 root root   64 Nov 14 13:28 signing_key_file
 ```
 
-### Recovering Your Keys
+## Recovering Your Keys
 
 In case you lose access to your keys, you can recover the private keys using the seed phrase. Using the example phrase generated above:
 
@@ -430,7 +430,7 @@ chainflip-cli generate-keys \
 
 The output should be the same as above (except the `Node Public Key` and `Node Peer ID`), and the keys should be written to the provided path, as above.
 
-## 5. Engine Settings
+# 5. Engine Settings
 
 We need to create the engine config file.
 
@@ -439,7 +439,7 @@ sudo mkdir -p /etc/chainflip/config
 sudo nano /etc/chainflip/config/Settings.toml
 ```
 
-### Editing the Config
+## Editing the Config
 
 Copy the following to your `nano` editor. You also need to replace `PUBLIC_IP_ADDRESS_OF_YOUR_NODE` with the public IP Address of your server. To get the public IP of your node you can run this command: `curl -w "\n" ifconfig.me`.&#x20;
 
@@ -573,7 +573,7 @@ json_rpc_endpoint = "http://tron.someprovider:443/jsonrpc"
     will not work!
 </Callout>
 
-### Saving the File
+## Saving the File
 
 Once you're happy with your configuration file and have inserted a valid endpoint address, exit and save the file by using `CTRL(Control)+x` and when prompted type `Y` then hit `Enter`.
 
@@ -681,7 +681,7 @@ Nov 14 13:39:23 berghain-validator chainflip-node[1908]: 2023-11-14 13:39:23 üí
 
 </Callout>
 
-### Starting the Engine
+## Starting the Engine
 
 To start the `chainflip-engine`, we issue another command.
 
@@ -733,7 +733,7 @@ Nov 14 13:42:31 berghain-validator chainflip-engine[2011]: {"timestamp":"2023-11
     next section and start with the process of adding funds.
 </Callout>
 
-### Enable systemd Services
+## Enable systemd Services
 
 Tell both the services to start again after a reboot:
 

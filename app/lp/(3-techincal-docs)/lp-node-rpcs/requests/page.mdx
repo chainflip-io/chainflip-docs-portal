@@ -1,14 +1,14 @@
 ---
 
-title: Node RPC Requests
+title: LP Node RPC Requests
 
-description: The state chain node RPCs that are useful for liquidity providers.
+description: Liquidity provider node RPC requests for LP integrations and operations.
 
 ---
 
-## RPC requests
+# LP Node RPC Requests
 
-### `cf_required_asset_ratio_for_range_order`
+## `cf_required_asset_ratio_for_range_order`
 
 Returns the ratio of assets that would be required to create a range order at the specified tick range.
 
@@ -33,6 +33,7 @@ Return:
 
 The ratio of these two amounts is the needed ratio for range orders over the same range given the current price, i.e. the asset composition of all range orders with the same range will match this ratio.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -74,7 +75,7 @@ Response:
 ```
 </details>
 
-### `cf_pool_info`
+## `cf_pool_info`
 
 Returns the fees percentages LP's earn in the given pool.
 
@@ -102,6 +103,7 @@ where `PoolPairsMap` is defined as follows:
 
 The fees are represented in hundredth's of a pip, i.e. 1 = 0.00001%.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -154,7 +156,7 @@ Response:
 }
 ```
 
-### `cf_pool_depth`
+## `cf_pool_depth`
 
 Returns depth of a specified pool between two prices.
 
@@ -192,6 +194,7 @@ Where `UnidirectionalPoolDepth` is defined as follows:
 ```
 The [Amount](/lp/lp-api/types#amount) of each of the pool's two assets available for sale inside the given price range. The depth of limit orders and range orders are separately stated.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -243,7 +246,7 @@ Response:
 ```
 </details>
 
-### `cf_pool_liquidity`
+## `cf_pool_liquidity`
 
 Returns all the liquidity available for swaps in a particular pool, at a given block hash. If not provided, returns data for the latest block. Note that this does **not** take into account any pending transactions in the mempool.
 
@@ -282,6 +285,7 @@ For limit orders two lists of prices (as [Tick](/lp/lp-api/types#tick)) and the 
 
 For range orders, an ordered list of pairs. The first element of the pair is a tick/price and the second is the liquidity between that tick and the next tick in the list. Forming a histogram of the liquidity in the range order pool.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -353,7 +357,7 @@ Response:
 ```
 </details>
 
-### `cf_pool_orders`
+## `cf_pool_orders`
 
 Returns all the orders associated with a specified account in a particular pool.
 
@@ -397,6 +401,7 @@ Where `RangeOrder` is defined as follows:
     "fees_earned": "PoolPairsMap<Amount>",
 }
 ```
+### Example
 <details>
 <summary>Example</summary>
 
@@ -473,7 +478,7 @@ Response:
 ```
 </details>
 
-### `cf_pool_orderbook`
+## `cf_pool_orderbook`
 
 Returns an orderbook representation of all the liquidity in the specified pool. For example if you make a request with an orders count of 1, it will return 1 ask and 1 bid that each represent the sum of all asks and bids respectively. The returned ask's and bid's prices will be approximately in an logarithm distribution going from the best price to the worst, for example it could be something like the first ask/bid represents all liquidity within 0.01% of the best price, then the next all liquidity between 0.01%->0.1% of the best price, then next between 0.1%->1.0%, and so on until there is no more liquidity.
 
@@ -500,6 +505,7 @@ A list of asks and a list of bids. The number of asks and bids will be equal to 
 - The amount is quoted in the base asset's smallest unit, i.e. for ETH that is 10^-18 ETH.
 - The sqrt_price is the sqrt of the price in units of the quote asset, represented as a fixed point number with 96 fractional bits. Note prices are in each asset's smallest unit i.e. for ETH 10^-18, and for USDC 10^-6, so the price 10000 USDC/ETH represented as sqrt_price would be `round(sqrt(10000 * 10^18 / 10^6)*2^96) ≈ 7.9228162E36`. We use this representation as it ensures a high degree of precision across a large range of possible prices.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -609,7 +615,7 @@ Response:
 ```
 </details>
 
-### `cf_pool_range_order_liquidity_value`
+## `cf_pool_range_order_liquidity_value`
 
 Returns the value of a hypothetical range order, e.g. the assets which would be returned to an LP's free balance if they were to close/cancel such a range order.
 
@@ -627,6 +633,7 @@ Return:
 
 The value of the hypothetical range order if it where burnt now, in amounts of the base and pair assets.
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -670,7 +677,7 @@ Response:
 ```
 </details>
 
-### `cf_free_balances`
+## `cf_free_balances`
 
 > [!TIP]
 >
@@ -686,6 +693,7 @@ Parameters:
 Return:
 - A JSON object containing the list of [Chains](/lp/lp-api/types#chain) as keys. Each chain is a JSON object containing a list of assets for that chain and their respective balances (as [Amount](/lp/lp-api/types#amount)).
 
+### Example
 <details>
 <summary>Example</summary>
 
@@ -730,7 +738,7 @@ Response:
 ```
 </details>
 
-### `cf_scheduled_swaps`
+## `cf_scheduled_swaps`
 
 Returns all scheduled swaps in a pool.
 
@@ -756,6 +764,7 @@ Where `ScheduledSwap` is defined as follow:
 	"execute_at": "number",
 }
 ```
+### Example:
 <details>
 <summary>Example</summary>:
 
@@ -805,7 +814,7 @@ Response:
 ```
 </details>
 
-### `cf_get_trading_strategies`
+## `cf_get_trading_strategies`
 
 > [!NOTE]
 >

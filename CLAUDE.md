@@ -1,58 +1,68 @@
-# Chainflip Docs Portal
+# CLAUDE.md
 
-## Stack
-- **Framework:** Next.js 15 (App Router) + Nextra 4.3.0
-- **React:** 19.1.2
-- **CSS:** Tailwind CSS 4
-- **Package manager:** pnpm
-- **Deploy:** Vercel
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Commands
+
 ```bash
-pnpm dev          # Start dev server → localhost:3000
-pnpm build        # next build + sitemap + pagefind index
+pnpm i            # Install dependencies
+pnpm dev          # Start dev server (localhost:3000, uses Turbopack)
+pnpm build        # Production build (includes sitemap + Pagefind search indexing)
+pnpm start        # Start production server
+pnpm lint         # Run oxlint
+pnpm format       # Format code with oxfmt
+pnpm format:check # Check formatting without writing
 ```
 
-## Project Structure
-```
-app/
-  _meta.global.tsx        # Global navigation metadata (sidebar/nav config)
-  _components/            # App-level React components
-  brokers/                # Broker docs section
-  lp/                     # Liquidity provider docs section
-  validators/             # Validator docs section
-  protocol/               # Protocol docs section
-  lending/                # Lending docs section
-  layout.tsx              # Root layout
-components/               # Shared components (slider, table, toggle-visibility-section, video, icons)
-mdx-components.tsx        # MDX component overrides
-next.config.ts            # Nextra + Next.js config (SVG/SVGR, LaTeX, redirects)
-```
+## Architecture
 
-## Conventions
+### Tech Stack
 
-### MDX Pages
-Every `.mdx` page **must** have front matter:
-```mdx
----
-title: Page Title
-description: Page description.
----
-```
+- **Next.js 15** with App Router
+- **Nextra 4** documentation framework with nextra-theme-docs
+- **React 19**, **TypeScript** (strict mode)
+- **Tailwind CSS 4** via PostCSS
+- **Pagefind** for client-side search (indexed at build time)
 
-### Navigation
-- Edit `app/_meta.global.tsx` to add/reorder pages in the sidebar.
+### Content Structure
 
-### SVG Icons
-- Icons live in `components/icons/` and are imported via `@svgr/webpack`.
-- Use `?svgr` query param for SVGR imports; plain imports use Next.js image loader.
+All documentation is MDX files organized under `/app`:
 
-### Styling
-- Use Tailwind CSS 4 utility classes.
-- Global styles in `app/globals.css` and `app/page.css`.
+- `/app/protocol/` - Core protocol docs
+- `/app/brokers/` - Broker integration guides
+- `/app/lp/` - Liquidity provider docs
+- `/app/validators/` - Validator node guides
+- `/app/lending/` - Lending protocol docs
 
-## Notes
-- ESLint is disabled during builds (`ignoreDuringBuilds: true`) — lint locally before pushing.
-- LaTeX is supported via MathJax (Nextra config) and KaTeX (Next.js config).
-- OG image generation at `/og` route using page `title` from front matter.
-- `postbuild` runs `next-sitemap` then `pagefind` to build the search index.
+### Key Files
+
+- `/app/_meta.global.tsx` - Navigation structure for all pages
+- `/app/layout.tsx` - Root layout with Nextra theme config
+- `/mdx-components.tsx` - Custom MDX component overrides
+- `/next.config.ts` - Nextra setup, LaTeX support (MathJax), SVG handling via @svgr/webpack
+
+### Components
+
+- `/app/_components/` - Page-specific components (features, social cards, themed images)
+- `/components/` - Shared components (video embeds, toggle sections, file trees)
+- `/components/icons/` - SVG icons auto-converted to React components
+
+## Adding Documentation
+
+1. Create MDX file in appropriate `/app` subdirectory
+2. Include front matter at the top:
+   ```
+   ---
+   title: Page Title
+   description: Description for SEO
+   ---
+   ```
+3. Update `/app/_meta.global.tsx` to add navigation entry
+
+## Configuration Notes
+
+- SVG files in `/components/icons/` are auto-converted to React components
+- LaTeX/math supported via MathJax renderer
+- `defaultShowCopyCode: true` for all code blocks
+- ESLint is ignored during builds (`ignoreDuringBuilds: true`)
+- Path alias: `@components/*` maps to `components/*`

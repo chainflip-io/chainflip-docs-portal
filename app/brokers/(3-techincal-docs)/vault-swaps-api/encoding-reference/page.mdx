@@ -69,6 +69,11 @@ pub struct DcaParameters {
 
 Chainflip uses its own notation for chain and token within our Vault smart contracts. These are the values for the source and destination chains and assets parameters described above. The same values apply for the the corresponding testnets (e.g. Ethereum mainnet and Sepolia share the same value).
 
+<Callout type="info">
+    **New in version 2.3:** BSC is chain `8`. The new assets are `19` (BNB), `20`
+    (bscUSDT) and `21` (cbBTC).
+</Callout>
+
 | Chain ID | Chain    | Supported |
 | -------- | -------- | --------- |
 | 1        | Ethereum | ✅        |
@@ -78,6 +83,7 @@ Chainflip uses its own notation for chain and token within our Vault smart contr
 | 5        | Solana   | ✅        |
 | 6        | AssetHub | ✅        |
 | 7        | Tron     | ✅        |
+| 8        | BSC      | ✅        |
 
 | Asset ID | Asset   | Chain    | Supported |
 | -------- | ------- | -------- | --------- |
@@ -99,6 +105,9 @@ Chainflip uses its own notation for chain and token within our Vault smart contr
 | 16       | solUSDT | Solana   | ✅        |
 | 17       | TRX     | Tron     | ✅        |
 | 18       | trxUSDT | Tron     | ✅        |
+| 19       | BNB     | BSC      | ✅        |
+| 20       | bscUSDT | BSC      | ✅        |
+| 21       | cbBTC   | Ethereum | ✅        |
 
 ---
 

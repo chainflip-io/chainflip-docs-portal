@@ -26,7 +26,8 @@ Return:
     "Ethereum": [..],
     "Arbitrum": [..],
     "Solana": [..],
-    "Tron": [..]
+    "Tron": [..],
+    "Bsc": [..]
 }
 ``` 
 
@@ -65,6 +66,9 @@ Response:
     ],
     "Tron": [
       "TX8VqM3w9rJftks1UfqntGpdbp9npPUbyu"
+    ],
+    "Bsc": [
+      "0x4b3f4e2b8a5c1d9e7f0a2c6d8e1b3f5a7c9d0e24"
     ]
   },
   "id": "1"
@@ -93,7 +97,8 @@ Return:
     "Ethereum": [..],
     "Arbitrum": [..],
     "Solana": [..],
-    "Tron": [..]
+    "Tron": [..],
+    "Bsc": [..]
 }
 ```
 A single entry looks like follows:
@@ -204,6 +209,15 @@ Response:
         "name": "tron_vault_contract",
         "address": "TMkw4gZgD4sDFLtnCu3tW1v2vETdG76MrN",
         "explanation": "Holds TRX and all tokens on Tron. Directly receives user funds in case of smart contract-based vault swaps.",
+        "rotation_policy": "Never",
+        "next_predicted_rotation": null
+      }
+    ],
+    "Bsc": [
+      {
+        "name": "bsc_vault_contract",
+        "address": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+        "explanation": "Holds BNB and all tokens on BSC. Directly receives user funds in case of smart contract-based vault swaps.",
         "rotation_policy": "Never",
         "next_predicted_rotation": null
       }

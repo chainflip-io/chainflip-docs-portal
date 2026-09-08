@@ -49,6 +49,18 @@ You validator will need Arbitrum `ETH` to pay for transactions fees on the Arbit
 
 Your validator will need Tron `TRX` to pay for transaction fees on the Tron network.
 
+**BNB (BSC)**
+
+Your validator will need `BNB` to pay for transaction fees on the BNB Smart Chain network.
+
+<Callout type="warning">
+    **New in version 2.3:** every validator must set up BSC *before* the upgrade.
+    Add a `[bsc]` section to your `Settings.toml` (see [Editing the
+    Config](#editing-the-config)) and send `BNB` to your validator's address.
+    Without a working BSC RPC endpoint, your engine will not start after the
+    upgrade.
+</Callout>
+
 ## System Requirements
 
 ```
@@ -375,7 +387,7 @@ Take special note of the **Validator Account ID** beginning with `cF`. This is t
 
 ## Setting Up Your Validator's Ethereum Account
 
-You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum and **300 TRX** on Tron. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
+You must ensure that the public Ethereum address generated above has at least **0.2 ETH** on Ethereum Mainnet, **0.1 ETH** on Arbitrum, **300 TRX** on Tron and **0.25 BNB** on BSC to pay for transaction fees. The protocol regularly refunds the fees paid to the paying address. You should monitor this balance to ensure it doesn't fall below the required amount.
 
 <Callout type="warning">
     Please also note that the Ethereum key is for the exclusive use of the
@@ -443,12 +455,12 @@ sudo nano /etc/chainflip/config/Settings.toml
 
 Copy the following to your `nano` editor. You also need to replace `PUBLIC_IP_ADDRESS_OF_YOUR_NODE` with the public IP Address of your server. To get the public IP of your node you can run this command: `curl -w "\n" ifconfig.me`.&#x20;
 
-Also you'll need to provide the `ws_endpoint`, and `http_endpoint` for whichever `Ethereum`, `Arbitrum`, `Polkadot` and `Bitcoin` RPC client you've selected.
+Also you'll need to provide the `ws_endpoint`, and `http_endpoint` for whichever `Ethereum`, `Arbitrum`, `Polkadot`, `Bitcoin` and `BSC` RPC client you've selected.
 
 <Callout type="info">
     Make sure that both endpoints (HTTP and WebSockets) are accessible for the
-    Ethereum, Arbitrum and Polkadot nodes. Bitcoin only has HTTP. Otherwise your
-    engine will fail to start.
+    Ethereum, Arbitrum and Polkadot nodes. Bitcoin, Solana, Tron and BSC only
+    have HTTP. Otherwise your engine will fail to start.
 </Callout>
 
 <Callout type="info">
@@ -547,6 +559,18 @@ json_rpc_endpoint = "http://tron.someprovider:443/jsonrpc"
 # [tron.backup_rpc]
 # http_endpoint = "http://tron.someprovider.backup:443/wallet"
 # json_rpc_endpoint = "http://tron.someprovider.backup:443/jsonrpc"
+
+[bsc]
+# BSC private key file path. This file should contain a hex-encoded private key.
+# Note: Here we use the same private key file as Ethereum. You can use a different key if you want.
+private_key_file = "/etc/chainflip/keys/ethereum_key_file"
+
+[bsc.rpc]
+http_endpoint = "http://my_local_bsc_node:8545"
+
+# optional
+#[bsc.backup_rpc]
+#http_endpoint = "http://my_bsc_node_backup.someprovider/<secret_access_key>"
 
 # optional
 #[logging]

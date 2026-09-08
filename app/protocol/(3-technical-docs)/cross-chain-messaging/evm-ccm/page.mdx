@@ -18,6 +18,7 @@ Besides the general [implementation checklist](/protocol/cross-chain-messaging/o
 - In the event of a transaction not being broadcasted due to insufficient gas, the signed payload will be available for the user to broadcast as described [here](#ccm-broadcast-failure).
 - CCM swaps to Tron (TVM) work identically to EVM, except energy is used instead of gas.
 - The gas limit on EVM destination chains is capped to 10 million gas. In Tron the fee limit is capped to 1k TRX.
+- CCM swaps to BSC work identically to Ethereum and Arbitrum, including the 10 million gas cap.
 
 ## CCM Receiver Smart contract interface
 
@@ -82,7 +83,7 @@ If the receiver is not a contract, doesn't have the specified interface or the l
 
 The user-provided gas budget value is the amount of gas alllocated for the user logic in the CCM egress transaction on the destination chain. The simplest way to estimate the gas needed on the destination chain is to simulate the execution of the receiver's logic with a direct call to the receiver contract with the parameters expected from the Chainflip call.
 
-### Ethereum and Arbitrum
+### Ethereum, Arbitrum and BSC
 
 Gas is estimated using the `eth_estimateGas` call. The base EVM gas can be subtracted as it will automatically be added by the protocol as part of the overhead. 
 

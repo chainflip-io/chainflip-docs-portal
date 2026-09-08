@@ -5,7 +5,15 @@ title: Chains & Assets
 description: Our SDK/API uses human-readable strings to identify chains.
 
 ---
+
+import { Callout } from "nextra/components";
+
 # Chainflip Supported Chains & Assets
+
+<Callout type="info">
+    **New in version 2.3:** BSC (BNB Smart Chain) is a new chain, with the assets
+    `BNB` and `USDT`. `cbBTC` is a new ERC-20 asset on Ethereum.
+</Callout>
 
 ## Chains
 
@@ -20,6 +28,7 @@ Our SDK/API uses human-readable strings to identify chains. For more information
 | **Solana** | `perseverance` `sisyphos` `mainnet` |
 | **Assethub** | `perseverance` `sisyphos` `mainnet` |
 | **Tron** | `perseverance` `sisyphos` `mainnet` |
+| **Bsc** | `perseverance` `sisyphos` `mainnet` |
 
 ## Assets
 
@@ -35,6 +44,7 @@ Our SDK/API uses human-readable strings to identify assets. For more information
   | **[USDT (ERC-20)](https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7)** | Ethereum | `perseverance` `sisyphos` `mainnet` |
   | **[USDT (ERC-20)](https://arbiscan.io/address/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9)** | Arbitrum | `perseverance` `sisyphos` `mainnet` |
   | **[WBTC (ERC-20)](https://etherscan.io/address/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599)** | Ethereum | `perseverance` `sisyphos` `mainnet` |
+  | **[cbBTC (ERC-20)](https://etherscan.io/address/0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf)** | Ethereum | `perseverance` `sisyphos` `mainnet` |
   | **[FLIP (ERC-20)](https://etherscan.io/address/0x826180541412D574cf1336d22c0C0a287822678A)** | Ethereum | `perseverance` `sisyphos` `mainnet` |
   | **DOT** | Polkadot | `perseverance` `sisyphos` `mainnet` |
   | **SOL** | Solana | `perseverance` `sisyphos` `mainnet` |
@@ -45,6 +55,23 @@ Our SDK/API uses human-readable strings to identify assets. For more information
   | **[USDT](https://assethub-polkadot.subscan.io/assets/1984)** | Assethub | `perseverance` `sisyphos` `mainnet` |
   | **TRX** | Tron | `perseverance` `sisyphos` `mainnet` |
   | **[USDT (TRC-20)](https://tronscan.org/#/contract/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t)** | Tron | `perseverance` `sisyphos` `mainnet` |
+  | **BNB** | Bsc | `perseverance` `sisyphos` `mainnet` |
+  | **[USDT (BEP-20)](https://bscscan.com/address/0x55d398326f99059fF775485246999027B3197955)** | Bsc | `perseverance` `sisyphos` `mainnet` |
+
+<Callout type="warning">
+    `USDT` on BSC has **18 decimals**, unlike `USDT` on the other chains, which
+    has 6. `cbBTC` has **8 decimals**, like BTC. Use [Get
+    Assets](/brokers/javascript-sdk/functions#get-assets.md "mention") to read
+    the decimals of an asset instead of assuming them.
+</Callout>
+
+<Callout type="info">
+    `BNB`, `USDT` on BSC and `cbBTC` have no oracle price feed. They can't be
+    used as lending collateral or in oracle-based [trading
+    strategies](/lp/passive-liquidity), and swaps in these assets get no default
+    slippage protection.
+</Callout>
+
 ## Chainflip Networks
 
 We currently support different networks for different purposes:

@@ -124,6 +124,13 @@ curl -H "Content-Type: application/json" -d '{
 
 Submits an extrinsic that sets your lp account's refund address for one of the external chains. For your lp account to have any assets associated with it, you must set a refund address with the external chain which those assets are associated with. For example, to create an order in the DOT-USDC pool, you must have Polkadot and Ethereum refund addresses registered. You can change your registered addresses at anytime via this RPC.
 
+<Callout type="warning">
+    **New in version 2.3:** BSC is a new chain. You must register a `"Bsc"`
+    refund address before you can deposit or withdraw `BNB` or BSC `USDT`.
+    `cbBTC` is an Ethereum asset, so your existing Ethereum refund address
+    already covers it.
+</Callout>
+
 Parameters:
 - [`chain`](/lp/lp-api/types#chain): The external chain the refund address exists on.
 - [`address`](/lp/lp-api/types#addresses): The refund address for the specified external chain. Any assets associated with that chain will be transferred there if a refund is needed, e.g. "USDC" would be transferred to the address associated with "Ethereum".

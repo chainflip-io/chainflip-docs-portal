@@ -517,6 +517,43 @@ Example output:
 }
 ```
 
+## `broker_deregister_affiliate`
+
+Deregisters an affiliate account registered to your broker account. The affiliate's short id is released and will be assigned to the next affiliate you register. Available from version 2.2.
+
+<Callout type="warning">
+The affiliate's USDC balance must be zero. Withdraw any remaining earnings with [`broker_affiliate_withdrawal_request`](#broker_affiliate_withdrawal_request) first, otherwise the request fails with `AffiliateEarnedFeesNotWithdrawn`. See [Deregistering an Affiliate](/brokers/broker-affiliates#deregistering-an-affiliate) before using this request.
+</Callout>
+
+Parameters:
+- `affiliate_account_id`: The account id of the affiliate.
+
+Return:
+- `account_id`: The account id of the deregistered affiliate.
+- `short_id`: The short id that was assigned to the deregistered affiliate.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_deregister_affiliate", "params": {"affiliate_account_id": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR"}}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "account_id": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR",
+    "short_id": 0
+  },
+  "id": 1
+}
+```
+
 ## `broker_get_affiliates`
 
 Get a list of all affiliates registered to your broker account.

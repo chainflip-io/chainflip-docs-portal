@@ -35,13 +35,13 @@ You can think of an Affiliate as a "passive" sub-account controlled by the Broke
 
 Since the Affiliate's earnings are controlled by the Broker, we need a way to ensure that the Broker cannot steal or lose the Affiliate's funds. In other words, the Broker must not be the custodian of the funds. For this reason, Brokers are required to [*register*](broker-api#broker_register_affiliate) Affiliates on-chain with an associated **Ethereum** mainnet address, which will function as the withdrawal address for earned commission.
 
-Each Affiliate is assigned a unique Chainflip address, indistinguishable from any other address. Once created, the Affiliate registration cannot be changed.
+Each Affiliate is assigned a unique Chainflip address, indistinguishable from any other address. Once created, the Affiliate's withdrawal address cannot be changed, but the Broker can [deregister](#deregistering-an-affiliate) an Affiliate it no longer needs.
 
 <Callout type="info">
 All Affiliate commission is earned in USDC and can only be withdrawn by the Broker to the registered Ethereum withdrawal address. 
 </Callout>
 
-Each Broker can register up to 256 Affiliates.
+Each Broker can have up to 256 Affiliates registered at once. Deregistering an Affiliate frees up its slot.
 
 After the Affiliate has been registered, the Affiliate can verify the withdrawal address by submitting an rpc request to an rpc node. This will return a list of Affiliates registered to that broker, including the withdrawal address associated with each Affiliate. For example:
 
@@ -106,6 +106,16 @@ sequenceDiagram
     B->>C: Forward Withdrawal Request
     C-->>A: Send USDC balance to 0xaf..af
 ```
+
+## Deregistering an Affiliate
+
+From version 2.2, a Broker can [deregister](/brokers/broker-api/requests#broker_deregister_affiliate) an Affiliate it no longer works with. Only the Broker that registered the Affiliate can deregister it, and only once the Affiliate's balance is zero. Any earned commission must first be [withdrawn](/brokers/broker-api/requests#broker_affiliate_withdrawal_request) to the registered withdrawal address, so deregistering an Affiliate can never cause it to lose earnings.
+
+Deregistration removes the Affiliate's registration and releases its short ID. The next Affiliate the Broker registers gets the lowest free short ID, so a released short ID will be reused.
+
+<Callout type="warning">
+Vault Swap payloads identify Affiliates by short ID. Once the short ID of a deregistered Affiliate is reassigned, any Vault Swap that still includes it pays that commission to the *new* Affiliate. Before deregistering, stop building Vault Swap payloads that include the Affiliate, and make sure no open deposit channels list it as a Beneficiary.
+</Callout>
 
 ## Legacy Affiliate Accounts
 

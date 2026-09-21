@@ -13,7 +13,17 @@ import { Callout } from "nextra/components";
 Returns the list of available chains or destination chains for the provided `sourceChain`.
 
 ```typescript copy
-function getChains(sourceChain?: Chain): Promise<ChainData[]>;
+function getChains(
+  sourceChain?: Chain,
+  type?: AssetState,
+): Promise<ChainData[]>;
+
+type AssetState =
+  | "all"
+  | "deposit"
+  | "destination"
+  | "depositChannel"
+  | "vaultSwap";
 
 type ChainData = {
   chain: Chain;
@@ -25,11 +35,29 @@ type ChainData = {
 };
 ```
 
-| Param                    | Description                                                                                               | Data type |
-| ------------------------ | --------------------------------------------------------------------------------------------------------- | :-------: |
-| `sourceChain` (optional) | Chain ID that allows to filter the returned array to contain only destination chains for the given chain. |  `Chain`  |
+| Param                    | Description                                                                                               |  Data type   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------- | :----------: |
+| `sourceChain` (optional) | Chain ID that allows to filter the returned array to contain only destination chains for the given chain. |   `Chain`    |
+| `type` (optional)        | Filters the returned chains by the swap capability they support. Defaults to `all`.                       | `AssetState` |
+
+The `type` argument accepts the following values:
+
+| Value            | Description                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `all`            | Every chain supported by the protocol.                                              |
+| `deposit`        | Chains that can be used as a source chain for both deposit channel and vault swaps. |
+| `destination`    | Chains that can be used as a destination chain.                                     |
+| `depositChannel` | Chains that support [deposit channel swaps](#requestdepositaddressv2).              |
+| `vaultSwap`      | Chains that support [vault swaps](#encodevaultswapdata).                            |
 
 If a `sourceChain` is provided, it returns the supported swap destination chains for that specific source chain.
+
+`Chain` is one of `Ethereum`, `Arbitrum`, `Bsc`, `Bitcoin`, `Solana`, `Assethub` or `Tron`.
+
+<Callout type="warning">
+  `Polkadot` was removed as a supported chain in version 1.11. Use `Assethub`
+  and its `DOT` asset instead.
+</Callout>
 
 <details>
 <summary>Example</summary>
@@ -37,7 +65,7 @@ If a `sourceChain` is provided, it returns the supported swap destination chains
 ```typescript copy
 import { Chains } from "@chainflip/sdk/swap";
 
-console.log(await swapSDK.getChains(Chains.Polkadot));
+console.log(await swapSDK.getChains(Chains.Assethub));
 ```
 
 ```typescript copy
@@ -61,6 +89,7 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
   },
 ];
 ```
+
 </details>
 
 ## `getAssets`
@@ -68,16 +97,17 @@ console.log(await swapSDK.getChains(Chains.Polkadot));
 Fetches the list of available assets for the given `chain`.
 
 ```typescript copy
-function getAssets(chain?: Chain): Promise<AssetData[]>;
+function getAssets(chain?: Chain, type?: AssetState): Promise<AssetData[]>;
 
 type AssetData = {
-  chainflipId: string;
+  /** internal id of the asset, e.g. `SolUsdc` for USDC on Solana */
+  chainflipId: ChainflipId;
   asset: Asset;
   chain: Chain;
   contractAddress: string | undefined;
   decimals: number;
   name: string;
-  symbol: string;
+  symbol: Asset;
   isMainnet: boolean;
   minimumSwapAmount: string;
   maximumSwapAmount: string | null;
@@ -85,9 +115,12 @@ type AssetData = {
 };
 ```
 
-| Param              | Description         | Data type |
-| :----------------- | :------------------ | :-------: |
-| `chain` (optional) | The ID of the chain |  `Chain`  |
+| Param              | Description                                                                         |  Data type   |
+| :----------------- | :---------------------------------------------------------------------------------- | :----------: |
+| `chain` (optional) | The ID of the chain                                                                 |   `Chain`    |
+| `type` (optional)  | Filters the returned assets by the swap capability they support. Defaults to `all`. | `AssetState` |
+
+The `type` argument accepts the same values as the [`getChains`](#getchains) one.
 
 <details>
 <summary>Example</summary>
@@ -130,6 +163,7 @@ console.log(await swapSDK.getAssets(Chains.Ethereum));
   },
 ]
 ```
+
 </details>
 
 ## `getQuoteV2`
@@ -140,7 +174,7 @@ Currently quotes can be either a regular quotes or a DCA quotes.
 ```typescript copy
 function getQuoteV2(
   quoteRequest: QuoteRequest,
-  options?: RequestOptions
+  options?: RequestOptions,
 ): Promise<QuoteResponseV2>;
 
 type QuoteRequest = {
@@ -150,7 +184,9 @@ type QuoteRequest = {
   destAsset: Asset;
   amount: string;
   isVaultSwap?: boolean;
+  isOnChain?: boolean;
   brokerCommissionBps?: number;
+  brokerAccount?: `cF${string}`;
   affiliateBrokers?: { account: string; commissionBps: number }[];
   ccmParams?: { gasBudget: string; messageLengthBytes: number };
 };
@@ -176,31 +212,47 @@ The `quoteRequest` object describes the swap for which a quote is returned.
 | `amount`                         | Amount of the source token to be swapped, represented in the base unit of the source token                                                                                                                                                                                                                    | `string`  |
 | `brokerCommissionBps` (optional) | Commission charged by the broker in basis points. If given, the value will be used instead of the brokerCommissionBps passed when initializing the SDK instance                                                                                                                                               | `number`  |
 | `affiliateBrokers` (optional)    | Array of objects describing the affiliate brokers that charge a commission                                                                                                                                                                                                                                    |  `Array`  |
-| `isVaultSwap` (optional)         | Flag for requesting a quote for a [vault swap](/brokers/javascript-sdk/functions#encode-vault-swap-data). Network related fees can be different for vault swaps compared to channel swaps                                                                                                                     | `boolean` |
+| `isVaultSwap` (optional)         | Flag for requesting a quote for a [vault swap](#encodevaultswapdata). Network related fees can be different for vault swaps compared to channel swaps                                                                                                                                                         | `boolean` |
+| `isOnChain` (optional)           | Flag for requesting a quote for an [internal swap](/lp/internal-swaps) that is executed entirely on the State Chain, without a deposit or an egress                                                                                                                                                           | `boolean` |
+| `brokerAccount` (optional)       | Chainflip broker SS58 address the quote is attributed to. Overrides the `brokerAccount` option passed when initializing the SDK. Brokers are encouraged to set this so their quotes can be attributed to them                                                                                                 | `string`  |
 | `ccmParams` (optional)           | Additional params for requesting a quote for a [CCM swap](/protocol/cross-chain-messaging/overview#type-reference). This is only used to increase the accuracy of the broadcast fee estimation for CCM swaps. A rough estimation of the values is good enough if the actual values are unknown at this stage. | `Object`  |
 
 ### Result type
 
 ```typescript copy
-type QuoteResponseV2 = {
-  srcChain: Chain;
-  srcAsset: Asset;
-  destChain: Chain;
-  destAsset: Asset;
-  amount: string;
-  isVaultSwap?: boolean;
-  brokerCommissionBps?: number;
-  affiliateBrokers?: { account: string; commissionBps: number }[];
-  ccmParams?: { gasBudget: string; messageLengthBytes: number };
-  quotes: QuoteDetails &
-    {
-      /** only present if there is a boost opportunity for the requested swap amount */
-      boostQuote?: BoostedQuoteDetails;
-      type: "REGULAR" | "DCA";
-    }[];
+type QuoteResponseV2 = QuoteRequest & {
+  quotes: Quote[];
+  /** id of the quote request, include it when reporting an issue with a quote */
+  requestId?: string;
 };
 
-type QuoteDetails = {
+type Quote = RegularQuote | DCAQuote;
+
+type BoostQuote = NonNullable<Quote["boostQuote"]>;
+
+interface RegularQuote extends QuoteDetails {
+  type: "REGULAR";
+  /** only present if there is a boost opportunity for the requested swap amount */
+  boostQuote?: Omit<RegularQuote, "boostQuote"> & BoostedQuoteDetails;
+}
+
+interface DCAQuote extends QuoteDetails {
+  type: "DCA";
+  dcaParams: {
+    numberOfChunks: number;
+    chunkIntervalBlocks: number;
+  };
+  /** only present if there is a boost opportunity for the requested swap amount */
+  boostQuote?: Omit<DCAQuote, "boostQuote"> & BoostedQuoteDetails;
+}
+
+interface QuoteDetails {
+  srcAsset: { chain: Chain; asset: Asset };
+  destAsset: { chain: Chain; asset: Asset };
+  isVaultSwap: boolean;
+  isOnChain: boolean;
+  ccmParams?: { gasBudget: string; messageLengthBytes: number };
+  depositAmount: string;
   intermediateAmount?: string;
   egressAmount: string;
   includedFees: SwapFee[];
@@ -225,18 +277,37 @@ type QuoteDetails = {
   };
   /** estimated price of the swap at amm level (does not include deposit/broadcast fee) */
   estimatedPrice: string;
-  /** only present if the quote is a DCA quote */
-  dcaParams?: {
-    numberOfChunks: number;
-    chunkIntervalBlocks: number;
-  };
-};
+}
 
-interface BoostedQuoteDetails extends QuoteDetails {
+type BoostedQuoteDetails = {
   /** estimated fee (in bps) that the user has to pay (from the deposit amount) to get this swap boosted */
   estimatedBoostFeeBps: number;
-}
+  /** maximum boost fee (in bps) that is set on the deposit channel or vault swap */
+  maxBoostFeeBps: number;
+};
+
+type SwapFee = {
+  type: "NETWORK" | "INGRESS" | "EGRESS" | "BROKER" | "BOOST" | "REFUND";
+  chain: Chain;
+  asset: Asset;
+  amount: string;
+};
+
+type PoolInfo = {
+  baseAsset: { chain: Chain; asset: Asset };
+  quoteAsset: { chain: Chain; asset: Asset };
+  fee: { chain: Chain; asset: Asset; amount: string };
+};
 ```
+
+<Callout type="info">
+  A `boostQuote` is a full quote for the same swap executed through the [boost
+  pools](/protocol/boost). Pass it to
+  [`requestDepositAddressV2`](#requestdepositaddressv2) or
+  [`encodeVaultSwapData`](#encodevaultswapdata) instead of the parent quote to
+  boost the swap. It is not nested any deeper: a `boostQuote` has no
+  `boostQuote` of its own.
+</Callout>
 
 <Callout type="info">
   `lowLiquidityWarning`: This value is true if the difference in the chainflip
@@ -288,7 +359,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
   destChain: 'Solana',
   destAsset: 'SOL',
   amount: '50000000',
-  dcaEnabled: true,
+  requestId: '3f1a9c62-7b4e-4c10-9d5f-2a8e6b0c4d13',
   quotes: [
     {
       egressAmount: '309311018',
@@ -317,11 +388,13 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
       destAsset: { chain: 'Solana', asset: 'SOL' },
       depositAmount: '50000000',
       isVaultSwap: false,
+      isOnChain: false,
     },
     {
       egressAmount: '309311018',
       recommendedSlippageTolerancePercent: 0.5,
       recommendedLivePriceSlippageTolerancePercent: 0.125,
+      recommendedRetryDurationMinutes: 5,
       includedFees: [
         { type: 'INGRESS', chain: 'Ethereum', asset: 'USDC', amount: '1395704' },
         { type: 'NETWORK', chain: 'Ethereum', asset: 'USDC', amount: '48604' },
@@ -339,11 +412,12 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
       estimatedDurationsSeconds: { deposit: 90, swap: 142, egress: 90.6 },
       estimatedDurationSeconds: 192.6,
       estimatedPrice: '0.00636414974511718059',
-      type: 'REGULAR',
+      type: 'DCA',
       srcAsset: { chain: 'Ethereum', asset: 'USDC' },
       destAsset: { chain: 'Solana', asset: 'SOL' },
       depositAmount: '50000000',
       isVaultSwap: false,
+      isOnChain: false,
       dcaParams: {
         chunkIntervalBlocks: 2,
         numberOfChunks: 22,
@@ -352,6 +426,7 @@ console.log(await swapSDK.getQuoteV2(quoteRequest));
   ],
 }
 ```
+
 </details>
 
 ## `requestDepositAddressV2`
@@ -374,74 +449,64 @@ to open a deposit channel.
 
 ```typescript copy
 function requestDepositAddressV2(
-  depositAddressRequest: DepositAddressRequestV2
-): Promise<DepositAddressResponse>;
+  depositAddressRequest: DepositAddressRequestV2,
+): Promise<DepositAddressResponseV2>;
 
 type DepositAddressRequestV2 = {
-  quote: Quote;
+  quote: Quote | BoostQuote;
   destAddress: string;
-  fillOrKillParams: {
-    retryDurationBlocks: number;
-    refundAddress: string;
-    slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number;
-  };
+  fillOrKillParams: FillOrKillParams;
   srcAddress?: string;
   brokerCommissionBps?: number;
   affiliateBrokers?: {
     account: `cF${string}` | `0x${string}`;
     commissionBps: number;
   }[];
-  ccmParams?: {
-    gasBudget: string;
-    message: string;
-    additionalData?: string;
-  };
+  ccmParams?: CcmParams;
 };
 ```
 
 The `depositAddressRequest` object describes the swap for which a deposit address is requested.
 
-| Param                                                                 | Description                                                                                                                                                                                                                                     | Data type |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| `quote`                                                               | The object returned by [getQuoteV2](/brokers/javascript-sdk/functions#get-quote-v2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote). |  `Quote`  |
-| `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                      | `string`  |
-| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This protects the swapper against price changes between a quote and the execution of a swap.                                                       | `Object`  |
-| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers) creating the channel, in basis points. This option is only available when the SDK is initialized with a `brokerUrl`                                                                                | `number`  |
-| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with a `brokerUrl`                         |  `Array`  |
-| [`ccmParams`](/protocol/cross-chain-messaging/overview) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                  | `Object`  |
+| Param                                                                 | Description                                                                                                                                                                                                              | Data type |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------: |
+| `quote`                                                               | The object returned by [getQuoteV2](#getquotev2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).             |  `Quote`  |
+| `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                               | `string`  |
+| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This protects the swapper against price changes between a quote and the execution of a swap.                                | `Object`  |
+| `srcAddress` (optional)                                               | Address that sends the deposit. It is validated against the source chain and echoed back in the response, but it is not submitted to the protocol when opening a deposit channel.                                        | `string`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers) creating the channel, in basis points. This option is only available when the SDK is initialized with a `broker` URL                                                        | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with a `broker` URL |  `Array`  |
+| [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                           | `Object`  |
+
+<Callout type="warning">
+  The method throws if the `quote` was requested with `isVaultSwap` or
+  `isOnChain` set, since neither is executed through a deposit channel. It also
+  throws if `ccmParams` is set but the `quote` was requested without
+  `ccmParams`, or vice versa.
+</Callout>
 
 ### Result type
 
 ```typescript copy
-type DepositAddressRequestV2 = {
+type DepositAddressResponseV2 = {
   srcChain: Chain;
   srcAsset: Asset;
   destChain: Chain;
   destAsset: Asset;
   amount: string;
   destAddress: string;
-  ccmParams?: {
-    gasBudget: string;
-    message: string;
-    additionalData?: string;
-  };
+  ccmParams?: CcmParams;
   maxBoostFeeBps?: number;
   srcAddress?: string;
   dcaParams?: {
     numberOfChunks: number;
     chunkIntervalBlocks: number;
   };
-  fillOrKillParams: {
-    retryDurationBlocks: number;
-    refundAddress: string;
-    slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number;
-  };
+  fillOrKillParams: FillOrKillParams;
   depositChannelId: string;
   depositAddress: string;
   brokerCommissionBps: number;
-  affiliateBrokers?: {
+  affiliateBrokers: {
     account: `cF${string}` | `0x${string}`;
     commissionBps: number;
   }[];
@@ -450,6 +515,13 @@ type DepositAddressRequestV2 = {
   channelOpeningFee: bigint;
 };
 ```
+
+<Callout type="info">
+  The `fillOrKillParams` returned here are the ones that were passed in, not the
+  values that were submitted to the protocol. The SDK converts a
+  `slippageTolerancePercent` into a minimum price and a `retryDurationMinutes`
+  into a number of blocks before submitting them.
+</Callout>
 
 ### Configure your Broker API
 
@@ -533,6 +605,7 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
   channelOpeningFee: 0n
 }
 ```
+
 </details>
 
 #### Boostable Deposit Address
@@ -622,18 +695,13 @@ This method uses the `broker_request_swap_parameter_encoding` RPC method of the 
 
 ```typescript copy
 function encodeVaultSwapData(
-  vaultSwapRequest: VaultSwapRequest
+  vaultSwapRequest: VaultSwapRequest,
 ): Promise<VaultSwapResponse>;
 
 type VaultSwapRequest = {
-  quote: Quote;
+  quote: Quote | BoostQuote;
   destAddress: string;
-  fillOrKillParams: {
-    retryDurationBlocks: number;
-    refundAddress: string;
-    slippageTolerancePercent: number;
-    livePriceSlippageTolerancePercent?: number;
-  };
+  fillOrKillParams: FillOrKillParams;
   srcAddress?: string;
   brokerAccount?: `cF${string}`;
   brokerCommissionBps?: number;
@@ -641,30 +709,34 @@ type VaultSwapRequest = {
     account: `cF${string}` | `0x${string}`;
     commissionBps: number;
   }[];
-  ccmParams?: {
-    gasBudget: string;
-    message: string;
-    additionalData?: string;
-  };
-  extraParams?: { seed?: string };
+  ccmParams?: CcmParams;
+  extraParams?: { seed?: `0x${string}` };
 };
 ```
 
 The `vaultSwapRequest` object describes the swap for which the vault swap data is encoded.
 
-| Param                                                                             | Description                                                                                                                                                                                                                                                                             | Data type |
-| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| `quote`                                                                           | The object returned by [`getQuoteV2`](/brokers/javascript-sdk/functions#get-quote-v2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).                                       |  `Quote`  |
-| `destAddress`                                                                     | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                                                              | `string`  |
-| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams)             | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                                                              | `Object`  |
-| `srcAddress` (optional)                                                           | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                                                                      | `string`  |
-| `brokerAccount` (optional)                                                        | [Broker](/brokers#brokers) account that recieves the commission for the swap.                                                                                                                                                                                                           | `string`  |
-| `brokerCommissionBps` (optional)                                                  | Commission charged by the [broker](/brokers#brokers) of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `brokerUrl`                                                                                            | `number`  |
-| `affiliateBrokers` (optional)                                                     | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `brokerUrl`                                    |  `Array`  |
-| [`ccmParams`](/protocol/cross-chain-messaging/overview#type-reference) (optional) | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                                                          | `Object`  |
-| `extraParams` (optional)                                                          | Additional data that is required for encoding vault swap transaction data for specific chains. For swaps starting from Solana, a [`seed`](/brokers/vault-swaps-api/solana#swap-event-data-account) can be set optionally. If no seed is set, a random one will be generated on the fly. | `string`  |
+| Param                                                                 | Description                                                                                                                                                                                                                                                                                                                             | Data type |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| `quote`                                                               | The object returned by [`getQuoteV2`](/brokers/javascript-sdk/functions#get-quote-v2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).                                                                                       |  `Quote`  |
+| `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                                                                                                              | `string`  |
+| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                                                                                                              | `Object`  |
+| `srcAddress` (optional)                                               | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                                                                                                                      | `string`  |
+| `brokerAccount` (optional)                                            | [Broker](/brokers#brokers) account that recieves the commission for the swap.                                                                                                                                                                                                                                                           | `string`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers#brokers) of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                                                                                           | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                                   |  `Array`  |
+| [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                                                                                                          | `Object`  |
+| `extraParams` (optional)                                              | Additional data that is required for encoding vault swap transaction data for specific chains. For swaps starting from Solana, a [`seed`](/brokers/vault-swaps-api/solana#swap-event-data-account) can be set optionally. It must be a `0x`-prefixed, 32 byte hex string. If no seed is set, a random one will be generated on the fly. | `Object`  |
+
+<Callout type="warning">
+  The `quote` must have been requested with `isVaultSwap: true`, otherwise the
+  method throws. The fees of a vault swap differ from the fees of a deposit
+  channel swap, so a quote for one cannot be used for the other.
+</Callout>
 
 ### Result type
+
+The shape of the response depends on the source chain of the swap.
 
 ```typescript copy
 type VaultSwapResponse =
@@ -674,10 +746,19 @@ type VaultSwapResponse =
       depositAddress: string;
     }
   | {
-      chain: "Ethereum" | "Arbitrum";
+      chain: "Ethereum" | "Arbitrum" | "Bsc";
       calldata: string;
       value: bigint;
       to: string;
+      sourceTokenAddress?: string | undefined;
+    }
+  | {
+      chain: "Tron";
+      calldata: string;
+      value: bigint;
+      to: string;
+      /** swap parameters that must be attached to the transaction as a note */
+      note: string;
       sourceTokenAddress?: string | undefined;
     }
   | {
@@ -701,7 +782,7 @@ import { getDefaultProvider, Wallet, Contract } from "ethers";
 
 const wallet = new Wallet(
   process.env.SECRET_KEY,
-  getDefaultProvider("sepolia")
+  getDefaultProvider("sepolia"),
 );
 
 const { quotes } = await swapSDK.getQuoteV2({
@@ -734,11 +815,11 @@ if (vaultSwapData.sourceTokenAddress) {
   const sourceTokenContract = new Contract(
     vaultSwapData.sourceTokenAddress,
     ["function approve(address spender, uint256 value) returns (bool)"],
-    wallet
+    wallet,
   );
   const approvalTx = await sourceTokenContract.approve(
     vaultSwapData.to,
-    quote.depositAmount
+    quote.depositAmount,
   );
   await approvalTx.wait();
 }
@@ -764,6 +845,7 @@ const status = await swapSDK.getStatusV2({ id: receipt.hash });
   sourceTokenAddress: '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238'
 }
 ```
+
 </details>
 
 <details>
@@ -819,7 +901,7 @@ const inputUxto = {
   outIndex: 2,
 };
 const inputTx = bitcoin.Transaction.fromHex(
-  await rpcClient.command("getrawtransaction", inputUxto.txId)
+  await rpcClient.command("getrawtransaction", inputUxto.txId),
 );
 const txFeeSats = 1000;
 
@@ -901,7 +983,7 @@ import {
 import bs58 from "bs58";
 
 const keypair = Keypair.fromSecretKey(
-  bs58.decode(process.env.SECRET_KEY_BASE58)
+  bs58.decode(process.env.SECRET_KEY_BASE58),
 );
 
 const { quotes } = await swapSDK.getQuoteV2({
@@ -941,12 +1023,12 @@ const transaction = new Transaction().add(
     })),
     programId: new PublicKey(vaultSwapData.programId),
     data: Buffer.from(vaultSwapData.data.slice(2), "hex"),
-  })
+  }),
 );
 const signature = await sendAndConfirmTransaction(
   new Connection(clusterApiUrl("devnet"), "confirmed"),
   transaction,
-  [keypair]
+  [keypair],
 );
 
 // status will be available after the transaction is included in a block
@@ -969,6 +1051,7 @@ const status = await swapSDK.getStatusV2({ id: signature });
   ]
 }
 ```
+
 </details>
 
 ## `encodeCfParameters`
@@ -993,7 +1076,7 @@ interface EncodeCfParametersRequest {
   quote: Quote | BoostQuote;
   srcAddress?: string;
   destAddress: string;
-  fillOrKillParams: FillOrKillParamsWithMinPrice | FillOrKillParamsWithSlippage;
+  fillOrKillParams: FillOrKillParams;
   affiliateBrokers?: {
     account: `cF${string}` | `0x${string}`;
     commissionBps: number;
@@ -1005,7 +1088,7 @@ interface EncodeCfParametersRequest {
 
 class SwapSDK {
   encodeCfParameters(
-    cfParameters: EncodeCfParametersRequest
+    cfParameters: EncodeCfParametersRequest,
   ): Promise<`0x${string}`>;
 }
 ```
@@ -1019,8 +1102,8 @@ The `cfParameters` object describes the swap for which the CF parameters data is
 | [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection) This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                      | `Object`  |
 | `srcAddress` (optional)                                               | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                             | `string`  |
 | `brokerAccount` (optional)                                            | account that receives the commission for the swap.                                                                                                                                                                                             | `string`  |
-| `brokerCommissionBps` (optional)                                      | Commission charged by the broker of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `brokerUrl`                                                                       | `number`  |
-| `affiliateBrokers` (optional)                                         | An array of objects defining affiliate accounts that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `brokerUrl`                         |  `Array`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the broker of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                      | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining affiliate accounts that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                        |  `Array`  |
 | [`ccmParams`](/brokers/javascript-sdk/params#ccmparams)(optional)     | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                 | `Object`  |
 
 ### Result type
@@ -1065,6 +1148,7 @@ console.log(vaultSwapData);
 // console output:
 "0x006400000036ead71325604dc15d35fae584d7b50646d81753b8b06ebc3b32569bff571d39d21918010000000000000000000000000000000000009e8d88ae895c9b37b2dead9757a3452f7c2299704d91ddfa444d87723f94fe0c000000";
 ```
+
 </details>
 
 ## `getStatusV2`
@@ -1074,7 +1158,7 @@ Fetches the status of an ongoing swap based on the provided `swapStatusRequest` 
 ```typescript copy
 function getStatusV2(
   swapStatusRequest: SwapStatusRequest,
-  options?: RequestOptions
+  options?: RequestOptions,
 ): Promise<SwapStatusResponseV2>;
 
 type SwapStatusRequest = {
@@ -1088,123 +1172,28 @@ type RequestOptions = {
 
 The `SwapStatusRequest` object includes the following arguments:
 
-| Param | Description                                                                                                                                                                                                                                                                               | Data type |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| `id`  | One of the following:<br/>- The `depositChannelId` from the [Request deposit address](/brokers/javascript-sdk/functions#request-deposit-address-v2) method<br/>- The `transactionHash` from the [Encode vault swap data](/brokers/javascript-sdk/functions#encode-vault-swap-data) method | `string`  |
+| Param | Description                                                                                                                                                                                                                                                                  | Data type |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| `id`  | One of the following:<br/>- The `depositChannelId` returned by [`requestDepositAddressV2`](#requestdepositaddressv2)<br/>- The hash of the transaction that was submitted for a swap encoded with [`encodeVaultSwapData`](#encodevaultswapdata)<br/>- The `swapId` of a swap | `string`  |
 
 ### Result type
 
+The response is a discriminated union on the `state` property. Each state adds
+the fields that are known at that point of the [swap
+lifecycle](#lifecycle-of-a-swap).
+
 ```typescript copy
-interface Boost {
-  maxBoostFeeBps: number;
-  effectiveBoostFeeBps: number | undefined;
-  boostedAt: number | undefined;
-  boostedBlockIndex: string | undefined;
-  skippedAt: number | undefined;
-  skippedBlockIndex: string | undefined;
-}
-
-interface DepositChannelFields {
-  id: string;
-  createdAt: number;
-  brokerCommissionBps: number;
-  depositAddress: string;
-  srcChainExpiryBlock: string;
-  estimatedExpiryTime: number;
-  expectedDepositAmount: string;
-  isExpired: boolean;
-  openedThroughBackend: boolean;
-  affiliateBrokers: AffiliateBroker[];
-  fillOrKillParams: FillOrKillParams | undefined;
-  dcaParams: DcaParams | undefined;
-}
-
-interface DepositFields {
-  amount: string;
-  txRef: string | undefined;
-  txConfirmations: number | undefined;
-  witnessedAt: number | undefined;
-  witnessedBlockIndex: string | undefined;
-  failure: Failure | undefined;
-  failedAt: number | undefined;
-  failedBlockIndex: string | undefined;
-}
-
-interface PaidFee {
-  type: "NETWORK" | "INGRESS" | "EGRESS" | "BROKER" | "BOOST" | "LIQUIDITY";
-  chain: Chain;
-  asset: Asset;
-  amount: string;
-}
-
-interface SwapFields {
-  originalInputAmount: string;
-  remainingInputAmount: string;
-  swappedInputAmount: string;
-  swappedOutputAmount: string;
-  regular?: {
-    inputAmount: string;
-    outputAmount: string;
-    scheduledAt: number;
-    scheduledBlockIndex: string;
-    executedAt?: number;
-    executedBlockIndex?: string;
-    retryCount: 0;
-  };
-  dca?: {
-    lastExecutedChunk: {
-      inputAmount: string;
-      outputAmount: string;
-      scheduledAt: number;
-      scheduledBlockIndex: string;
-      executedAt: number;
-      executedBlockIndex: string;
-      retryCount: number;
-    } | null;
-    currentChunk: {
-      inputAmount: string;
-      scheduledAt: number;
-      scheduledBlockIndex: string;
-      retryCount: number;
-    } | null;
-    executedChunks: number;
-    remainingChunks: number;
-  };
-}
-
-interface EgressFields {
-  amount: string;
-  scheduledAt: number;
-  scheduledBlockIndex: string;
-  txRef: string | undefined;
-  witnessedAt: number | undefined;
-  witnessedBlockIndex: string | undefined;
-  failure: Failure | undefined;
-  failedAt: number | undefined;
-  failedBlockIndex: string | undefined;
-}
-
-interface SwapStatusResponseCommonFields {
-  swapId: string;
-  srcChain: Chain;
-  srcAsset: Asset;
-  destChain: Chain;
-  destAsset: Asset;
-  destAddress: string;
-  depositChannel: DepositChannelFields | undefined;
-  ccmParams: CcmParams | undefined;
-  boost: Boost | undefined;
-  fees: PaidFee[];
-  estimatedDurationSeconds: number | null | undefined; // total estimated time until destination asset is received by the user
-  estimatedDurationsSeconds: {
-    deposit: number; // estimated time for a deposit to be witnessed
-    swap: number; // estimated time for a swap to be fully executed
-    egress: number; // estimated time until the output transaction is included in a block
-  };
-  srcChainRequiredBlockConfirmations: number | null;
-}
+type SwapStatusResponseV2 =
+  | ({ state: "WAITING" } & Waiting)
+  | ({ state: "RECEIVING" } & Receiving)
+  | ({ state: "SWAPPING" } & Swapping)
+  | ({ state: "SENDING" } & Sending)
+  | ({ state: "SENT" } & Sending)
+  | ({ state: "COMPLETED" } & Sending)
+  | ({ state: "FAILED" } & Sending);
 
 interface Waiting extends SwapStatusResponseCommonFields {
+  /** this state is only possible for swaps with a deposit channel */
   depositChannel: DepositChannelFields;
 }
 
@@ -1220,31 +1209,187 @@ interface Sending extends Receiving {
   swap: SwapFields;
   swapEgress: EgressFields | undefined;
   refundEgress: EgressFields | undefined;
+  /** egress of a swap that was sent to the refund address after the destination transfer failed */
+  fallbackEgress: EgressFields | undefined;
 }
 
-export type SwapStatusResponseV2 =
-  | ({
-      state: "WAITING";
-    } & Waiting)
-  | ({
-      state: "RECEIVING";
-    } & Receiving)
-  | ({
-      state: "SWAPPING";
-    } & Swapping)
-  | ({
-      state: "SENDING";
-    } & Sending)
-  | ({
-      state: "SENT";
-    } & Sending)
-  | ({
-      state: "COMPLETED";
-    } & Sending)
-  | ({
-      state: "FAILED";
-    } & Sending);
+interface SwapStatusResponseCommonFields {
+  swapId: string;
+  /** `Polkadot` is still returned for swaps that were executed before it was removed */
+  srcChain: Chain | "Polkadot";
+  srcAsset: Asset;
+  destChain: Chain | "Polkadot";
+  destAsset: Asset;
+  destAddress: string;
+  depositChannel: DepositChannelFields | undefined;
+  ccmParams: CcmParams | undefined;
+  fillOrKillParams: FillOrKillParamsWithMinPrice | undefined;
+  dcaParams: DcaParams | undefined;
+  boost: Boost | undefined;
+  /** the broker that opened the channel or encoded the vault swap, followed by its affiliates */
+  brokers: Broker[];
+  fees: PaidFee[];
+  /** total estimated time until destination asset is received by the user */
+  estimatedDurationSeconds: number | null | undefined;
+  estimatedDurationsSeconds: {
+    /** estimated time for a deposit to be witnessed */
+    deposit: number;
+    /** estimated time for a swap to be fully executed */
+    swap: number;
+    /** estimated time until the output transaction is included in a block */
+    egress: number;
+  };
+  srcChainRequiredBlockConfirmations: number | null;
+  /** timestamp of the last State Chain block that updated this swap */
+  lastStatechainUpdateAt: number | undefined;
+}
+
+interface Broker {
+  account: string;
+  commissionBps: string;
+}
+
+interface DepositChannelFields {
+  id: string;
+  createdAt: number;
+  depositAddress: string;
+  srcChainExpiryBlock: string;
+  estimatedExpiryTime: number;
+  expectedDepositAmount: string | undefined;
+  isExpired: boolean;
+  openedThroughBackend: boolean;
+  dcaParams: DcaParams | undefined;
+}
+
+interface Boost {
+  maxBoostFeeBps: number;
+  effectiveBoostFeeBps: number | undefined;
+  boostedAt: number | undefined;
+  boostedBlockIndex: string | undefined;
+  /** set when a boost was skipped for lack of boost liquidity, so the deposit waits for full confirmation */
+  skippedAt: number | undefined;
+  skippedBlockIndex: string | undefined;
+}
+
+interface DepositFields {
+  amount: string;
+  txRef: string | undefined;
+  txConfirmations: number | undefined;
+  witnessedAt: number | undefined;
+  witnessedBlockIndex: string | undefined;
+  failure: Failure | undefined;
+  failedAt: number | undefined;
+  failedBlockIndex: string | undefined;
+}
+
+interface SwapFields {
+  originalInputAmount: string;
+  remainingInputAmount: string;
+  swappedInputAmount: string;
+  swappedIntermediateAmount: string;
+  swappedOutputAmount: string;
+  /** average delta between the oracle price and the execution price across all chunks */
+  livePriceExecutionDeltaPercentage: number | undefined;
+  /** only present for regular (non-DCA) swaps */
+  regular: ChunkInfo | undefined;
+  /** only present for DCA swaps */
+  dca:
+    | {
+        lastExecutedChunk: ChunkInfo | null;
+        currentChunk: ChunkInfo | null;
+        executedChunks: number;
+        remainingChunks: number;
+      }
+    | undefined;
+  /** only present for swaps that were executed on the State Chain */
+  onChain:
+    | {
+        /** the account identifier of the LP for the on-chain swap */
+        accountId: string;
+        /** undefined if the swap has not been executed or was fully refunded */
+        outputAmount: string | undefined;
+        /** undefined if no refund occurred */
+        refundAmount: string | undefined;
+      }
+    | undefined;
+}
+
+type ChunkInfo = {
+  inputAmount: string;
+  intermediateAmount: string | undefined;
+  outputAmount: string | undefined;
+  scheduledAt: number;
+  scheduledBlockIndex: string;
+  executedAt: number | undefined;
+  executedBlockIndex: string | undefined;
+  retryCount: number;
+  abortedAt: number | undefined;
+  abortedBlockIndex: string | undefined;
+  abortedReason: ChunkFailureReason | undefined;
+  latestSwapRescheduledAt: number | undefined;
+  latestSwapRescheduledBlockIndex: string | undefined;
+  latestSwapRescheduledReason: ChunkFailureReason | undefined;
+};
+
+type ChunkFailureReason =
+  | "PriceImpactLimit"
+  | "MinPriceViolation"
+  | "OraclePriceSlippageExceeded"
+  | "OraclePriceStale"
+  | "PredecessorSwapFailure"
+  | "SafeModeActive";
+
+interface EgressFields {
+  amount: string;
+  scheduledAt: number | undefined;
+  scheduledBlockIndex: string | undefined;
+  txRef: string | undefined;
+  witnessedAt: number | undefined;
+  witnessedBlockIndex: string | undefined;
+  failure: Failure | undefined;
+  failedAt: number | undefined;
+  failedBlockIndex: string | undefined;
+  /** only present for egresses that have to be manually submitted by the user */
+  transactionPayload:
+    | {
+        contract: `0x${string}`;
+        value: string;
+        chainId: string;
+        data: `0x${string}`;
+      }
+    | undefined;
+}
+
+interface Failure {
+  failedAt: number;
+  failedBlockIndex: string;
+  mode: string;
+  reason: {
+    code: string;
+    message: string;
+  };
+}
+
+interface PaidFee {
+  type:
+    | "NETWORK"
+    | "INGRESS"
+    | "EGRESS"
+    | "BROKER"
+    | "BOOST"
+    | "REFUND"
+    | "LIQUIDITY";
+  chain: Chain;
+  asset: Asset;
+  amount: string;
+}
 ```
+
+<Callout type="warning">
+  `depositChannel.brokerCommissionBps`, `depositChannel.affiliateBrokers` and
+  `depositChannel.fillOrKillParams` were removed in version 2.2. Use `brokers`
+  and `fillOrKillParams` at the root of the response instead.
+</Callout>
 
 <details>
 <summary>Example</summary>
@@ -1285,20 +1430,12 @@ console.log(await swapSDK.getStatusV2(swapStatusRequest));
   depositChannel: {
     id: '6726421-Bitcoin-34009',
     createdAt: 1740415452001,
-    brokerCommissionBps: 5,
     depositAddress: 'bc1ppaxkhh5c65zypqtjl7s5j4lqqaund3lzaz27cwlhw7nvg0s84cwqv4q6pw',
     srcChainExpiryBlock: '885280',
     estimatedExpiryTime: 1740502800000,
+    expectedDepositAmount: undefined,
     isExpired: false,
     openedThroughBackend: false,
-    affiliateBrokers: [
-      { account: 'cFK6mYjpajcwPDZ7JUsac8XUoVSJnhjL43ZMZW7YoN8HE4dD8', commissionBps: 60 },
-    ],
-    fillOrKillParams: {
-      refundAddress: 'bc1qstlcaqcds8xea7dtktdn47hng7c3lq3fa7vrtm',
-      minPrice: '92307.460172',
-      retryDurationBlocks: 150,
-    },
     dcaParams: { numberOfChunks: 18, chunkIntervalBlocks: 2 },
   },
   deposit: {
@@ -1351,6 +1488,7 @@ console.log(await swapSDK.getStatusV2(swapStatusRequest));
   lastStatechainUpdateAt: 1740497470820,
 }
 ```
+
 </details>
 
 ### Lifecycle of a swap
@@ -1371,26 +1509,13 @@ function getSwapLimits(): Promise<{
 }>;
 
 type ChainAssetMap<T> = {
-  Bitcoin: {
-    BTC: T;
-  };
-  Ethereum: {
-    ETH: T;
-    USDC: T;
-    USDT: T;
-    FLIP: T;
-  };
-  Polkadot: {
-    DOT: T;
-  };
-  Arbitrum: {
-    ETH: T;
-    USDC: T;
-  };
-  Solana: {
-    Sol: T;
-    SolUsdc: T;
-  };
+  Bitcoin: { BTC: T };
+  Ethereum: { ETH: T; FLIP: T; USDC: T; USDT: T; WBTC: T; CBBTC: T };
+  Arbitrum: { ETH: T; USDC: T; USDT: T };
+  Solana: { SOL: T; USDC: T; USDT: T };
+  Assethub: { DOT: T; USDC: T; USDT: T };
+  Bsc: { BNB: T; USDT: T };
+  Tron: { TRX: T; USDT: T };
 };
 ```
 
@@ -1400,7 +1525,7 @@ given source asset and chain and less than or equal to the maximum swap amount
 for the asset and chain.
 
 These values are in the base unit of the asset, i.e. satoshis for Bitcoin, wei
-for Ethereum, and Planck for Polkadot, etc.
+for Ethereum, and Planck for Assethub, etc.
 
 <Callout type="warning">
   <p>
@@ -1421,46 +1546,51 @@ console.log(await swapSDK.getSwapLimits());
 ```
 
 ```typescript copy
-// console output:
+// console output (the values are protocol parameters and change over time):
 {
   minimumSwapAmounts: {
     Bitcoin: { BTC: 70000n },
     Ethereum: {
       ETH: 10000000000000000n,
+      FLIP: 4000000000000000000n,
       USDC: 20000000n,
       USDT: 20000000n,
-      FLIP: 4000000000000000000n
+      WBTC: 70000n,
+      CBBTC: 70000n
     },
-    Polkadot: { DOT: 40000000000n },
     Arbitrum: {
       ETH: 10000000000000000n,
       USDC: 20000000n,
+      USDT: 20000000n
     },
-    Solana: {
-      SOL: 0n,
-      SOLUSDC: 0n
-    }
+    Solana: { SOL: 0n, USDC: 0n, USDT: 0n },
+    Assethub: { DOT: 40000000000n, USDC: 20000000n, USDT: 20000000n },
+    Bsc: { BNB: 10000000000000000n, USDT: 20000000n },
+    Tron: { TRX: 20000000n, USDT: 20000000n }
   },
   maximumSwapAmounts: {
     Bitcoin: { BTC: 4000000n },
     Ethereum: {
       ETH: 500000000000000000n,
+      FLIP: 200000000000000000000n,
       USDC: 1000000000n,
       USDT: 1000000000n,
-      FLIP: 200000000000000000000n
+      WBTC: null,
+      CBBTC: null
     },
-    Polkadot: { DOT: 2000000000000n },
     Arbitrum: {
       ETH: 500000000000000000n,
       USDC: 1000000000n,
+      USDT: null
     },
-    Solana: {
-      SOL: null
-      SOLUSDC: null
-    }
+    Solana: { SOL: null, USDC: null, USDT: null },
+    Assethub: { DOT: 2000000000000n, USDC: null, USDT: null },
+    Bsc: { BNB: null, USDT: null },
+    Tron: { TRX: null, USDT: null }
   }
 }
 ```
+
 </details>
 
 ## `getBoostLiquidity`
@@ -1472,7 +1602,7 @@ The returned list can be filtered by `feeTierBps` **or** `asset, chain`.
 function getBoostLiquidity(
   params:
     | { feeTierBps?: number }
-    | { feeTierBps?: number; asset: Asset; chain: Chain }
+    | { feeTierBps?: number; asset: Asset; chain: Chain },
 ): Promise<BoostPoolDepth[]>;
 
 type BoostPoolDepth = {
@@ -1480,6 +1610,7 @@ type BoostPoolDepth = {
   availableAmount: bigint;
   asset: Asset;
   chain: Chain;
+  poolType: "LEGACY_BOOST" | "SUPPLY";
 };
 ```
 
@@ -1487,6 +1618,16 @@ type BoostPoolDepth = {
 | ------------------------- | ---------------------------------------------------------------------------------- | :------------: |
 | `feeTierBps` (optional)   | Allows filtering of the returned list of boost pools based on their fee tier (bps) |    `number`    |
 | `chain, asset` (optional) | Allows filtering of the returned list of boost pools based on their chain asset    | `Chain, Asset` |
+
+`poolType` describes where the liquidity comes from: `LEGACY_BOOST` for the
+[boost pools](/protocol/boost), and `SUPPLY` for [lending supply
+pools](/lending/supply) that contribute to boosting.
+
+<Callout type="warning">
+  `feeTierBps` is deprecated. All boost pools other than the 5 bps one have been
+  removed in version 2.2, so `5` is the only accepted value and passing anything
+  else throws.
+</Callout>
 
 <details>
 <summary>Example: no filtering</summary>
@@ -1506,46 +1647,40 @@ console.log(await swapSDK.getBoostLiquidity());
     feeTierBps: 5,
     chain: "Ethereum",
     asset: "FLIP",
-  },
-  {
-    availableAmount: 0n,
-    feeTierBps: 10,
-    chain: "Ethereum",
-    asset: "USDT",
+    poolType: "LEGACY_BOOST",
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
     chain: "Ethereum",
     asset: "USDC",
-  },
-  {
-    availableAmount: 0n,
-    feeTierBps: 5,
-    chain: "Polkadot",
-    asset: "DOT",
+    poolType: "LEGACY_BOOST",
   },
   {
     availableAmount: 450695350n,
     feeTierBps: 5,
     chain: "Bitcoin",
     asset: "BTC",
+    poolType: "LEGACY_BOOST",
+  },
+  {
+    availableAmount: 1200000000n,
+    feeTierBps: 5,
+    chain: "Bitcoin",
+    asset: "BTC",
+    poolType: "SUPPLY",
   },
   {
     availableAmount: 0n,
     feeTierBps: 5,
     chain: "Arbitrum",
     asset: "USDC",
-  },
-  {
-    availableAmount: 0n,
-    feeTierBps: 5,
-    chain: "Arbitrum",
-    asset: "ETH",
+    poolType: "LEGACY_BOOST",
   },
   // ...
 ];
 ```
+
 </details>
 
 <details>
@@ -1558,7 +1693,7 @@ console.log(
   await sdk.getBoostLiquidity({
     asset: "BTC",
     chain: "Bitcoin",
-  })
+  }),
 );
 ```
 
@@ -1566,25 +1701,22 @@ console.log(
 // console output:
 [
   {
-    availableAmount: 300000000n,
-    feeTierBps: 30,
-    chain: "Bitcoin",
-    asset: "BTC",
-  },
-  {
-    availableAmount: 450149304n,
-    feeTierBps: 10,
-    chain: "Bitcoin",
-    asset: "BTC",
-  },
-  {
     availableAmount: 450695350n,
     feeTierBps: 5,
     chain: "Bitcoin",
     asset: "BTC",
+    poolType: "LEGACY_BOOST",
+  },
+  {
+    availableAmount: 1200000000n,
+    feeTierBps: 5,
+    chain: "Bitcoin",
+    asset: "BTC",
+    poolType: "SUPPLY",
   },
 ];
 ```
+
 </details>
 
 <details>
@@ -1596,7 +1728,7 @@ If a `feeTierBps` is provided, it returns the available boost pools for that spe
 console.log(
   await sdk.getBoostLiquidity({
     feeTierBps: 5,
-  })
+  }),
 );
 ```
 
@@ -1609,10 +1741,12 @@ console.log(
     feeTierBps: 5,
     chain: "Bitcoin",
     asset: "BTC",
+    poolType: "LEGACY_BOOST",
   },
   // ...
 ];
 ```
+
 </details>
 
 ## `getChannelOpeningFees`
@@ -1625,9 +1759,11 @@ function getChannelOpeningFees(): Promise<ChainMap<bigint>>;
 type ChainMap<T> = {
   Bitcoin: T;
   Ethereum: T;
-  Polkadot: T;
   Arbitrum: T;
   Solana: T;
+  Assethub: T;
+  Bsc: T;
+  Tron: T;
 };
 ```
 
@@ -1644,15 +1780,18 @@ console.log(await swapSDK.getChannelOpeningFees());
 ```
 
 ```typescript copy
-// console output:
+// console output (the values are protocol parameters and change over time):
 {
   Bitcoin: 0n,
   Ethereum: 0n,
-  Polkadot: 0n,
   Arbitrum: 0n,
-  Solana: 0n
+  Solana: 0n,
+  Assethub: 0n,
+  Bsc: 0n,
+  Tron: 0n
 }
 ```
+
 </details>
 
 ## `getRequiredBlockConfirmations`
@@ -1665,16 +1804,18 @@ function getRequiredBlockConfirmations(): Promise<ChainMap<number | null>>;
 type ChainMap<T> = {
   Bitcoin: T;
   Ethereum: T;
-  Polkadot: T;
   Arbitrum: T;
   Solana: T;
+  Assethub: T;
+  Bsc: T;
+  Tron: T;
 };
 ```
 
 Before a transaction to a deposit address or via smart contract call can be
 considered confirmed, it must be included in a certain number of blocks to limit
 the risk of a "reorg" event to the protocol. The number of blocks varies by chain. Some chains,
-like Polkadot, have deterministic finality and do not require any confirmations
+like Assethub, have deterministic finality and do not require any confirmations
 other than being included in a block. These chains will return `null` for the
 number of confirmations required, while others will return a `number`.
 
@@ -1686,13 +1827,43 @@ console.log(await swapSDK.getRequiredBlockConfirmations());
 ```
 
 ```typescript copy
-// console output:
+// console output (the values are protocol parameters and change over time):
 {
   Bitcoin: 2,
   Ethereum: 5,
-  Polkadot: null,
   Arbitrum: 2,
-  Solana: null
+  Solana: null,
+  Assethub: null,
+  Bsc: 5,
+  Tron: 20
 }
 ```
+
+</details>
+
+## `checkBoostEnabled`
+
+Returns whether boost deposits are currently enabled. The flag is read from the
+configuration of the Bitcoin asset.
+
+```typescript copy
+function checkBoostEnabled(): Promise<boolean>;
+```
+
+Boost deposits can be disabled by governance, for example during an incident.
+Check the [Introduction to Boost](/protocol/boost) section for more information
+about the Boost feature.
+
+<details>
+<summary>Example</summary>
+
+```typescript copy
+console.log(await swapSDK.checkBoostEnabled());
+```
+
+```typescript copy
+// console output:
+true;
+```
+
 </details>

@@ -13,11 +13,11 @@ import { Callout } from "nextra/components";
 The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript developers to interact with the Chainflip protocol. In this guide we'll explain how to:
 
 1. **Get chains & assets**: Use the `getChains` and `getAssets` methods to retrieve information about the available chains and their respective assets.
-2. **Get quotes**: The `getQuote` method provides a quote for a proposed swap. This includes the expected exchange rate, expected fees and expected duration.
+2. **Get quotes**: The `getQuoteV2` method provides a quote for a proposed swap. This includes the expected exchange rate, expected fees and expected duration.
 3. **Swap assets:** There are two ways to initiate a swap on Chainflip:
-    1. **Request a deposit address:** The `requestDepositAddress` method generates a deposit address on the source chain. The user sends funds to this address to initiate a swap.
+    1. **Request a deposit address:** The `requestDepositAddressV2` method generates a deposit address on the source chain. The user sends funds to this address to initiate a swap.
     2. **Trigger a vault swap:** The `encodeVaultSwapData` method returns an unsigned transaction that encodes the details of the swap. The user signs and submits this transaction to initiate the swap.
-4. **Get status:** The `getStatus` method provides real-time updates about the status of a swap operation.
+4. **Get status:** The `getStatusV2` method provides real-time updates about the status of a swap operation.
 
 <Callout type="info">
     If you want to learn more about how Chainflip swaps work, check the
@@ -29,10 +29,10 @@ The Chainflip Javascript SDK provides a simple way for JavaScript/TypeScript dev
 There are two ways to initiate a swap on Chainflip.
 Both options are **fire-and-forget** - once the assets are sent to a deposit channel or the vault swap transaction is submitted, the user doesn't need to do anything for the swap to take place.
 
-1. **Request a deposit address:** The [`requestDepositAddress` method](/brokers/javascript-sdk/functions#request-deposit-address-v2) generates a deposit address on the source chain.
+1. **Request a deposit address:** The [`requestDepositAddressV2` method](/brokers/javascript-sdk/functions#requestdepositaddressv2) generates a deposit address on the source chain.
    The user sends funds to this address to initiate a swap.
 
-2. **Trigger a vault swap:** The [`encodeVaultSwapData` method](/brokers/javascript-sdk/functions#encode-vault-swap-data) returns an unsigned transaction that encodes the details of the swap.
+2. **Trigger a vault swap:** The [`encodeVaultSwapData` method](/brokers/javascript-sdk/functions#encodevaultswapdata) returns an unsigned transaction that encodes the details of the swap.
    The user signs and submits this transaction to initiate the swap.
 
 <Callout type="info">
@@ -55,7 +55,6 @@ To start using the Chainflip SDK, you'll first need to create an instance with t
 
 ```javascript
 import { SwapSDK } from "@chainflip/sdk/swap";
-import { Wallet } from "ethers";
 
 const options = {
     network: "perseverance", // Testnet
@@ -70,15 +69,16 @@ The `options` object accepts the following properties:
 | Param                         | Description                                                                                                                                                                                    |                  Data type                  |
 | :---------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------: |
 | `network`(optional)           | The [Chainflip network](/protocol/supported-chains-assets/chains-assets#chainflip-networks) to interact with. Defaults to `perseverance`.                                                      | `'sisyphos' \| 'perseverance' \| 'mainnet'` |
-| `backendServiceUrl`(optional) | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network.      |                  `string`                   |
+| `backendUrl`(optional)        | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network.      |                  `string`                   |
 | `broker`(optional)            | The URL of the [Broker API](/brokers/running-broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network.                                         |           `` `{ url: string }` ``           |
-| `rpcUrl`(optional)            | The URL of the [Chainflip RPC node](/protocol/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network.                                               |                  `String`                   |
+| `rpcUrl`(optional)            | The URL of the [Chainflip RPC node](/protocol/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network.                                               |                  `string`                   |
+| `brokerAccount`(optional)     | Chainflip broker SS58 address that quote requests are attributed to. Brokers are encouraged to set this so their quotes can be attributed to them. Can be overridden per `getQuoteV2` call.    |            `` `cF${string}` ``              |
 | `enabledFeatures`(optional)   | Features that must be explicitly opted into. `dcaV2` enables the new DCA V2 quoting strategy that returns DCA quotes for eligible swaps based on asset configuration and USD value thresholds. |         `` `{ dcaV2?: boolean }` ``         |
 
 <Callout type="warning">
-    The `dca` option in `enabledFeatures` has been deprecated and will be
-    enabled by default in version 2.2. Use `dcaV2` for the new DCA quoting
-    strategy.
+    The `dca` option in `enabledFeatures` was removed in version 2.2. DCA is now
+    enabled by default at the protocol level. Use `dcaV2` to opt into the new
+    DCA quoting strategy.
 </Callout>
 
 ## Working Examples
@@ -105,6 +105,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 
 // Find regular quote
 const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 console.log("quote", quote);
 
 // Request deposit address for swap
@@ -141,7 +142,7 @@ const swapSDK = new SwapSDK({
     enabledFeatures: { dcaV2: true },
 });
 const wallet = new Wallet(
-    process.env.SECRET_KEY,
+    process.env.SECRET_KEY as string,
     getDefaultProvider("sepolia"),
 );
 
@@ -157,6 +158,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 
 // Find regular quote
 const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 console.log("quote", quote);
 
 // Encode vault swap transaction data
@@ -174,6 +176,10 @@ const transactionData = await swapSDK.encodeVaultSwapData({
 });
 console.log("transactionData", transactionData);
 
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (transactionData.chain !== "Ethereum") throw new Error("Invalid chain");
+
 // Sign and submit swap transaction
 const transaction = await wallet.sendTransaction({
     to: transactionData.to,
@@ -181,6 +187,7 @@ const transaction = await wallet.sendTransaction({
     value: transactionData.value,
 });
 const receipt = await transaction.wait(); // wait for transaction to be included in a block
+if (!receipt) throw new Error("Transaction was not mined");
 console.log("receipt", receipt);
 
 // Fetch swap status
@@ -218,6 +225,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 
 // Find dca quote
 const quote = quotes.find((quote) => quote.type === "DCA");
+if (!quote) throw new Error("No DCA quote");
 console.log("quote", quote);
 
 // Request deposit address for swap

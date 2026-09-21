@@ -439,11 +439,11 @@ This deposit channel is assigned to a unique address on the source chain of the 
 to initiate the swap by sending the source asset to this address. Deposit channels expire after a fixed period of time (24hs).
 
 Once a deposit channel is open, the user can send the funds from any wallet to its deposit address to initiate the swap process. **No need to connect a wallet**.
-Compared to [vault swaps](#encode-vault-swap-data), using deposit channels can be cheaper for the user because it doesn't require token approvals.
+Compared to [vault swaps](/brokers/broker-vault-swaps), using deposit channels can be cheaper for the user because it doesn't require token approvals.
 
 <Callout type="info">
   Learn more about deposit channels in the [Deposit Channels &
-  Brokers](//brokers/broker-deposit-channels-swaps) documentation.
+  Brokers](/brokers/broker-deposit-channels-swaps) documentation.
 </Callout>
 
 Requests a deposit address for the given `DepositAddressRequestV2`.
@@ -509,10 +509,7 @@ type DepositAddressResponseV2 = {
   depositChannelId: string;
   depositAddress: string;
   brokerCommissionBps: number;
-  affiliateBrokers: {
-    account: `cF${string}` | `0x${string}`;
-    commissionBps: number;
-  }[];
+  affiliateBrokers: { account: string; commissionBps: number }[];
   depositChannelExpiryBlock: bigint;
   estimatedDepositChannelExpiryTime: number | undefined;
   channelOpeningFee: bigint;
@@ -691,7 +688,7 @@ Vault swap transactions need to encode the swap details in a specific format sup
 needs to sign and submit this transaction to initiate a swap. Therefore, applications usually require users to
 connect their wallet to initiate vault swaps.
 
-Compared to [deposit channel swaps](#request-deposit-address-v2), the vault swap process is similar to the swap process
+Compared to [deposit channel swaps](#requestdepositaddressv2), the vault swap process is similar to the swap process
 of other decentralized exchanges and therefore might be easier to integrate into existing applications.
 
 <Callout type="info">
@@ -727,7 +724,7 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
 
 | Param                                                                 | Description                                                                                                                                                                                                                                                                                                                             | Data type |
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
-| `quote`                                                               | The object returned by [`getQuoteV2`](/brokers/javascript-sdk/functions#get-quote-v2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).                                                                                       |  `Quote`  |
+| `quote`                                                               | The object returned by [`getQuoteV2`](#getquotev2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).                                                                                                                          |  `Quote`  |
 | `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                                                                                                              | `string`  |
 | [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                                                                                                              | `Object`  |
 | `srcAddress` (optional)                                               | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                                                                                                                      | `string`  |
@@ -1169,7 +1166,7 @@ const status = await swapSDK.getStatusV2({ id: receipt.txid });
 ## `encodeCfParameters`
 
 It is recommended to encode Vault swaps using the SDK's method to
-[encode the Vault Swap data](#encode-vault-swap-data). However, some
+[encode the Vault Swap data](#encodevaultswapdata). However, some
 integrators might want to manually execute the smart contract call to initiate
 Vault Swaps.
 
@@ -1409,7 +1406,8 @@ interface SwapFields {
   dca:
     | {
         lastExecutedChunk: ChunkInfo | null;
-        currentChunk: ChunkInfo | null;
+        /** the chunk that is scheduled but has not been executed yet */
+        currentChunk: CurrentChunkInfo | null;
         executedChunks: number;
         remainingChunks: number;
       }
@@ -1443,6 +1441,18 @@ type ChunkInfo = {
   latestSwapRescheduledBlockIndex: string | undefined;
   latestSwapRescheduledReason: ChunkFailureReason | undefined;
 };
+
+/** a chunk that has not been executed yet only carries the fields below */
+type CurrentChunkInfo = Pick<
+  ChunkInfo,
+  | "inputAmount"
+  | "scheduledAt"
+  | "scheduledBlockIndex"
+  | "retryCount"
+  | "latestSwapRescheduledAt"
+  | "latestSwapRescheduledBlockIndex"
+  | "latestSwapRescheduledReason"
+>;
 
 type ChunkFailureReason =
   | "PriceImpactLimit"

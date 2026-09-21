@@ -24,13 +24,36 @@ The `fillOrKillParams` object sets two different types of slippage protection wh
    i.e the slippage tolerance will "follow" the global price of the asset. In case the price
    moves against the swapper, it will still execute as long as the execution price is above the minimum accepted price.
 
-| Param                                           | Description                                                                                                                                                                                                                                                                                                          |           Data type           |
-| :---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------: |
-| `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                           |           `string`            |
-| `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                |           `string`            |
-| `livePriceSlippageTolerancePercent` \(optional) | The percentage deviation from the global index price that is acceptable for the swap to execute. If the deviation exceeds, the swap will be refunded to the specified refund address. If not set, protocol defaults will be used. (if available for the asset pair)                                                  |           `string`            |
-| `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                    |           `string`            |
-| `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds.                                                                                                                                                                  |           `number`            |
+```typescript copy
+type FillOrKillParams = {
+  refundAddress: string;
+  livePriceSlippageTolerancePercent?: string | number;
+  refundCcmMetadata?: CcmParams | null;
+} & (
+  | { minPrice: string; retryDurationBlocks: number }
+  | { minPrice: string; retryDurationMinutes: number }
+  | { slippageTolerancePercent: string | number; retryDurationBlocks: number }
+  | { slippageTolerancePercent: string | number; retryDurationMinutes: number }
+);
+```
+
+| Param                                           | Description                                                                                                                                                                                                                                                                                                          |    Data type     |
+| :---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------: |
+| `refundAddress`                                 | Address on the source chain to which the refund will be sent, if the minimum price cannot be met.                                                                                                                                                                                                                    |     `string`     |
+| `slippageTolerancePercent`                      | The percent of slippage that is acceptable for the swap. The `estimatedPrice` field from the `quote` is used to calculate the minimum price for the channel. **This field must be left out when specifying a `minPrice`.**                                                                                           | `string \| number` |
+| `minPrice`                                      | Minimum accepted price for swaps triggered through the deposit channel. **This field must be left out when specifying a `slippageTolerancePercent`.**                                                                                                                                                                |     `string`     |
+| `retryDurationBlocks`                           | Number of State Chain blocks after which a deposit is refunded, if the minimum price cannot be met. One State Chain block corresponds to 6 seconds. **This field must be left out when specifying a `retryDurationMinutes`.**                                                                                        |     `number`     |
+| `retryDurationMinutes`                          | Number of minutes after which a deposit is refunded, if the minimum price cannot be met. Converted to State Chain blocks by the SDK. Pass the `recommendedRetryDurationMinutes` field from the `quote` to use the recommended value. **This field must be left out when specifying a `retryDurationBlocks`.**        |     `number`     |
+| `livePriceSlippageTolerancePercent` \(optional) | The percentage deviation from the global index price that is acceptable for the swap to execute. If the deviation exceeds, the swap will be refunded to the specified refund address. If not set, the `recommendedLivePriceSlippageTolerancePercent` from the `quote` is applied. (if available for the asset pair)  | `string \| number` |
+| `refundCcmMetadata` \(optional)                 | [`ccmParams`](#ccmparams) to attach to the refund transaction, so a message is passed to a receiver contract/program on the source chain when the swap is refunded.                                                                                                                                                  | `CcmParams \| null` |
+
+<Callout type="info">
+  Exactly one of `minPrice` / `slippageTolerancePercent` and exactly one of
+  `retryDurationBlocks` / `retryDurationMinutes` must be provided. Both
+  tolerance values must be between `0` and `100` inclusive. Passing a
+  `livePriceSlippageTolerancePercent` for an asset pair that does not support
+  live price protection throws an error.
+</Callout>
 
 <Callout type="warning">
   Slippage tolerance is applied relative to the quoted price unlike live price
@@ -54,6 +77,18 @@ const fillOrKillParams = {
     quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
 };
 ```
+
+Using the recommended retry duration from the quote instead of a fixed number of blocks:
+
+```typescript copy
+const fillOrKillParams = {
+  refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  retryDurationMinutes: quote.recommendedRetryDurationMinutes, // use recommended retry duration from quote
+  slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+  livePriceSlippageTolerancePercent:
+    quote.recommendedLivePriceSlippageTolerancePercent,
+};
+```
 </details>
 
 ### `ccmParams`
@@ -61,11 +96,29 @@ const fillOrKillParams = {
 The Cross-Chain Messaging optional `ccmParams` object enables to pass a [Cross-Chain Message](/protocol/cross-chain-messaging/overview)
 to a receiver contract/program on the destination chain.
 
-| Param                          | Description                                                                                                                                              | Data type |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| `message` (required)           | Message (bytes) that is passed to the destination address on the destination chain.                                                                      | `string`  |
-| `gasBudget` (required)         | Gas budget for the call on the destination chain. This amount is the amount of gas or compute units required by the user logic on the destination chain. | `number`  |
-| `ccmAdditionalData` (optional) | Additional bytes required for the CCM call on the destination chain. This is required for Solana to pass the accounts that are required for the call.    | `string`  |
+```typescript copy
+type CcmParams = {
+  gasBudget: string;
+  message: string;
+  ccmAdditionalData?: string;
+};
+```
+
+| Param                          | Description                                                                                                                                                                                                       | Data type |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `message` (required)           | Message (bytes) that is passed to the destination address on the destination chain. Hex-encoded, up to 15,000 bytes.                                                                                              | `string`  |
+| `gasBudget` (required)         | Gas budget for the call on the destination chain. This amount is the amount of gas or compute units required by the user logic on the destination chain. Passed as a decimal or hex-encoded string.                | `string`  |
+| `ccmAdditionalData` (optional) | Additional bytes required for the CCM call on the destination chain. This is required for Solana to pass the accounts that are required for the call. Hex-encoded, up to 3,000 bytes. Defaults to `0x`.           | `string`  |
+
+<Callout type="info">
+  The presence of `ccmParams` must match between the quote and the swap request.
+  Passing `ccmParams` to
+  [`requestDepositAddressV2`](/brokers/javascript-sdk/functions#requestdepositaddressv2),
+  [`encodeVaultSwapData`](/brokers/javascript-sdk/functions#encodevaultswapdata)
+  or
+  [`encodeCfParameters`](/brokers/javascript-sdk/functions#encodecfparameters)
+  throws unless the `quote` was requested with `ccmParams`, and vice versa.
+</Callout>
 
 <details>
 <summary>Example</summary>
@@ -73,7 +126,7 @@ to a receiver contract/program on the destination chain.
 ```typescript copy
 const ccmParams = {
   message: "0xdeadc0de",
-  gasBudget: 250_000,
+  gasBudget: "250000",
 };
 ```
 </details>

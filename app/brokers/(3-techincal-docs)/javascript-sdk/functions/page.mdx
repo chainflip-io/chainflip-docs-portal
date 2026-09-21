@@ -345,7 +345,10 @@ const quoteRequest = {
 };
 
 const swapSDK = new SwapSDK({
-  enabledFeatures: { dcaV2: true }, // enable DCA V2 feature when initiating the SDK to receive DCA quotes
+  enabledFeatures: {
+    // enable DCA V2 feature when initiating the SDK to receive DCA quotes
+    dcaV2: true,
+  },
 });
 
 console.log(await swapSDK.getQuoteV2(quoteRequest));
@@ -473,7 +476,7 @@ The `depositAddressRequest` object describes the swap for which a deposit addres
 | `quote`                                                               | The object returned by [getQuoteV2](#getquotev2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).             |  `Quote`  |
 | `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                               | `string`  |
 | [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This protects the swapper against price changes between a quote and the execution of a swap.                                | `Object`  |
-| `srcAddress` (optional)                                               | Address that sends the deposit. It is validated against the source chain and echoed back in the response, but it is not submitted to the protocol when opening a deposit channel.                                        | `string`  |
+| `srcAddress` (optional)                                               | Address that sends the deposit. It is validated against the source chain and simply echoed back in the response.                                                                                                         | `string`  |
 | `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers) creating the channel, in basis points. This option is only available when the SDK is initialized with a `broker` URL                                                        | `number`  |
 | `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with a `broker` URL |  `Array`  |
 | [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                           | `Object`  |
@@ -554,6 +557,7 @@ const { quotes } = await swapSDK.getQuoteV2({
   amount: (1.5e18).toString(), // 1.5 ETH
 });
 const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 
 const swapDepositAddressRequest = {
   quote,
@@ -587,9 +591,10 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
   destAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
   dcaParams: undefined,
   fillOrKillParams: {
-    slippageTolerancePercent: 0.5,
     refundAddress: '0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF',
-    retryDurationBlocks: 100
+    retryDurationMinutes: 5,
+    slippageTolerancePercent: 0.5,
+    livePriceSlippageTolerancePercent: 0.125
   },
   maxBoostFeeBps: 0,
   ccmParams: undefined,
@@ -606,8 +611,6 @@ console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 }
 ```
 
-</details>
-
 #### Boostable Deposit Address
 
 Check the [Introduction to Boost](/protocol/boost) section for more information about the Boost feature.
@@ -622,11 +625,14 @@ const { quotes } = await swapSDK.getQuoteV2({
   destAsset: Assets.ETH,
   amount: (1.5e8).toString(), // 1.5 BTC
 });
-const quote = quotes.find((quote) => quote.type === "REGULAR");
+// `boostQuote` may be undefined depending on asset and liquidity conditions
+const regularBoostQuote = quotes.find(
+  (quote) => quote.type === "REGULAR",
+)?.boostQuote;
+if (!regularBoostQuote) throw new Error("No boost quote");
 
 const swapDepositAddressRequest = {
-  // `boostQuote` may be undefined depending on asset and liquidity conditions
-  quote: quote.boostQuote,
+  quote: regularBoostQuote,
   destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
   fillOrKillParams: {
     refundAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
@@ -656,6 +662,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 
 // ❗ the dcaV2 feature must be enabled when the SDK is instantiated to receive DCA quotes ❗
 const quote = quotes.find((quote) => quote.type === "DCA");
+if (!quote) throw new Error("No DCA quote");
 
 const swapDepositAddressRequest = {
   quote,
@@ -671,6 +678,8 @@ const swapDepositAddressRequest = {
 };
 console.log(await swapSDK.requestDepositAddressV2(swapDepositAddressRequest));
 ```
+
+</details>
 
 ## `encodeVaultSwapData`
 
@@ -793,7 +802,8 @@ const { quotes } = await swapSDK.getQuoteV2({
   isVaultSwap: true,
   amount: (500e6).toString(), // 500 USDC
 });
-const quote = quotes.find((quote) => quote.type === "DCA");
+const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 
 const vaultSwapRequest = {
   quote,
@@ -876,7 +886,8 @@ const { quotes } = await swapSDK.getQuoteV2({
 });
 
 // `boostQuote` may be undefined depending on asset and liquidity conditions
-const quote = quotes.find((quote) => quote.type === "REGULAR").boostQuote;
+const quote = quotes.find((quote) => quote.type === "REGULAR")?.boostQuote;
+if (!quote) throw new Error("No boost quote");
 
 const vaultSwapRequest = {
   quote,
@@ -896,26 +907,26 @@ console.log(vaultSwapData);
 export const rpcClient = new Client({
   host: "https://bitcoin-testnet-rpc.publicnode.com",
 });
-const inputUxto = {
+const inputUtxo = {
   txId: "4403c8d3b752a3aa0757031239a82ce92d67fadc1bb4a35f80ace660499edd55",
   outIndex: 2,
 };
 const inputTx = bitcoin.Transaction.fromHex(
-  await rpcClient.command("getrawtransaction", inputUxto.txId),
+  await rpcClient.command("getrawtransaction", inputUtxo.txId),
 );
-const txFeeSats = 1000;
+const txFeeSats = 1000n;
 
 const tx = new bitcoin.Psbt({ network })
   .addInput({
     hash: inputTx.getHash(),
-    index: inputUxto.outIndex,
+    index: inputUtxo.outIndex,
     nonWitnessUtxo: inputTx.toBuffer(),
     sequence: 0xfffffffd, // enable replace-by-fee
   })
   .addOutput({
     // first output needs to spend assets to deposit address
     address: vaultSwapData.depositAddress,
-    value: Number(quote.depositAmount),
+    value: BigInt(quote.depositAmount),
   })
   .addOutput({
     // second output needs to return encoded vault details using the OP_RETURN opcode
@@ -925,14 +936,14 @@ const tx = new bitcoin.Psbt({ network })
       ],
       network,
     }).output,
-    value: 0,
+    value: 0n,
   })
   .addOutput({
     // third output defines the refund address for the swap
     address: walletAddress,
     value:
-      inputTx.outs[inputUxto.outIndex].value -
-      Number(quote.depositAmount) -
+      inputTx.outs[inputUtxo.outIndex].value -
+      BigInt(quote.depositAmount) -
       txFeeSats,
   })
   .signInput(0, {
@@ -958,7 +969,7 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
 
 <Callout type="warning">
 
-    The `changeAddress`, which is included in the change UTXO as the third output, is mandatory because the Chainflip protocol needs a refund address in case the swap is refunded.
+    The change address, which is included in the change UTXO as the third output, is mandatory because the Chainflip protocol needs a refund address in case the swap is refunded.
 
     Per the Bitcoin protocol, the change UTXO amount *cannot* be zero and must be larger than Bitcoin's dust threshold for the change address type. Therefore it is not possible to swap the entire amount of the input UTXOs, a dust amount needs to be sent to the change address.
 
@@ -995,6 +1006,7 @@ const { quotes } = await swapSDK.getQuoteV2({
   amount: (1.5e9).toString(), // 1.5 SOL
 });
 const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 
 const vaultSwapRequest = {
   quote,
@@ -1008,7 +1020,8 @@ const vaultSwapRequest = {
       quote.recommendedLivePriceSlippageTolerancePercent,
   },
   extraParams: {
-    seed: randomBytes(32).toString("hex"),
+    // the seed must be a 0x-prefixed, 32 byte hex string
+    seed: `0x${randomBytes(32).toString("hex")}`,
   },
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
@@ -1049,6 +1062,105 @@ const status = await swapSDK.getStatusV2({ id: signature });
     },
     ...
   ]
+}
+```
+
+</details>
+
+<details>
+<summary>Example: Tron vault swap</summary>
+
+Unlike the other chains, a Tron vault swap does not encode the swap parameters
+into the transaction itself. The swap is a plain TRX transfer to the Chainflip
+vault (or a TRC-20 `transfer` call for tokens), and the returned `note` is
+attached to the transaction as transaction data.
+
+```typescript copy
+import { Chains, Assets } from "@chainflip/sdk/swap";
+import { TronWeb } from "tronweb";
+
+const tronWeb = new TronWeb({
+  fullHost: "https://nile.trongrid.io", // Nile testnet matches perseverance
+  privateKey: process.env.TRON_SECRET_KEY,
+});
+const tronAddress = tronWeb.address.fromPrivateKey(process.env.TRON_SECRET_KEY);
+
+const swapAmount = (50e6).toString(); // 50 TRX in sun
+
+const { quotes } = await swapSDK.getQuoteV2({
+  srcChain: Chains.Tron,
+  srcAsset: Assets.TRX,
+  destChain: Chains.Ethereum,
+  destAsset: Assets.USDC,
+  isVaultSwap: true,
+  amount: swapAmount,
+});
+const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
+
+const vaultSwapData = await swapSDK.encodeVaultSwapData({
+  quote,
+  destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
+  fillOrKillParams: {
+    refundAddress: tronAddress,
+    retryDurationBlocks: 100,
+    slippageTolerancePercent: quote.recommendedSlippageTolerancePercent,
+    livePriceSlippageTolerancePercent:
+      quote.recommendedLivePriceSlippageTolerancePercent,
+  },
+});
+console.log(vaultSwapData);
+
+const { to, value, note, sourceTokenAddress } = vaultSwapData;
+
+let transaction;
+if (sourceTokenAddress) {
+  // TRC-20 (USDT): call transfer(vault, amount) on the token contract
+  const { transaction: trc20Tx } =
+    await tronWeb.transactionBuilder.triggerSmartContract(
+      sourceTokenAddress,
+      "transfer(address,uint256)",
+      { feeLimit: 100_000_000 },
+      [
+        { type: "address", value: to },
+        { type: "uint256", value: swapAmount },
+      ],
+      tronAddress,
+    );
+  transaction = trc20Tx;
+} else {
+  // native TRX: send TRX directly to the Chainflip vault address
+  transaction = await tronWeb.transactionBuilder.sendTrx(
+    to,
+    Number(value), // value is in sun (1 TRX = 1,000,000 sun)
+    tronAddress,
+  );
+}
+
+// attach the swap parameters as a note - this is what identifies the
+// transaction to Chainflip
+transaction = await tronWeb.transactionBuilder.addUpdateData(
+  transaction,
+  note.slice(2), // strip the leading 0x
+  "hex",
+);
+
+const signedTx = await tronWeb.trx.sign(transaction);
+const receipt = await tronWeb.trx.sendRawTransaction(signedTx);
+
+// status will be available after the transaction is included in a block
+const status = await swapSDK.getStatusV2({ id: receipt.txid });
+```
+
+```typescript copy
+// console output (native TRX swap):
+{
+  chain: 'Tron',
+  to: 'TYPcfPnrhqRRbaBmeJoWmgAcbVLGrJHeLR',
+  calldata: '0x',
+  value: 50000000n,
+  note: '0x0001a56a6be23b6cf39d9448ff6e897c29c41c8fbdff640029a43fc140746a5e00000000000000000100020000',
+  sourceTokenAddress: undefined
 }
 ```
 
@@ -1119,15 +1231,16 @@ import { Chains, Assets, SwapSDK } from "@chainflip/sdk/swap";
 
 const swapSDK = new SwapSDK({ network: "perseverance" });
 
-const {
-  quotes: [quote],
-} = await swapSDK.getQuoteV2({
+const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,
   srcAsset: Assets.USDC,
   destChain: Chains.Bitcoin,
   destAsset: Assets.BTC,
+  isVaultSwap: true,
   amount: (500e6).toString(), // 500 USDC
 });
+const quote = quotes.find((quote) => quote.type === "REGULAR");
+if (!quote) throw new Error("No quote");
 
 const vaultSwapRequest = {
   quote,
@@ -1494,7 +1607,7 @@ console.log(await swapSDK.getStatusV2(swapStatusRequest));
 ### Lifecycle of a swap
 
 <br />
-<a href="/sdk/swap-status.png" target="_blank">
+<a href="/sdk/lifecycle.png" target="_blank">
   <img src="/sdk/lifecycle.png" />
 </a>
 

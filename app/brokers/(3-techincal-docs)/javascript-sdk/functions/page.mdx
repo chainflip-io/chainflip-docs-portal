@@ -875,7 +875,7 @@ import ECPairFactory from "ecpair";
 import * as secp256k1 from "tiny-secp256k1";
 
 const keypair = ECPairFactory(secp256k1).fromWIF(
-  process.env.WALLET_WIF as string
+  process.env.WALLET_WIF as string,
 );
 const network = bitcoin.networks.testnet;
 const walletAddress = bitcoin.payments.p2wpkh({
@@ -992,11 +992,7 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
 <summary>Example: Solana vault swap</summary>
 
 ```typescript copy
-import {
-  Chains,
-  Assets,
-  type VaultSwapRequest,
-} from "@chainflip/sdk/swap";
+import { Chains, Assets, type VaultSwapRequest } from "@chainflip/sdk/swap";
 import { randomBytes } from "crypto";
 import {
   PublicKey,
@@ -1010,7 +1006,7 @@ import {
 import bs58 from "bs58";
 
 const keypair = Keypair.fromSecretKey(
-  bs58.decode(process.env.SECRET_KEY_BASE58 as string)
+  bs58.decode(process.env.SECRET_KEY_BASE58 as string),
 );
 
 const { quotes } = await swapSDK.getQuoteV2({
@@ -1716,7 +1712,7 @@ console.log(await swapSDK.getSwapLimits());
     },
     Solana: { SOL: 0n, USDC: 0n, USDT: 0n },
     Assethub: { DOT: 40000000000n, USDC: 20000000n, USDT: 20000000n },
-    Bsc: { BNB: 10000000000000000n, USDT: 20000000n },
+    Bsc: { BNB: 10000000000000000n, USDT: 20000000000000000000n },
     Tron: { TRX: 20000000n, USDT: 20000000n }
   },
   maximumSwapAmounts: {

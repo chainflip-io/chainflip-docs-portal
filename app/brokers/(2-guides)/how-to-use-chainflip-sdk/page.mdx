@@ -142,7 +142,7 @@ const swapSDK = new SwapSDK({
     enabledFeatures: { dcaV2: true },
 });
 const wallet = new Wallet(
-    process.env.SECRET_KEY,
+    process.env.SECRET_KEY as string,
     getDefaultProvider("sepolia"),
 );
 
@@ -176,6 +176,10 @@ const transactionData = await swapSDK.encodeVaultSwapData({
 });
 console.log("transactionData", transactionData);
 
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (transactionData.chain !== "Ethereum") throw new Error("Invalid chain");
+
 // Sign and submit swap transaction
 const transaction = await wallet.sendTransaction({
     to: transactionData.to,
@@ -183,6 +187,7 @@ const transaction = await wallet.sendTransaction({
     value: transactionData.value,
 });
 const receipt = await transaction.wait(); // wait for transaction to be included in a block
+if (!receipt) throw new Error("Transaction was not mined");
 console.log("receipt", receipt);
 
 // Fetch swap status

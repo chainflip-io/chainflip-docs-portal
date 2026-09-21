@@ -544,7 +544,11 @@ const sdk = new SwapSDK({
 #### Regular Deposit Address
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
+import {
+  Chains,
+  Assets,
+  type DepositAddressRequestV2,
+} from "@chainflip/sdk/swap";
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,
@@ -556,7 +560,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 const quote = quotes.find((quote) => quote.type === "REGULAR");
 if (!quote) throw new Error("No quote");
 
-const swapDepositAddressRequest = {
+const swapDepositAddressRequest: DepositAddressRequestV2 = {
   quote,
   destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
   fillOrKillParams: {
@@ -787,7 +791,7 @@ import { Chains, Assets } from "@chainflip/sdk/swap";
 import { getDefaultProvider, Wallet, Contract } from "ethers";
 
 const wallet = new Wallet(
-  process.env.SECRET_KEY,
+  process.env.SECRET_KEY as string,
   getDefaultProvider("sepolia"),
 );
 
@@ -817,6 +821,10 @@ const vaultSwapRequest = {
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
 console.log(vaultSwapData);
 
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (vaultSwapData.chain !== "Ethereum") throw new Error("Invalid chain");
+
 // approve chainflip vault to spend erc20 token
 if (vaultSwapData.sourceTokenAddress) {
   const sourceTokenContract = new Contract(
@@ -837,6 +845,7 @@ const swapTx = await wallet.sendTransaction({
   value: vaultSwapData.value,
 });
 const receipt = await swapTx.wait(); // wait for transaction to be included in a block
+if (!receipt) throw new Error("Transaction was not mined");
 
 // status will be available after the transaction is included in a block
 const status = await swapSDK.getStatusV2({ id: receipt.hash });
@@ -865,12 +874,14 @@ import * as bitcoin from "bitcoinjs-lib";
 import ECPairFactory from "ecpair";
 import * as secp256k1 from "tiny-secp256k1";
 
-const keypair = ECPairFactory(secp256k1).fromWIF(process.env.WALLET_WIF);
+const keypair = ECPairFactory(secp256k1).fromWIF(
+  process.env.WALLET_WIF as string
+);
 const network = bitcoin.networks.testnet;
 const walletAddress = bitcoin.payments.p2wpkh({
   pubkey: Buffer.from(keypair.publicKey),
   network,
-}).address;
+}).address!;
 bitcoin.initEccLib(secp256k1);
 
 const { quotes } = await swapSDK.getQuoteV2({
@@ -900,6 +911,10 @@ const vaultSwapRequest = {
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
 console.log(vaultSwapData);
+
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (vaultSwapData.chain !== "Bitcoin") throw new Error("Invalid chain");
 
 export const rpcClient = new Client({
   host: "https://bitcoin-testnet-rpc.publicnode.com",
@@ -932,7 +947,7 @@ const tx = new bitcoin.Psbt({ network })
         Buffer.from(vaultSwapData.nulldataPayload.replace("0x", ""), "hex"),
       ],
       network,
-    }).output,
+    }).output!,
     value: 0n,
   })
   .addOutput({
@@ -977,7 +992,11 @@ const status = await swapSDK.getStatusV2({ id: tx.getId() });
 <summary>Example: Solana vault swap</summary>
 
 ```typescript copy
-import { Chains, Assets } from "@chainflip/sdk/swap";
+import {
+  Chains,
+  Assets,
+  type VaultSwapRequest,
+} from "@chainflip/sdk/swap";
 import { randomBytes } from "crypto";
 import {
   PublicKey,
@@ -991,7 +1010,7 @@ import {
 import bs58 from "bs58";
 
 const keypair = Keypair.fromSecretKey(
-  bs58.decode(process.env.SECRET_KEY_BASE58),
+  bs58.decode(process.env.SECRET_KEY_BASE58 as string)
 );
 
 const { quotes } = await swapSDK.getQuoteV2({
@@ -1005,7 +1024,7 @@ const { quotes } = await swapSDK.getQuoteV2({
 const quote = quotes.find((quote) => quote.type === "REGULAR");
 if (!quote) throw new Error("No quote");
 
-const vaultSwapRequest = {
+const vaultSwapRequest: VaultSwapRequest = {
   quote,
   srcAddress: keypair.publicKey.toBase58(),
   destAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
@@ -1023,6 +1042,10 @@ const vaultSwapRequest = {
 };
 const vaultSwapData = await swapSDK.encodeVaultSwapData(vaultSwapRequest);
 console.log(vaultSwapData);
+
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (vaultSwapData.chain !== "Solana") throw new Error("Invalid chain");
 
 const transaction = new Transaction().add(
   new TransactionInstruction({
@@ -1076,11 +1099,12 @@ attached to the transaction as transaction data.
 import { Chains, Assets } from "@chainflip/sdk/swap";
 import { TronWeb } from "tronweb";
 
+const privateKey = process.env.TRON_SECRET_KEY as string;
 const tronWeb = new TronWeb({
   fullHost: "https://nile.trongrid.io", // Nile testnet matches perseverance
-  privateKey: process.env.TRON_SECRET_KEY,
+  privateKey,
 });
-const tronAddress = tronWeb.address.fromPrivateKey(process.env.TRON_SECRET_KEY);
+const tronAddress = tronWeb.address.fromPrivateKey(privateKey) as string;
 
 const swapAmount = (50e6).toString(); // 50 TRX in sun
 
@@ -1107,6 +1131,10 @@ const vaultSwapData = await swapSDK.encodeVaultSwapData({
   },
 });
 console.log(vaultSwapData);
+
+// `VaultSwapResponse` is a union - narrow it on `chain` to get the fields for
+// the source chain of the swap
+if (vaultSwapData.chain !== "Tron") throw new Error("Invalid chain");
 
 const { to, value, note, sourceTokenAddress } = vaultSwapData;
 

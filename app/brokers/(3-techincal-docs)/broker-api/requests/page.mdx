@@ -13,9 +13,9 @@ import { Callout } from "nextra/components";
 ## `broker_request_swap_deposit_address`
 
 Parameters:
-- `source_asset`: Source [asset](#assets).
-- `destination_asset`: Egress [asset](#assets).
-- `destination_address`: Egress [Address](#addresses).
+- `source_asset`: Source [asset](/brokers/broker-api/types#assets).
+- `destination_asset`: Egress [asset](/brokers/broker-api/types#assets).
+- `destination_address`: Egress [Address](/brokers/broker-api/types#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent or 0.01%). Broker operators can choose to charge a fee for the use of their endpoint, and can be set at any value from 1 basis point to 1000 basis points (0.01% - 10%).
 - `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview#type-reference) metadata:
    - `message`: Hex encoded call data used after the message is egressed.
@@ -23,7 +23,7 @@ Parameters:
    - `ccm_additional_data`: Hex encoded additional data for the cross-chain message. Should be an empty array except for [CCM Swaps to Solana](/protocol/cross-chain-messaging/sol-ccm#solana-ccm-additional-data).
 - `boost_fee`: (Optional) Maximum accepted boost fee in basis points (100th of a percent).
 - `affiliate_fees`: (Optional) Array of affiliate brokers (up to 5) `[{"account": <AccountId>, "bps": <number>}]`.
-- `refund_parameters`: (Optional) [Slippage protection](/protocol/swapping-basics#slippage-protection) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](#addresses), and `min_price` is a [price](#price), and `max_oracle_price_slippage` is basis points.
+- `refund_parameters`: [Slippage protection](/protocol/swapping-basics#slippage-protection) for swaps through the channel as JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. Where `retry_duration` is a number of blocks, `refund_address` is an [address](/brokers/broker-api/types#addresses), and `min_price` is a [price](/brokers/broker-api/types#price), and `max_oracle_price_slippage` is basis points.
 - `dca_parameters`: (Optional) DCA parameters for swaps through the channel as JSON object: `{"number_of_chunks": <number>, "chunk_interval": <number>}`. Where `number_of_chunks` is the number of "sub-swaps" to perform, and `chunk_interval` is the delay between them in number of blocks.
 
 Where every affiliate broker is defined as follow:
@@ -37,7 +37,7 @@ The total broker fee is the sum of the `broker_commission` + all the `affiliate_
 
 Return:
 
-- deposit [address](#addresses).
+- deposit [address](/brokers/broker-api/types#addresses).
 
 ## `broker_register_account`
 
@@ -61,15 +61,15 @@ curl 'http://localhost/' \
 Withdraw all accumulated fees for a given asset.
 
 Parameters:
-- `asset`: The [asset](#assets) to withdraw.
-- `destination_address`: The [destination address](#addresses) to which the assets should be withdrawn.
+- `asset`: The [asset](/brokers/broker-api/types#assets) to withdraw.
+- `destination_address`: The [destination address](/brokers/broker-api/types#addresses) to which the assets should be withdrawn.
 
 Return:
 - tx_hash: Hash,
 - egress_id: [ForeignChain, Number],
 - egress_amount: Amount,
 - egress_fee: Amount,
-- destination_address: [Address](#addresses),
+- destination_address: [Address](/brokers/broker-api/types#addresses),
 
 Example input:
 
@@ -202,9 +202,9 @@ Create an encoded swap with the given parameters. The encoding depends on the ch
 See [Vault Swaps](/brokers/broker-vault-swaps) for more details.
 
 Parameters:
-- `source_asset`: The source [asset](#assets) who's chain we are encoding for.
-- `destination_asset`: Egress [asset](#assets).
-- `destination_address`: Egress [Address](#addresses).
+- `source_asset`: The source [asset](/brokers/broker-api/types#assets) who's chain we are encoding for.
+- `destination_asset`: Egress [asset](/brokers/broker-api/types#assets).
+- `destination_address`: Egress [Address](/brokers/broker-api/types#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent).
 - `extra_parameters`: JSON object with different data depending on the chain of the input asset.
   - `chain`: The chain of the input asset. Use only one of the following, then provide the corresponding parameters:
@@ -216,7 +216,7 @@ Parameters:
       - `input_amount`: Amount of the input asset in the smallest unit.
       - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
     - `Solana`:
-      - `from`: [Address](#addresses) of the sender.
+      - `from`: [Address](/brokers/broker-api/types#addresses) of the sender.
       - `seed`: Seed used by the program to derive the [event data account](/brokers/vault-swaps-api/solana#swap-event-data-account). The maximum valid length is 32-bytes.
       - `input_amount`: Amount of the input asset in the smallest unit.
       - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>, "max_oracle_price_slippage": <number | undefined>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
@@ -293,8 +293,8 @@ Return:
 Input parameter for the given vault swap. See [vault swaps](/brokers/broker-vault-swaps) for more details.
 
 - `source_asset`: Source asset for the vault swap.
-- `destination_asset`: Egress [asset](#assets).
-- `destination_address`: Egress [Address](#addresses).
+- `destination_asset`: Egress [asset](/brokers/broker-api/types#assets).
+- `destination_address`: Egress [Address](/brokers/broker-api/types#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent).
 - `extra_parameters`: JSON object with different data depending on the chain of the input asset.
 - `chain`: The chain of the input asset. Use only one of the following, then provide the corresponding parameters:
@@ -305,7 +305,7 @@ Input parameter for the given vault swap. See [vault swaps](/brokers/broker-vaul
 - `input_amount`: Amount of the input asset in the smallest unit.
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `Solana`:
-- `from`: [Address](#addresses) of the sender.
+- `from`: [Address](/brokers/broker-api/types#addresses) of the sender.
 - `seed`: Seed used by the program to derive the [event data account](/brokers/vault-swaps-api/solana#swap-event-data-account). The maximum valid length is 32-bytes.
 - `input_amount`: Amount of the input asset in the smallest unit.
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
@@ -371,9 +371,9 @@ Validates and encode the `cf_parameter` needed as part of a Vault Swap call.
 See [Vault Swaps](/brokers/broker-vault-swaps) and [Chainflip parameters](/brokers/vault-swaps-api/encoding-reference) for more details.
 
 Parameters:
-- `source_asset`: The source [asset](#assets) who's chain we are encoding for.
-- `destination_asset`: Egress [asset](#assets).
-- `destination_address`: Egress [Address](#addresses).
+- `source_asset`: The source [asset](/brokers/broker-api/types#assets) who's chain we are encoding for.
+- `destination_asset`: Egress [asset](/brokers/broker-api/types#assets).
+- `destination_address`: Egress [Address](/brokers/broker-api/types#addresses).
 - `broker_commission`: Broker Commission in basis points (100th of a percent).
 - `refund_parameters`: JSON object: `{"retry_duration": <number>, "refund_address": <address>, "min_price": <hex_string>}`. See [broker_request_swap_deposit_address](#broker_request_swap_deposit_address) for more details.
 - `channel_metadata`: (Optional) Json object with the [cross-chain messaging](/protocol/cross-chain-messaging/overview) metadata:

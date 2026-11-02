@@ -124,10 +124,14 @@ curl 'http://localhost/' \
 
 ## `broker_link_recovery_account`
 
-Link the Liquidity Provider account that receives failed deposits attributed to your broker. See [Recovery Account](/brokers/broker-account#recovery-account) for how failed deposits are recovered. Available from version 2.2.20.
+Link the Liquidity Provider account that receives failed deposits made through your broker. See [Recovery Account](/brokers/broker-account#recovery-account).
+
+<Callout type="info">
+Only available on Broker API nodes running version 2.2.20 or later.
+</Callout>
 
 <Callout type="warning">
-The link can only be made once. It cannot be changed or removed, and it is kept if the broker deregisters.
+The link can only be made once and cannot be changed or removed.
 </Callout>
 
 The recovery account must be registered as a Liquidity Provider, otherwise the request fails with `RecoveryAccountNotLiquidityProvider`. Linking a second time fails with `RecoveryAccountAlreadyLinked`.
@@ -149,7 +153,11 @@ curl 'http://localhost/' \
 
 ## `broker_recovery_account`
 
-Get the Liquidity Provider account linked to your broker with [`broker_link_recovery_account`](#broker_link_recovery_account). Available from version 2.2.20.
+Get the Liquidity Provider account linked to your broker with [`broker_link_recovery_account`](#broker_link_recovery_account).
+
+<Callout type="info">
+Only available on Broker API nodes running version 2.2.20 or later.
+</Callout>
 
 The recovery account is also included as `recovery_account` in the broker's `cf_account_info`, and is left out when none is linked.
 

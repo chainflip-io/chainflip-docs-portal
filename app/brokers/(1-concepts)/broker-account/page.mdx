@@ -98,19 +98,14 @@ The protocol doesn't automatically execute the redemptions, the user needs to ma
 
 ## Recovery Account
 
-From version 2.2.20, a Broker can [link](/brokers/broker-api/requests#broker_link_recovery_account) a Liquidity Provider account as its **recovery account**. Governance can then recover deposits that failed and are attributed to the Broker, and pay them out to the recovery account instead of deciding where each one should go.
+A Broker can link a Liquidity Provider account as its **recovery account**. If a deposit made through the Broker fails, the funds can be recovered to this account. Because the destination is agreed in advance, recovering failed deposits is faster and more transparent.
 
 <Callout type="warning">
-The link can only be made once. It cannot be changed or removed, and deregistering the Broker does not clear it. Choose a Liquidity Provider account you control and intend to keep.
+The link can only be made once and cannot be changed or removed. Choose a Liquidity Provider account you control and intend to keep.
 </Callout>
 
-The recovery account must be registered as a Liquidity Provider when it is linked, and must still be one when a deposit is recovered. If it is not, the recovery fails and can be retried later.
+Recovered funds are sent to the recovery account's [refund address](/lp/lp-api/requests#lp_register_liquidity_refund_address) for the deposit's chain if one is registered, otherwise they are credited to the account's balance.
 
-Recovery is not automatic. Governance submits the failed deposits to recover, and each one is paid out as follows:
-
-- If the recovery account has a [refund address](/lp/lp-api/requests#lp_register_liquidity_refund_address) registered for the deposit's chain, and the amount covers the egress fee, the deposit is sent to that address.
-- Otherwise, the deposit is credited to the recovery account's free balance, from where it can be withdrawn with [`lp_withdraw_asset`](/lp/lp-api/requests#lp_withdraw_asset).
-
-Each recovery emits an `Environment.FailedDepositRecovered` event with the outcome (`Egressed` or `Credited`), or an `Environment.FailedDepositRecoveryFailed` event if it could not be recovered, for example because the Broker has no recovery account. Linking the account emits `Swapping.RecoveryAccountLinked`.
-
-Use [`broker_recovery_account`](/brokers/broker-api/requests#broker_recovery_account) to check which account is linked.
+<Callout type="info">
+Linking and checking the recovery account through the Broker API requires a [Broker Light-RPC node](/brokers/broker-light-rpc-node) or [Broker-API binary](/brokers/running-broker-api) running version 2.2.20 or later. Use [`broker_link_recovery_account`](/brokers/broker-api/requests#broker_link_recovery_account) to link the account and [`broker_recovery_account`](/brokers/broker-api/requests#broker_recovery_account) to check which account is linked.
+</Callout>

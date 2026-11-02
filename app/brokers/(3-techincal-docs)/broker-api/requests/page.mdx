@@ -127,7 +127,7 @@ curl 'http://localhost/' \
 Link the Liquidity Provider account that receives failed deposits made through your broker. See [Recovery Account](/brokers/broker-account#recovery-account).
 
 <Callout type="info">
-Only available on Broker API nodes running version 2.2.20 or later.
+Only available on [Broker Light-RPC nodes](/brokers/broker-light-rpc-node) running version 2.2.20 or later.
 </Callout>
 
 <Callout type="warning">
@@ -156,7 +156,7 @@ curl 'http://localhost/' \
 Get the Liquidity Provider account linked to your broker with [`broker_link_recovery_account`](#broker_link_recovery_account).
 
 <Callout type="info">
-Only available on Broker API nodes running version 2.2.20 or later.
+Only available on [Broker Light-RPC nodes](/brokers/broker-light-rpc-node) running version 2.2.20 or later.
 </Callout>
 
 The recovery account is also included as `recovery_account` in the broker's `cf_account_info`, and is left out when none is linked.

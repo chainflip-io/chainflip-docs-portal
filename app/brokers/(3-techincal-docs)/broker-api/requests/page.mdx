@@ -122,6 +122,69 @@ curl 'http://localhost/' \
   --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_bind_fee_withdrawal_address", "params": {"address": "0xabababababababababababababababababababab"}}' | jq
 ```
 
+## `broker_link_recovery_account`
+
+Link the Liquidity Provider account that receives failed deposits made through your broker. See [Recovery Account](/brokers/broker-account#recovery-account).
+
+<Callout type="info">
+Only available on [Broker Light-RPC nodes](/brokers/broker-light-rpc-node) running version 2.2.20 or later.
+</Callout>
+
+<Callout type="warning">
+The link can only be made once and cannot be changed or removed.
+</Callout>
+
+The recovery account must be registered as a Liquidity Provider, otherwise the request fails with `RecoveryAccountNotLiquidityProvider`. Linking a second time fails with `RecoveryAccountAlreadyLinked`.
+
+Parameters:
+- `recovery_account`: The SS58 account ID of the Liquidity Provider account.
+
+Return:
+- Transaction hash.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_link_recovery_account", "params": {"recovery_account": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR"}}' | jq
+```
+
+## `broker_recovery_account`
+
+Get the Liquidity Provider account linked to your broker with [`broker_link_recovery_account`](#broker_link_recovery_account).
+
+<Callout type="info">
+Only available on [Broker Light-RPC nodes](/brokers/broker-light-rpc-node) running version 2.2.20 or later.
+</Callout>
+
+The recovery account is also included as `recovery_account` in the broker's `cf_account_info`, and is left out when none is linked.
+
+Parameters: None
+
+Return:
+- The SS58 account ID of the recovery account, or `null` if none is linked.
+
+Example input:
+
+```bash copy
+curl 'http://localhost/' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"id": 1, "jsonrpc": "2.0", "method": "broker_recovery_account"}' | jq
+```
+
+Example output:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "cFPS1XY681MaJZUKMQ1fEwThFGZveDkpgkwinsJRC24sRG1MR",
+  "id": 1
+}
+```
+
 ## `broker_mark_transaction_for_rejection`
 
 Request an incoming transaction to be rejected. Only available for bitcoin. This call will always succeed, but the transaction will

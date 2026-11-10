@@ -6,7 +6,7 @@ description: Running Broker Light RPC node guide.
 
 ---
 
-import { Tabs } from 'nextra/components'
+import { Callout, Tabs } from 'nextra/components'
 
 # Broker Light RPC node
 
@@ -17,6 +17,10 @@ This `light-rpc` mode prunes older blocks and permits querying only recent block
 * 2 vCPU
 * 4 GB RAM
 * 20 GB SSD
+
+<Callout type="warning">
+  Your Broker API should never be exposed to the public. An exposed API could allow unauthorized access to your broker account and funds.
+</Callout>
 
 ## Running the Broker light-rpc node using Docker
 

@@ -28,7 +28,7 @@ Each such period between auctions is known as an Epoch. At the time of writing, 
 
 In order to be considered for an Authority Slot, validators must fulfil the following conditions:
 
-- The Validator must be in a *bidding* state. The Validator's auction Bid is equal to their on-chain FLIP balance.
+- The Validator must be in a *bidding* state. The Validator's auction Bid is equal to their on-chain FLIP balance, or to their [maximum bid](#maximum-bid) if one is set and it is lower.
 - The Validator's account balances must be at least 20K FLIP.
 - The Validator must be running correctly configured Validator software, including the Chainflip Engine:
   - The Chainflip Engine must be at a compatible release version.
@@ -45,6 +45,27 @@ Auctions begin halfway between the start and the expected end of an Epoch. Durin
 - **Operators** may not update their settings such as commission.
 
 In order for a node to retire, it must enter a non-bidding state before the next Auction begins. See [Validator Types & States](/validators/validator-types-and-states) section for more information.
+
+### Maximum Bid
+
+By default, a Validator's Bid is its full FLIP balance.
+A Validator can cap this by setting a maximum bid, using the commands in the [funding guide](/validators/mainnet/funding#set-a-maximum-bid-optional).
+Its Bid is then the lower of its balance and its maximum bid.
+
+Funds above the cap are not part of the Bid, so they are never bonded.
+They stay free to rebalance to other Validators, or to redeem between Auctions.
+Rewards are added to the balance, so a cap also stops them from raising the Bid automatically.
+
+Keep in mind:
+
+- The maximum bid must be at least the minimum Validator stake of 20K FLIP.
+- It may be higher than the Validator's current balance. In that case it has no effect until the balance grows past it.
+- It cannot be changed while an Auction is in progress. Set it before the Auction starts.
+- It does not start or stop bidding.
+- If it is set too low, the Bid may fall below the Minimum Active Bid and the Validator may lose its Authority slot.
+- Deregistering the account clears the maximum bid.
+
+The `cf_account_info` RPC reports a Validator's current `bid` and `max_bid`.
 
 
 ### Delegation
@@ -84,7 +105,7 @@ Once the Auction is resolved, KeyGen is successful, and the Authority Set rotate
 
 Validators selected from the Secondary set or who have been [slashed](/validators/reputation-and-slashing) may have a balance lower than the bonded amount. This means they will not be able to make any withdrawals until they have a balance in excess of their Bond, or the Bond is lifted through retirement or losing an Auction.
 
-The balance of bidders with or without a Bond will be considered as an implicit bid in the next Auction, including any rewards the Validator has earned from their node. This still means that current Validators might have to top up their bid between auctions to keep their slot, but if it’s high enough, do not need to do anything extra to succeed in each subsequent auction cycle.
+The balance of bidders with or without a Bond will be considered as an implicit bid in the next Auction, including any rewards the Validator has earned from their node (up to the Validator's maximum bid, if one is set). This still means that current Validators might have to top up their bid between auctions to keep their slot, but if it’s high enough, do not need to do anything extra to succeed in each subsequent auction cycle.
 
 
 ## Rewards

@@ -66,6 +66,34 @@ sudo chainflip-cli --config-root /etc/chainflip validator start-bidding
     eventually join the active validator set.
 </Callout>
 
+## Set a Maximum Bid (Optional)
+
+By default, your validator bids its full `$FLIP` balance in every auction.
+To cap the bid, set a maximum bid in `$FLIP`:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator set-max-bid 60000
+```
+
+To remove the cap and go back to bidding your full balance, run the command without an amount:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator set-max-bid
+```
+
+To check your current settings, query your node's `cf_account_info` RPC:
+
+```bash copy
+curl -s -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"cf_account_info","params":["<YOUR_VALIDATOR_ACCOUNT_ID>"]}' \
+  http://localhost:9944
+```
+
+The response includes `max_bid` (`null` if no cap is set) and `bid`, the amount your validator will bid in the next auction.
+Both are in FLIPperinos (10<sup>18</sup> FLIPperinos = 1 `$FLIP`), hex-encoded.
+
+See [Maximum Bid](/validators/validator-auctions-bonds-and-rewards#maximum-bid) for how this affects your bid and bond.
+
 ## Set Vanity Name
 
 Set a Vanity Name for your validator by running:

@@ -139,6 +139,34 @@ Once the Auction cycle is complete, the network will attempt to include your nod
 
 If your validator does not move into the expected state, continue to [Common Problems on Testnet](/validators/testnet/common-problems).
 
+## Set a Maximum Bid (Optional)
+
+By default, your validator bids its full `tFLIP` balance in every auction.
+To cap the bid, set a maximum bid in `tFLIP`:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator set-max-bid 60000
+```
+
+To remove the cap and go back to bidding your full balance, run the command without an amount:
+
+```bash copy
+sudo chainflip-cli --config-root /etc/chainflip validator set-max-bid
+```
+
+To check your current settings, query your node's `cf_account_info` RPC:
+
+```bash copy
+curl -s -H "Content-Type: application/json" \
+  -d '{"id":1,"jsonrpc":"2.0","method":"cf_account_info","params":["<YOUR_VALIDATOR_ACCOUNT_ID>"]}' \
+  http://localhost:9944
+```
+
+The response includes `max_bid` (`null` if no cap is set) and `bid`, the amount your validator will bid in the next auction.
+Both are in FLIPperinos (10<sup>18</sup> FLIPperinos = 1 `tFLIP`), hex-encoded.
+
+See [Maximum Bid](/validators/validator-auctions-bonds-and-rewards#maximum-bid) for how this affects your bid and bond.
+
 # Rebalancing
 
 If you administer multiple Validators, you may want to move funds between them to optimise your auction bids. This can be cumbersome using the normal funding and redeeming flow, so there is a way to short-circuit this and transfer funds directly between accounts.

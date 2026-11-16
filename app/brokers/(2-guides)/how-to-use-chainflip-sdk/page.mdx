@@ -59,6 +59,8 @@ import { SwapSDK } from "@chainflip/sdk/swap";
 const options = {
     network: "perseverance", // Testnet
     broker: { name: "swap.chainflip.io" },
+    // or use your own Broker API:
+    // broker: { url: "https://my.broker.io" },
 };
 
 const swapSDK = new SwapSDK(options);
@@ -76,12 +78,8 @@ Opening deposit channels and encoding vault swaps requires a [broker](/brokers).
 const swapSDK = new SwapSDK({
     network: "perseverance",
     broker: { name: "swap.chainflip.io" },
-});
-
-// or use your own Broker API
-const swapSDK = new SwapSDK({
-    network: "perseverance",
-    broker: { url: "https://my.broker.io" },
+    // or use your own Broker API:
+    // broker: { url: "https://my.broker.io" },
 });
 ```
 

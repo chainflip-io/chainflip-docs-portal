@@ -74,7 +74,6 @@ Opening deposit channels and encoding vault swaps requires a [broker](/brokers).
 - **Broker URL, `{ url: "https://my.broker.io" }`**: Channels are opened and vault swaps are encoded by your own [Broker API](/brokers/running-broker-api). This is required if you want to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates).
 
 ```javascript
-// use a named broker
 const swapSDK = new SwapSDK({
     network: "perseverance",
     broker: { name: "swap.chainflip.io" },

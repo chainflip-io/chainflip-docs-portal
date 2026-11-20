@@ -449,9 +449,9 @@ Compared to [vault swaps](/brokers/broker-vault-swaps), using deposit channels c
 </Callout>
 
 Requests a deposit address for the given `DepositAddressRequestV2`.
-The SDK must be initialized with a [`broker`](#configure-a-broker). When using a named broker (`broker: { name: "swap.chainflip.io" }`),
-the channel is opened through the backend service. With `broker: { url }`, this method uses the `broker_request_swap_deposit_address` RPC method of your
-[Broker API](/brokers/broker-api/requests#broker_request_swap_deposit_address) to open a deposit channel.
+The SDK must be initialized with a [`broker`](#configure-a-broker). With `broker: { url }`, this method uses the `broker_request_swap_deposit_address` RPC method of your
+[Broker API](/brokers/broker-api/requests#broker_request_swap_deposit_address) to open a deposit channel. When using a named broker (`broker: { name: "swap.chainflip.io" }`),
+the channel is opened through the backend service.
 
 ```typescript copy
 function requestDepositAddressV2(
@@ -529,20 +529,8 @@ type DepositAddressResponseV2 = {
 
 ### Configure a broker
 
-A broker is required to open deposit channels. When using a named broker, its commission is included in the quotes
-returned by [`getQuoteV2`](#getquotev2).
-
-```typescript copy
-import { SwapSDK } from "@chainflip/sdk/swap";
-
-const sdk = new SwapSDK({
-  network: "perseverance",
-  broker: { name: "swap.chainflip.io" },
-});
-```
-
-If you want to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates),
-you need to run your own [Broker API](/brokers/running-broker-api) and configure its URL instead.
+A broker is required to open deposit channels. Configure the URL of your own [Broker API](/brokers/running-broker-api)
+to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates).
 
 ```typescript copy
 import { SwapSDK } from "@chainflip/sdk/swap";
@@ -550,6 +538,18 @@ import { SwapSDK } from "@chainflip/sdk/swap";
 const sdk = new SwapSDK({
   network: "perseverance",
   broker: { url: "https://my.broker.io" },
+});
+```
+
+If you don't run a Broker API, you can use a named broker eg: `swap.chainflip.io` instead. Its commission is included in the quotes
+returned by [`getQuoteV2`](#getquotev2), and `brokerCommissionBps` and `affiliateBrokers` cannot be set.
+
+```typescript copy
+import { SwapSDK } from "@chainflip/sdk/swap";
+
+const sdk = new SwapSDK({
+  network: "perseverance",
+  broker: { name: "swap.chainflip.io" },
 });
 ```
 
@@ -716,9 +716,9 @@ of other decentralized exchanges and therefore might be easier to integrate into
 </Callout>
 
 Returns the unsigned transaction data for the given `VaultSwapRequest`.
-The SDK must be initialized with a [`broker`](#configure-a-broker). When using a named broker (`broker: { name: "swap.chainflip.io" }`),
-the data is encoded through the backend service. With `broker: { url }`, this method uses the `broker_request_swap_parameter_encoding` RPC method of your
-[Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding).
+The SDK must be initialized with a [`broker`](#configure-a-broker). With `broker: { url }`, this method uses the `broker_request_swap_parameter_encoding` RPC method of your
+[Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding). When using a named broker (`broker: { name: "swap.chainflip.io" }`),
+the data is encoded through the backend service.
 
 ```typescript copy
 function encodeVaultSwapData(
@@ -1273,7 +1273,8 @@ import { Chains, Assets, SwapSDK } from "@chainflip/sdk/swap";
 
 const swapSDK = new SwapSDK({
   network: "perseverance",
-  broker: { name: "swap.chainflip.io" },
+  broker: { url: "https://my.broker.io" },
+  // broker: { name: "swap.chainflip.io" },
 });
 
 const { quotes } = await swapSDK.getQuoteV2({

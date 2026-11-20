@@ -210,8 +210,8 @@ The `quoteRequest` object describes the swap for which a quote is returned.
 | `srcAsset`                       | Asset to be swapped from the source chain                                                                                                                                                                                                                                                                     |  `Asset`  |
 | `destAsset`                      | Asset to be received on the destination chain                                                                                                                                                                                                                                                                 |  `Asset`  |
 | `amount`                         | Amount of the source token to be swapped, represented in the base unit of the source token                                                                                                                                                                                                                    | `string`  |
-| `brokerCommissionBps` (optional) | Commission charged by the broker in basis points. If given, the value will be used instead of the brokerCommissionBps passed when initializing the SDK instance                                                                                                                                               | `number`  |
-| `affiliateBrokers` (optional)    | Array of objects describing the affiliate brokers that charge a commission                                                                                                                                                                                                                                    |  `Array`  |
+| `brokerCommissionBps` (optional) | Commission charged by the broker in basis points. Not supported when the SDK is initialized with `broker: { name: "swap.chainflip.io" }`, in which case the commission of the named broker is included in the quote automatically                                                                             | `number`  |
+| `affiliateBrokers` (optional)    | Array of objects describing the affiliate brokers that charge a commission. Not supported when the SDK is initialized with `broker: { name: "swap.chainflip.io" }`                                                                                                                                            |  `Array`  |
 | `isVaultSwap` (optional)         | Flag for requesting a quote for a [vault swap](#encodevaultswapdata). Network related fees can be different for vault swaps compared to channel swaps                                                                                                                                                         | `boolean` |
 | `isOnChain` (optional)           | Flag for requesting a quote for an [internal swap](/lp/internal-swaps) that is executed entirely on the State Chain, without a deposit or an egress                                                                                                                                                           | `boolean` |
 | `brokerAccount` (optional)       | Chainflip broker SS58 address the quote is attributed to. Overrides the `brokerAccount` option passed when initializing the SDK. Brokers are encouraged to set this so their quotes can be attributed to them                                                                                                 | `string`  |
@@ -345,6 +345,8 @@ const quoteRequest = {
 };
 
 const swapSDK = new SwapSDK({
+  // a broker commission and affiliates can only be set when using your own Broker API
+  broker: { url: "https://my.broker.io" },
   enabledFeatures: {
     // enable DCA V2 feature when initiating the SDK to receive DCA quotes
     dcaV2: true,
@@ -447,8 +449,9 @@ Compared to [vault swaps](/brokers/broker-vault-swaps), using deposit channels c
 </Callout>
 
 Requests a deposit address for the given `DepositAddressRequestV2`.
-This method uses the `broker_request_swap_deposit_address` RPC method of the configured [Broker API](/brokers/broker-api/requests#broker_request_swap_deposit_address)
-to open a deposit channel.
+The SDK must be initialized with a [`broker`](#configure-a-broker). With `broker: { url }`, this method uses the `broker_request_swap_deposit_address` RPC method of your
+[Broker API](/brokers/broker-api/requests#broker_request_swap_deposit_address) to open a deposit channel. When using a named broker (`broker: { name: "swap.chainflip.io" }`),
+the channel is opened through the backend service.
 
 ```typescript copy
 function requestDepositAddressV2(
@@ -471,21 +474,22 @@ type DepositAddressRequestV2 = {
 
 The `depositAddressRequest` object describes the swap for which a deposit address is requested.
 
-| Param                                                                 | Description                                                                                                                                                                                                              | Data type |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------: |
-| `quote`                                                               | The object returned by [getQuoteV2](#getquotev2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).             |  `Quote`  |
-| `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                               | `string`  |
-| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This protects the swapper against price changes between a quote and the execution of a swap.                                | `Object`  |
-| `srcAddress` (optional)                                               | Address that sends the deposit. It is validated against the source chain and simply echoed back in the response.                                                                                                         | `string`  |
-| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers) creating the channel, in basis points. This option is only available when the SDK is initialized with a `broker` URL                                                        | `number`  |
-| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with a `broker` URL |  `Array`  |
-| [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                           | `Object`  |
+| Param                                                                 | Description                                                                                                                                                                                                                 | Data type |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
+| `quote`                                                               | The object returned by [getQuoteV2](#getquotev2). This object will be used to set the input and output assets, the DCA parameters (if it is a DCA quote), and the boost parameters (if it is a boost quote).                |  `Quote`  |
+| `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                  | `string`  |
+| [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This protects the swapper against price changes between a quote and the execution of a swap.                                   | `Object`  |
+| `srcAddress` (optional)                                               | Address that sends the deposit. It is validated against the source chain and simply echoed back in the response.                                                                                                            | `string`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers) creating the channel, in basis points. This option is only available when the SDK is initialized with `broker: { url }`                                                        | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with `broker: { url }` |  `Array`  |
+| [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                              | `Object`  |
 
 <Callout type="warning">
-  The method throws if the `quote` was requested with `isVaultSwap` or
-  `isOnChain` set, since neither is executed through a deposit channel. It also
-  throws if `ccmParams` is set but the `quote` was requested without
-  `ccmParams`, or vice versa.
+  The method throws if the SDK is initialized without a `broker`, or if
+  `brokerCommissionBps` or `affiliateBrokers` are set while using named brokers. It also throws if the `quote` was requested
+  with `isVaultSwap` or `isOnChain` set, since neither is executed through a
+  deposit channel, or if `ccmParams` is set but the `quote` was requested
+  without `ccmParams`, or vice versa.
 </Callout>
 
 ### Result type
@@ -523,11 +527,10 @@ type DepositAddressResponseV2 = {
   into a number of blocks before submitting them.
 </Callout>
 
-### Configure your Broker API
+### Configure a broker
 
-If you want to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates),
-you need to run your own [Broker API](/brokers/running-broker-api).
-You can configure the URL of your Broker API when initializing the SDK.
+A broker is required to open deposit channels. Configure the URL of your own [Broker API](/brokers/running-broker-api)
+to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates).
 
 ```typescript copy
 import { SwapSDK } from "@chainflip/sdk/swap";
@@ -535,6 +538,18 @@ import { SwapSDK } from "@chainflip/sdk/swap";
 const sdk = new SwapSDK({
   network: "perseverance",
   broker: { url: "https://my.broker.io" },
+});
+```
+
+If you don't run a Broker API, you can use a named broker eg: `swap.chainflip.io` instead. Its commission is included in the quotes
+returned by [`getQuoteV2`](#getquotev2), and `brokerCommissionBps` and `affiliateBrokers` cannot be set.
+
+```typescript copy
+import { SwapSDK } from "@chainflip/sdk/swap";
+
+const sdk = new SwapSDK({
+  network: "perseverance",
+  broker: { name: "swap.chainflip.io" },
 });
 ```
 
@@ -570,6 +585,7 @@ const swapDepositAddressRequest: DepositAddressRequestV2 = {
     livePriceSlippageTolerancePercent:
       quote.recommendedLivePriceSlippageTolerancePercent, // use recommended live price slippage tolerance from quote
   },
+  // a broker commission and affiliates require the SDK to be initialized with `broker: { url }`
   brokerCommissionBps: 100, // 100 basis point = 1%
   affiliateBrokers: [
     {
@@ -668,7 +684,6 @@ if (!quote) throw new Error("No DCA quote");
 const swapDepositAddressRequest = {
   quote,
   destAddress: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
-  brokerCommissionBps: 100,
   fillOrKillParams: {
     refundAddress: "0xa56A6be23b6Cf39D9448FF6e897C29c41c8fbDFF",
     retryDurationBlocks: 100,
@@ -701,7 +716,9 @@ of other decentralized exchanges and therefore might be easier to integrate into
 </Callout>
 
 Returns the unsigned transaction data for the given `VaultSwapRequest`.
-This method uses the `broker_request_swap_parameter_encoding` RPC method of the configured [Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding).
+The SDK must be initialized with a [`broker`](#configure-a-broker). With `broker: { url }`, this method uses the `broker_request_swap_parameter_encoding` RPC method of your
+[Broker API](/brokers/broker-api/requests#broker_request_swap_parameter_encoding). When using a named broker (`broker: { name: "swap.chainflip.io" }`),
+the data is encoded through the backend service.
 
 ```typescript copy
 function encodeVaultSwapData(
@@ -713,7 +730,6 @@ type VaultSwapRequest = {
   destAddress: string;
   fillOrKillParams: FillOrKillParams;
   srcAddress?: string;
-  brokerAccount?: `cF${string}`;
   brokerCommissionBps?: number;
   affiliateBrokers?: {
     account: `cF${string}` | `0x${string}`;
@@ -732,16 +748,23 @@ The `vaultSwapRequest` object describes the swap for which the vault swap data i
 | `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                                                                                                              | `string`  |
 | [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection). This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                                                                                                              | `Object`  |
 | `srcAddress` (optional)                                               | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                                                                                                                      | `string`  |
-| `brokerAccount` (optional)                                            | [Broker](/brokers#brokers) account that recieves the commission for the swap.                                                                                                                                                                                                                                                           | `string`  |
-| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers#brokers) of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                                                                                           | `number`  |
-| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                                   |  `Array`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the [broker](/brokers#brokers) of the swap, in basis points. This option is only available when the SDK is initialized with `broker: { url }`                                                                                                                                                                     | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining [affiliate accounts](/brokers/broker-affiliates) that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with `broker: { url }`                                                                                                             |  `Array`  |
 | [`ccmParams`](/brokers/javascript-sdk/params#ccmparams) (optional)    | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                                                                                                          | `Object`  |
 | `extraParams` (optional)                                              | Additional data that is required for encoding vault swap transaction data for specific chains. For swaps starting from Solana, a [`seed`](/brokers/vault-swaps-api/solana#swap-event-data-account) can be set optionally. It must be a `0x`-prefixed, 32 byte hex string. If no seed is set, a random one will be generated on the fly. | `Object`  |
 
 <Callout type="warning">
   The `quote` must have been requested with `isVaultSwap: true`, otherwise the
   method throws. The fees of a vault swap differ from the fees of a deposit
-  channel swap, so a quote for one cannot be used for the other.
+  channel swap, so a quote for one cannot be used for the other. The method also
+  throws if the SDK is initialized without a `broker`, or if
+  `brokerCommissionBps` or `affiliateBrokers` are set while using named brokers.
+</Callout>
+
+<Callout type="info">
+  The `brokerAccount` parameter was removed. To encode vault swaps for your own
+  broker account, initialize the SDK with the `url` of your [Broker
+  API](/brokers/running-broker-api).
 </Callout>
 
 ### Result type
@@ -1215,7 +1238,6 @@ interface EncodeCfParametersRequest {
     commissionBps: number;
   }[];
   ccmParams?: CcmParams;
-  brokerAccount?: `cF${string}`;
   brokerCommissionBps?: number;
 }
 
@@ -1234,9 +1256,8 @@ The `cfParameters` object describes the swap for which the CF parameters data is
 | `destAddress`                                                         | Address where the swapped tokens will be sent to on the destination chain.                                                                                                                                                                     | `string`  |
 | [`fillOrKillParams`](/brokers/javascript-sdk/params#fillorkillparams) | Parameters to set a [minimum accepted price](/protocol/swapping-basics#slippage-protection) This allows to protect against price changes between a quote and the execution of a swap (also known as slippage protection).                      | `Object`  |
 | `srcAddress` (optional)                                               | Address that will sign and send the vault swap transaction. This parameter is required to encode vault swaps starting from Solana.                                                                                                             | `string`  |
-| `brokerAccount` (optional)                                            | account that receives the commission for the swap.                                                                                                                                                                                             | `string`  |
-| `brokerCommissionBps` (optional)                                      | Commission charged by the broker of the swap, in basis points. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                                                                      | `number`  |
-| `affiliateBrokers` (optional)                                         | An array of objects defining affiliate accounts that take a commission in addition to `brokerCommissionBps`. This option is only available when setting a `brokerAccount` or the SDK is initialized with a `broker` URL                        |  `Array`  |
+| `brokerCommissionBps` (optional)                                      | Commission charged by the broker of the swap, in basis points. This option is only available when the SDK is initialized with `broker: { url }`                                                                                                | `number`  |
+| `affiliateBrokers` (optional)                                         | An array of objects defining affiliate accounts that take a commission in addition to `brokerCommissionBps`. This option is only available when the SDK is initialized with `broker: { url }`                                                  |  `Array`  |
 | [`ccmParams`](/brokers/javascript-sdk/params#ccmparams)(optional)     | Optional parameters for [passing a message](/protocol/cross-chain-messaging/overview) to a reciever contract/program on the destination chain.                                                                                                 | `Object`  |
 
 ### Result type
@@ -1250,7 +1271,11 @@ Chain.
 ```typescript copy
 import { Chains, Assets, SwapSDK } from "@chainflip/sdk/swap";
 
-const swapSDK = new SwapSDK({ network: "perseverance" });
+const swapSDK = new SwapSDK({
+  network: "perseverance",
+  broker: { url: "https://my.broker.io" },
+  // broker: { name: "swap.chainflip.io" },
+});
 
 const { quotes } = await swapSDK.getQuoteV2({
   srcChain: Chains.Ethereum,

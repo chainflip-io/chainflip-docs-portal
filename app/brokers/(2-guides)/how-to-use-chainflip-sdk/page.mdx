@@ -59,21 +59,47 @@ import { SwapSDK } from "@chainflip/sdk/swap";
 const options = {
     network: "perseverance", // Testnet
     broker: { url: "https://my.broker.io" },
+    // or use the swap.chainflip.io broker:
+    // broker: { name: "swap.chainflip.io" },
 };
 
 const swapSDK = new SwapSDK(options);
 ```
 
+### Choosing a broker
+
+Opening deposit channels and encoding vault swaps requires a [broker](/brokers). The `broker` option can be set in one of two ways:
+
+- **Broker URL, `{ url: "https://my.broker.io" }`**: Channels are opened and vault swaps are encoded by your own [Broker API](/brokers/running-broker-api). This is required if you want to earn [broker fees](/brokers#broker-fees) or use [affiliates](/brokers/broker-affiliates).
+- **Named broker, `{ name: "swap.chainflip.io" }`**: Channels are opened and vault swaps are encoded through the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). The commission of the named broker is included in the quotes returned by `getQuoteV2`. Setting `brokerCommissionBps` or `affiliateBrokers` is not supported when using a named broker.
+
+```javascript
+const swapSDK = new SwapSDK({
+    network: "perseverance",
+    broker: { url: "https://my.broker.io" },
+    // or use the swap.chainflip.io broker:
+    // broker: { name: "swap.chainflip.io" },
+});
+```
+
+<Callout type="warning">
+    A broker must be configured to call `requestDepositAddressV2`,
+    `encodeVaultSwapData`, `encodeCfParameters` and
+    `requestAccountCreationDepositAddress`. These methods throw if the SDK is
+    initialized without a `broker`. Fetching chains, assets, quotes and swap
+    statuses does not require a broker.
+</Callout>
+
 The `options` object accepts the following properties:
 
-| Param                         | Description                                                                                                                                                                                    |                  Data type                  |
-| :---------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------: |
-| `network`(optional)           | The [Chainflip network](/protocol/supported-chains-assets/chains-assets#chainflip-networks) to interact with. Defaults to `perseverance`.                                                      | `'sisyphos' \| 'perseverance' \| 'mainnet'` |
-| `backendUrl`(optional)        | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network.      |                  `string`                   |
-| `broker`(optional)            | The URL of the [Broker API](/brokers/running-broker-api) used for initiating swaps. Defaults to the Broker API run by Chainflip for the given network.                                         |           `` `{ url: string }` ``           |
-| `rpcUrl`(optional)            | The URL of the [Chainflip RPC node](/protocol/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network.                                               |                  `string`                   |
-| `brokerAccount`(optional)     | Chainflip broker SS58 address that quote requests are attributed to. Brokers are encouraged to set this so their quotes can be attributed to them. Can be overridden per `getQuoteV2` call.    |            `` `cF${string}` ``              |
-| `enabledFeatures`(optional)   | Features that must be explicitly opted into. `dcaV2` enables the new DCA V2 quoting strategy that returns DCA quotes for eligible swaps based on asset configuration and USD value thresholds. |         `` `{ dcaV2?: boolean }` ``         |
+| Param                       | Description                                                                                                                                                                                                                                                                                                                                                                         |                        Data type                         |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------: |
+| `network`(optional)         | The [Chainflip network](/protocol/supported-chains-assets/chains-assets#chainflip-networks) to interact with. Defaults to `perseverance`.                                                                                                                                                                                                                                           |       `'sisyphos' \| 'perseverance' \| 'mainnet'`        |
+| `backendUrl`(optional)      | The URL of the [backend service](https://github.com/chainflip-io/chainflip-sdk-monorepo/tree/main/packages/swap). Defaults to the backend service run by Chainflip for the given network.                                                                                                                                                                                           |                         `string`                         |
+| `broker`(optional)          | The broker used for opening deposit channels and encoding vault swaps. Either `{ url }` for your own [Broker API](/brokers/running-broker-api), or a named broker, eg: `{ name: "swap.chainflip.io" }`. Required by `requestDepositAddressV2`, `encodeVaultSwapData`, `encodeCfParameters` and `requestAccountCreationDepositAddress`. See [Choosing a broker](#choosing-a-broker). | `` `{ url: string } \| { name: "swap.chainflip.io" }` `` |
+| `rpcUrl`(optional)          | The URL of the [Chainflip RPC node](/protocol/running-an-rpc-node). Defaults to the public rpc node operated by Chainflip for the given network.                                                                                                                                                                                                                                    |                         `string`                         |
+| `brokerAccount`(optional)   | Chainflip broker SS58 address that quote requests are attributed to. Brokers are encouraged to set this so their quotes can be attributed to them. Can be overridden per `getQuoteV2` call.                                                                                                                                                                                         |                   `` `cF${string}` ``                    |
+| `enabledFeatures`(optional) | Features that must be explicitly opted into. `dcaV2` enables the new DCA V2 quoting strategy that returns DCA quotes for eligible swaps based on asset configuration and USD value thresholds.                                                                                                                                                                                      |               `` `{ dcaV2?: boolean }` ``                |
 
 <Callout type="warning">
     The `dca` option in `enabledFeatures` was removed in version 2.2. DCA is now
@@ -91,6 +117,8 @@ import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
 // Initialize SDK
 const swapSDK = new SwapSDK({
     network: "perseverance",
+    broker: { url: "https://my.broker.io" },
+    // broker: { name: "swap.chainflip.io" },
     enabledFeatures: { dcaV2: true },
 });
 
@@ -139,6 +167,8 @@ import { getDefaultProvider, Wallet } from "ethers";
 // Initialize SDK and Wallet
 const swapSDK = new SwapSDK({
     network: "perseverance",
+    broker: { url: "https://my.broker.io" },
+    // broker: { name: "swap.chainflip.io" },
     enabledFeatures: { dcaV2: true },
 });
 const wallet = new Wallet(
@@ -205,6 +235,8 @@ import { SwapSDK, Chains, Assets } from "@chainflip/sdk/swap";
 // Initialize SDK
 const swapSDK = new SwapSDK({
     network: "perseverance",
+    broker: { url: "https://my.broker.io" },
+    // broker: { name: "swap.chainflip.io" },
     enabledFeatures: { dcaV2: true },
 });
 

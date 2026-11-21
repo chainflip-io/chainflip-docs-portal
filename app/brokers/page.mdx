@@ -47,6 +47,16 @@ It also removes some incentives to fragment the cross-chain swapping app by offe
 
 With that said, many Brokers will probably not take a fee, particularly private Brokers set up by professional traders to rapidly interact with the network for software trading strategies. However, Brokers that decide to take fees can withdraw these balances at any time through the CLI.
 
+### Don't want to run a broker?
+
+Running a broker means operating a public endpoint, paying \$FLIP transaction fees and protecting it from spam. If you would rather not run that infrastructure yourself, you can integrate Chainflip swaps through a hosted API that does this for you and lets you add your own fee:
+
+- [Broker as a Service](https://chainflip-broker.io/): a hosted Chainflip broker with a REST and MCP API, a 0.05% operating fee and a commission you set yourself.
+- [SwapKit](https://swapkit.dev/): an SDK and API that aggregates cross-chain routes, including Chainflip, with an affiliate fee you set.
+- [Rango](https://rango.exchange/): a cross-chain DEX and bridge aggregator whose API routes swaps through Chainflip when it gives the best rate.
+
+Compare fees, custody, supported chains and routing before choosing one.
+
 ## Quick Start
 
 If you are a developer of wallets, aggregators or DEXes, you can earn revenue by bringing volume to Chainflip's ecosystem. Any _State Chain_ account can register as a Broker, and start submitting **Deposit Channel Request** or **Vault swaps** on users' behalf.
